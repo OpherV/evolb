@@ -27,7 +27,7 @@ function create() {
     displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
     displacementFilter.scale.x = 25;
     displacementFilter.scale.y = 25;
-    underwater.filters =[displacementFilter];
+    //underwater.filters =[displacementFilter];
 
     bg.scale.x=2;
     bg.scale.y=2;
@@ -35,7 +35,7 @@ function create() {
 
     var centerSpawnPoint=new Phaser.Point(200, 200);
     for (var x=0;x<5;x++){
-        var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-150,150),centerSpawnPoint.y+game.rnd.realInRange(-150,150));
+        var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-300,300),centerSpawnPoint.y+game.rnd.realInRange(-300,300));
         var newCreature=new Creature(spawnPoint.x,spawnPoint.y);
         game.add.existing(newCreature);
         creatures.add(newCreature);
@@ -89,6 +89,9 @@ function resizeGame() {
 window.addEventListener('resize',function() { window.resizeGame(); } );
 
 Creature= function (x,y) {
+    this.dna=new Dna();
+    this.dna.randomizeBaseTraits();
+
     //  We call the Phaser.Sprite passing in the game reference
     //  We're giving it a random X/Y position here, just for the sake of this demo - you could also pass the x/y in the constructor
     Phaser.Sprite.call(this, game, x, y, 'creature');
@@ -97,14 +100,15 @@ Creature= function (x,y) {
 
 
     this.floatSpeed=5;
-    this.moveSpeed=60;
     this.body.bounce=1;
     this.body.drag.x=5;
     this.body.drag.y=5;
 
-    var scaleVariation=game.rnd.frac()*(0.2)+0.15;
+    //set creature size
+    this.scale.setTo(this.dna.baseTraits.sizeSpeed.getValue("size"),
+                     this.dna.baseTraits.sizeSpeed.getValue("size"));
 
-    this.scale.setTo(scaleVariation, scaleVariation);
+    this.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
 
     //methods
 
