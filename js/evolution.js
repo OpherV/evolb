@@ -2,6 +2,7 @@ var game = new Phaser.Game(640, 480, Phaser.AUTO, '', { preload: preload, create
 var displacementFilter;
 var creatures;
 var underwater;
+var creatureMaterial;
 
 function preload() {
     game.load.image('background', 'assets/background.png');
@@ -14,6 +15,18 @@ function create() {
     //	Enable p2 physics
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.enable([], false);
+
+
+    creatureMaterial=game.physics.p2.createMaterial();
+    var creatureContactMaterial=game.physics.p2.createContactMaterial(creatureMaterial, creatureMaterial);
+
+    creatureContactMaterial.friction = 0;     // Friction to use in the contact of these two materials.
+    creatureContactMaterial.restitution = 1.0;  // Restitution (i.e. how bouncy it is!) to use in the contact of these two materials.
+    creatureContactMaterial.stiffness = 1e7;    // Stiffness of the resulting ContactEquation that this ContactMaterial generate.
+    creatureContactMaterial.relaxation = 3;     // Relaxation of the resulting ContactEquation that this ContactMaterial generate.
+    creatureContactMaterial.frictionStiffness = 1e7;    // Stiffness of the resulting FrictionEquation that this ContactMaterial generate.
+    creatureContactMaterial.frictionRelaxation = 3;     // Relaxation of the resulting FrictionEquation that this ContactMaterial generate.
+    creatureContactMaterial.surfaceVelocity = 0;        // Will add surface velocity to this material. If bodyA rests on top if bodyB, and the surface velocity is positive, bodyA will slide to the right.
 
 
 
@@ -38,7 +51,7 @@ function create() {
 
 
     var centerSpawnPoint=new Phaser.Point(200, 200);
-    for (var x=0;x<5;x++){
+    for (var x=0;x<2;x++){
         var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-300,300),centerSpawnPoint.y+game.rnd.realInRange(-300,300));
         var newCreature=new Creature(spawnPoint.x,spawnPoint.y);
         game.add.existing(newCreature);
@@ -94,6 +107,7 @@ function resizeGame() {
 }
 window.addEventListener('resize',function() { window.resizeGame(); } );
 
+
 Creature= function (x,y) {
     this.dna=new Dna();
     this.dna.randomizeBaseTraits();
@@ -101,7 +115,9 @@ Creature= function (x,y) {
     //  We call the Phaser.Sprite passing in the game reference
     //  We're giving it a random X/Y position here, just for the sake of this demo - you could also pass the x/y in the constructor
     Phaser.Sprite.call(this, game, x, y, 'creature');
-    game.physics.p2.enable(this);
+    game.physics.p2.enable(this,true);
+    this.body.setMaterial(creatureMaterial);
+
     this.body.fixedRotation = true;
     this.body.collideWorldBounds=true;
 //    this.body.setZeroDamping();
