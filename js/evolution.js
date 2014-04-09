@@ -13,6 +13,10 @@ function preload() {
 function create() {
     //	Enable p2 physics
     game.physics.startSystem(Phaser.Physics.P2JS);
+    game.physics.p2.enable([], false);
+
+
+
     underwater=game.add.group();
     creatures=game.add.group();
 
@@ -56,11 +60,11 @@ function create() {
     resizeGame();
 
 
+
 }
 
 var count=0;
 function update () {
-    game.physics.arcade.collide(creatures, creatures, null, null, this);
     count+=0.1;
 
     displacementFilter.offset.x = count * 10;
@@ -80,6 +84,8 @@ function resizeGame() {
     game.stage.bounds.width = width;
     game.stage.bounds.height = height;
 
+    game.physics.p2.setBounds(0,0,width,height);
+
     if (game.renderType === Phaser.WEBGL)
     {
         game.renderer.resize(width, height);
@@ -95,18 +101,18 @@ Creature= function (x,y) {
     //  We call the Phaser.Sprite passing in the game reference
     //  We're giving it a random X/Y position here, just for the sake of this demo - you could also pass the x/y in the constructor
     Phaser.Sprite.call(this, game, x, y, 'creature');
-    game.physics.enable(this, Phaser.Physics.ARCADE);
-
-
+    game.physics.p2.enable(this);
+    this.body.fixedRotation = true;
+    this.body.collideWorldBounds=true;
+//    this.body.setZeroDamping();
 
     this.floatSpeed=5;
-    this.body.bounce=1;
-    this.body.drag.x=5;
-    this.body.drag.y=5;
+
 
     //set creature size
     this.scale.setTo(this.dna.baseTraits.sizeSpeed.getValue("size"),
                      this.dna.baseTraits.sizeSpeed.getValue("size"));
+    this.body.setCircle(this.width/2);
 
     this.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
 
@@ -125,8 +131,8 @@ Creature= function (x,y) {
         var movementVector=new Phaser.Point(randomPoint.x-this.x,randomPoint.y-this.y);
         movementVector.normalize();
 
-        this.body.velocity.x=this.body.velocity.x+(movementVector.x*this.floatSpeed);
-        this.body.velocity.y=this.body.velocity.y+(movementVector.y*this.floatSpeed);
+//        this.body.velocity.x+=this.body.velocity.x+(movementVector.x*this.floatSpeed);
+ //       this.body.velocity.y+=this.body.velocity.y+(movementVector.y*this.floatSpeed);
 
 
         if (this.state=="idle"){
@@ -146,7 +152,20 @@ Creature.prototype.constructor = Creature;
 Creature.prototype.update = function() {
 
     if (this.state=="following"){
-        game.physics.arcade.moveToPointer(this, this.moveSpeed);
+
+        moveToCoords(this, this.moveSpeed,game.input.x, game.input.y);
     }
 
 };
+
+
+
+function moveToCoords(item,speed,x,y) {
+    var dx = x - item.body.x;
+    var dy = y - item.body.y;
+    itemRotation= Math.atan2(dy, dx);
+    item.body.rotation = itemRotation + game.math.degToRad(-90);
+    var angle = item.body.rotation + (Math.PI / 2);
+    item.body.velocity.x += speed * Math.cos(angle);
+    item.body.velocity.y += speed * Math.sin(angle);
+}
