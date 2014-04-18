@@ -58,6 +58,15 @@ function create() {
         creatures.add(newCreature);
     }
 
+//    //draw rocks
+//    for (x=0;x<2;x++){
+//
+//        var newCreature=new Creature(spawnPoint.x,spawnPoint.y);
+        var newRock = new Rock(200,200);
+        //game.add.existing(newRock);
+//    }
+
+
     game.input.onDown.add(function(){
         creatures.forEach(function(creature){
             creature.state="following";
