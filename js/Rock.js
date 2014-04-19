@@ -1,18 +1,25 @@
-
-
-Rock=function(x,y){
-    Phaser.Sprite.call(this, game, x, y, 'rock');
-
-    if (!Rock.rockTexture){
-//        Rock.rockTexture = game.add.bitmapData(128, 128);
-        Rock.rockTexture = new Phaser.BitmapData(game,'rockTexture',128,128);
-        Rock.rockTexture.ctx.beginPath();
-        Rock.rockTexture.ctx.rect(0,0,128,128);
-        Rock.rockTexture.ctx.fillStyle = '#0F0F0F';
-        Rock.rockTexture.ctx.fill();
+evolution=(window.evolution?window.evolution:{});
+evolution.Rock=function(game,x,y){
+    Phaser.Sprite.call(this, game, x, y);
+    //define texture
+    if (!evolution.Rock.rockTexture){
+        evolution.Rock.rockTexture = game.add.bitmapData(128, 128);
+        evolution.Rock.rockTexture.context.beginPath();
+        evolution.Rock.rockTexture.context.rect(0,0,128,128);
+        evolution.Rock.rockTexture.context.fillStyle = '#BBBBBB';
+        evolution.Rock.rockTexture.context.fill();
     }
 
-   this.loadTexture('RockTexture');
+    this.loadTexture(evolution.Rock.rockTexture);
+    game.physics.p2.enable(this,true);
+    //this.body.setMaterial(evolution.Materials.getRockMaterial());
+    this.body.setMaterial(evolution.Materials.getRockMaterial());
+    this.body.static = true;
+    this.body.fixedRotation = true;
+
+
+
 };
 
-Rock.constructor=Rock;
+evolution.Rock.prototype = Object.create(Phaser.Sprite.prototype);
+evolution.Rock.prototype.constructor = evolution.Rock;
