@@ -3,10 +3,13 @@ evolution.core=(function(){
     var displacementFilter;
     var creatures;
     var rocks;
-    var allItems;
+    var bg;
+    var underwater;
+    var gameSprites={};
 
     var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var height =  Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    var gameBounds={width: width*2, height: height*2};
     var game=new Phaser.Game(width, height, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
     function preload() {
@@ -17,24 +20,30 @@ evolution.core=(function(){
     }
 
     function create() {
+        game.world.setBounds(0, 0, gameBounds.width, gameBounds.height);
+
         //	Enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.enable([], false);
 
-
-
         evolution.Materials.init(game);
 
-        allItems=game.add.group();
+        underwater=game.add.group();
         creatures=game.add.group();
         rocks=game.add.group();
 
 
 
 
-        var bg=game.add.tileSprite(0, 0, 2000, 2000, 'background');
-        allItems.add(bg);
-        allItems.add(creatures);
+        bg=game.add.sprite(900, 540, 'background');
+        bg.fixedToCamera=true;
+        bg.width*=3;
+        bg.height*=3;
+        bg.cameraOffset.x=0;
+        bg.cameraOffset.y=0;
+
+        underwater.add(bg);
+        underwater.add(creatures);
 
         var displacementTexture = PIXI.Texture.fromImage("assets/displacement_map.jpg");
         displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
@@ -42,40 +51,22 @@ evolution.core=(function(){
         displacementFilter.scale.y = 25;
         //underwater.filters =[displacementFilter];
 
-        bg.scale.x=2;
-        bg.scale.y=2;
+
 
         //draw rocks
-        for (x=0;x<5;x++){
+        for (x=0;x<10;x++){
             var newRock = new evolution.Rock(game,game.world.randomX,game.world.randomY);
-
-            rocks.forEach(function(item){
-                if (newRock.overlap(item)){
-                    newRock.x=game.world.randomX;
-                    newRock.y=game.world.randomY;
-                }
-            });
             rocks.add(newRock);
+
+            //console.log(isColliding(newRock));
+            gameSprites[newRock.key.key]=newRock;
         }
 
 
-        var centerSpawnPoint=new Phaser.Point(200, 200);
-        for (var x=0;x<2;x++){
-            //var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-300,300),centerSpawnPoint.y+game.rnd.realInRange(-300,300));
-            var newCreature=new evolution.Creature(game,game.world.randomX,game.world.randomY);
-            game.add.existing(newCreature);
-            creatures.forEach(function(item){
-                if (newCreature.overlap(item)){
-                    newCreature.x=game.world.randomX;
-                    newCreature.y=game.world.randomY;
-                }
-            });
-            rocks.forEach(function(item){
-                if (newCreature.overlap(item)){
-                    newCreature.x=game.world.randomX;
-                    newCreature.y=game.world.randomY;
-                }
-            });
+        var centerSpawnPoint=new Phaser.Point(game.world.randomX, game.world.randomY);
+        for (var x=0;x<5;x++){
+            var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-300,300),centerSpawnPoint.y+game.rnd.realInRange(-300,300));
+            var newCreature=new evolution.Creature(game,spawnPoint.x,spawnPoint.y);
             creatures.add(newCreature);
 
         }
@@ -99,14 +90,21 @@ evolution.core=(function(){
 
     var count=0;
     function update () {
-        count+=0.1;
 
+        count+=0.1;
         displacementFilter.offset.x = count * 10;
         displacementFilter.offset.y = count * 10 ;
+
+
     }
 
     function render(){
+        var creatureGroupCenter=_findCenterOfMass(creatures);
+        game.camera.focusOnXY(creatureGroupCenter.x,creatureGroupCenter.y);
 
+        game.debug.cameraInfo(game.camera, 32, 32);
+
+        _bgParallex();
     }
 
 
@@ -114,26 +112,46 @@ evolution.core=(function(){
     /// util functions
     // ****************************
 
+    //move bg for parallex effect
+    function _bgParallex(){
+        var bgMovementX=bg.width-width;
+        var bgMovementY=bg.height-height;
 
-    function forEachDeep(group,func){
-        game.world.forEach(function(item){
-            if(item instanceof Phaser.Group){
-               forEachDeep(item,func);
-           }
-            else{
-               func(item);
-           }
-        });
+        var moveXPercent=(game.camera.x)/(gameBounds.width-width);
+        var moveYPercent=(game.camera.y)/(gameBounds.height-height);
+        bg.cameraOffset.x=-bgMovementX*moveXPercent;
+        bg.cameraOffset.y=-bgMovementY*moveYPercent;
     }
 
+
+    function isColliding(item){
+        for (gameItem in gameSprites){
+            console.log(gameSprites[gameItem],item)
+            if (item.overlap(gameSprites[gameItem])){
+                return true;
+            }
+        }
+        return false;
+    };
+
     function _moveToCoords(item,speed,x,y) {
-        var dx = x - item.body.x;
-        var dy = y - item.body.y;
+        var dx = game.camera.x+x - item.body.x;
+        var dy = game.camera.y+y - item.body.y;
         itemRotation= Math.atan2(dy, dx);
         item.body.rotation = itemRotation + game.math.degToRad(-90);
         var angle = item.body.rotation + (Math.PI / 2);
         item.body.velocity.x += speed * Math.cos(angle);
         item.body.velocity.y += speed * Math.sin(angle);
+    }
+
+    function _findCenterOfMass(group){
+        var totalX=0;
+        var totalY=0;
+        group.forEach(function(item){
+            totalX+=item.x;
+            totalY+=item.y;
+        });
+        return {x: totalX/group.length, y: totalY/group.length}
     }
 
     return{

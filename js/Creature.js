@@ -6,7 +6,7 @@ evolution.Creature= function (game,x,y) {
 
 
     Phaser.Sprite.call(this, game, x, y, 'creature');
-    game.physics.p2.enable(this,true);
+    game.physics.p2.enable(this,false);
 
     this.body.fixedRotation = true;
     this.body.collideWorldBounds=true;

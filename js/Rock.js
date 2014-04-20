@@ -11,7 +11,7 @@ evolution.Rock=function(game,x,y){
     }
 
     this.loadTexture(evolution.Rock.rockTexture);
-    game.physics.p2.enable(this,true);
+    game.physics.p2.enable(this,false);
     //this.body.setMaterial(evolution.Materials.getRockMaterial());
     this.body.setMaterial(evolution.Materials.getRockMaterial());
     this.body.static = true;
