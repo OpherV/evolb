@@ -17,6 +17,8 @@ evolution.core=(function(){
         game.load.image('creature', 'assets/creature.png');
         game.load.script('abstracFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
+        game.load.atlasJSONHash('enemy1', 'assets/enemy1_sprites.png', 'assets/enemy1.json');
+
     }
 
     function create() {
@@ -49,12 +51,12 @@ evolution.core=(function(){
         displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
         displacementFilter.scale.x = 25;
         displacementFilter.scale.y = 25;
-        //underwater.filters =[displacementFilter];
+        bg.filters =[displacementFilter];
 
 
 
         //draw rocks
-        for (x=0;x<10;x++){
+        for (x=0;x<15;x++){
             var newRock = new evolution.Rock(game,game.world.randomX,game.world.randomY);
             rocks.add(newRock);
 
@@ -71,6 +73,11 @@ evolution.core=(function(){
 
         }
 
+        //enemies
+        for (x=0;x<3;x++){
+            var enemy=new evolution.Enemy1(game,game.world.randomX,game.world.randomY);
+            underwater.add(enemy);
+        }
 
         game.input.onDown.add(function(){
             creatures.forEach(function(creature){
@@ -83,7 +90,6 @@ evolution.core=(function(){
                 creature.setIdle();
             });
         }, this);
-
 
 
     }
@@ -102,7 +108,7 @@ evolution.core=(function(){
         var creatureGroupCenter=_findCenterOfMass(creatures);
         game.camera.focusOnXY(creatureGroupCenter.x,creatureGroupCenter.y);
 
-        game.debug.cameraInfo(game.camera, 32, 32);
+        //game.debug.cameraInfo(game.camera, 32, 32);
 
         _bgParallex();
     }
@@ -135,8 +141,8 @@ evolution.core=(function(){
     };
 
     function _moveToCoords(item,speed,x,y) {
-        var dx = game.camera.x+x - item.body.x;
-        var dy = game.camera.y+y - item.body.y;
+        var dx = x - item.body.x;
+        var dy = y - item.body.y;
         itemRotation= Math.atan2(dy, dx);
         item.body.rotation = itemRotation + game.math.degToRad(-90);
         var angle = item.body.rotation + (Math.PI / 2);
@@ -156,6 +162,7 @@ evolution.core=(function(){
 
     return{
         game: game,
-        moveToCoords: _moveToCoords
+        moveToCoords: _moveToCoords,
+        getCreatures: function(){return creatures;}
     }
 })();

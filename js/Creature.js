@@ -68,7 +68,9 @@ evolution.Creature.prototype.constructor = evolution.Creature;
 evolution.Creature.prototype.update = function() {
 
     if (this.state=="following"){
-        evolution.core.moveToCoords(this, this.moveSpeed,this.game.input.x, this.game.input.y);
+        var moveToCoords=new Phaser.Point(this.game.input.x+this.game.camera.x,
+                                   this.game.input.y+this.game.camera.y);
+        evolution.core.moveToCoords(this, this.moveSpeed,moveToCoords.x, moveToCoords.y);
     }
 
 };

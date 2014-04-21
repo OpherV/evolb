@@ -21,7 +21,7 @@ var baseTraits={
         highName: "Small & Fast",
         speed: {
             lowLimit: 70,
-            highLimit: 250,
+            highLimit: 150,
             reverse: true
         },
         size:{
