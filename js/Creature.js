@@ -8,8 +8,21 @@ evolution.Creature= function (game,x,y) {
     this.totalHitpoints = 20;
     this._lastHitPoints = 20;
 
-    Phaser.Sprite.call(this, game, x, y, 'creature');
-    game.physics.p2.enable(this,false);
+    this.graphicSprite=new Phaser.Sprite(game,0,0,'creature');
+    this.graphicSprite.anchor.setTo(0.5,0.5);
+
+    //instantiate this as a sprite
+    Phaser.Sprite.call(this, game, x, y);
+    game.physics.p2.enable(this,true);
+
+
+    this.addChild(this.graphicSprite);
+    //set creature size
+    this.graphicSprite.scale.setTo(this.dna.baseTraits.sizeSpeed.getValue("size"),
+        this.dna.baseTraits.sizeSpeed.getValue("size"));
+    this.graphicSprite.x=0;
+    this.graphicSprite.y=0;
+
 
     //physics
     this.body.fixedRotation = true;
@@ -27,9 +40,8 @@ evolution.Creature= function (game,x,y) {
     this.floatSpeed=0.5;
 
     //set creature size
-    this.scale.setTo(this.dna.baseTraits.sizeSpeed.getValue("size"),
-        this.dna.baseTraits.sizeSpeed.getValue("size"));
-    this.body.setCircle(this.width/2);
+
+    this.body.setCircle(this.graphicSprite.width/2);
 
     this.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
 
@@ -37,10 +49,11 @@ evolution.Creature= function (game,x,y) {
     this.body.setMaterial(evolution.Materials.getCreatureMaterial());
 
     //GUI
-    this.healthbar = new evolution.gui.Healthbar(game,this.width);
+    this.healthbar = new evolution.gui.Healthbar(game,this.graphicSprite.width);
     this.addChild(this.healthbar);
-    this.healthbar.x= (-this.width/2);
-    this.healthbar.y= (-this.height/2-30);
+    this.healthbar.x=-this.graphicSprite.width/2;
+    this.healthbar.y=-this.graphicSprite.height/2-6;
+
     this.healthbar.redraw(this.hitPoints,this.totalHitpoints);
 
 
