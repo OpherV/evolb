@@ -1,8 +1,9 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.gui=(window.evolution.gui?window.evolution.gui:{});
-evolution.gui.Healthbar= function (game,barWidth) {
+evolution.gui.Healthbar= function (game,character) {
     this.game=game;
-    this.barWidth=barWidth;
+    this.character=character;
+    this.barWidth=character.width;
     Phaser.Graphics.call(this, game, 0, 0);
 
     this.redraw=function(hp,totalHp){
@@ -13,7 +14,7 @@ evolution.gui.Healthbar= function (game,barWidth) {
         this.beginFill(colour);
         this.lineStyle(5, colour, 1);
         this.moveTo(0,-5);
-        this.lineTo(barWidth * hp / totalHp, -5);
+        this.lineTo(this.barWidth * hp / totalHp, -5);
         this.endFill();
     };
 
@@ -21,7 +22,15 @@ evolution.gui.Healthbar= function (game,barWidth) {
         return "0x" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     }
 
+
 };
 
 evolution.gui.Healthbar.prototype = Object.create(Phaser.Graphics.prototype);
 evolution.gui.Healthbar.prototype.constructor = evolution.gui.Healthbar;
+
+
+evolution.gui.Healthbar.prototype.postUpdate = function() {
+
+    this.x=this.character.x-this.character.width/2;
+    this.y=this.character.y-this.character.height/2-5;
+};

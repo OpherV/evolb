@@ -1,10 +1,11 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
     var displacementFilter;
-    var creatures;
+    var creaturesLayer;
     var rocks;
     var bg;
     var underwater;
+    var guiLayer;
     var gameSprites={};
 
     var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -31,8 +32,9 @@ evolution.core=(function(){
         evolution.Materials.init(game);
 
         underwater=game.add.group();
-        creatures=game.add.group();
+        creaturesLayer=game.add.group();
         rocks=game.add.group();
+        guiLayer=game.add.group();
 
 
 
@@ -45,7 +47,8 @@ evolution.core=(function(){
         bg.cameraOffset.y=0;
 
         underwater.add(bg);
-        underwater.add(creatures);
+        underwater.add(creaturesLayer);
+        underwater.add(guiLayer);
 
         var displacementTexture = PIXI.Texture.fromImage("assets/displacement_map.jpg");
         displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
@@ -69,7 +72,8 @@ evolution.core=(function(){
         for (var x=0;x<5;x++){
             var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-300,300),centerSpawnPoint.y+game.rnd.realInRange(-300,300));
             var newCreature=new evolution.Creature(game,spawnPoint.x,spawnPoint.y);
-            creatures.add(newCreature);
+            creaturesLayer.add(newCreature);
+            guiLayer.add(newCreature.healthbar);
 
         }
 
@@ -80,13 +84,13 @@ evolution.core=(function(){
         }
 
         game.input.onDown.add(function(){
-            creatures.forEach(function(creature){
+            creaturesLayer.forEach(function(creature){
                 creature.state="following";
             });
         }, this);
 
         game.input.onUp.add(function(){
-            creatures.forEach(function(creature){
+            creaturesLayer.forEach(function(creature){
                 creature.setIdle();
             });
         }, this);
@@ -105,7 +109,7 @@ evolution.core=(function(){
     }
 
     function render(){
-        var creatureGroupCenter=_findCenterOfMass(creatures);
+        var creatureGroupCenter=_findCenterOfMass(creaturesLayer);
         game.camera.focusOnXY(creatureGroupCenter.x,creatureGroupCenter.y);
 
         //game.debug.cameraInfo(game.camera, 32, 32);
@@ -163,6 +167,6 @@ evolution.core=(function(){
     return{
         game: game,
         moveToCoords: _moveToCoords,
-        getCreatures: function(){return creatures;}
+        getCreatures: function(){return creaturesLayer;}
     }
 })();
