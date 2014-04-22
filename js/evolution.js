@@ -56,7 +56,7 @@ evolution.core=(function(){
 
 
         //draw rocks
-        for (x=0;x<15;x++){
+        for (x=0;x<50;x++){
             var newRock = new evolution.Rock(game,game.world.randomX,game.world.randomY);
             rocks.add(newRock);
 

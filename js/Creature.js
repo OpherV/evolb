@@ -4,13 +4,16 @@ evolution.Creature= function (game,x,y) {
     this.dna=new Dna();
     this.dna.randomizeBaseTraits();
 
+    this.hitPoints= 20;
+    this.totalHitpoints = 20;
+    this._lastHitPoints = 20;
 
     Phaser.Sprite.call(this, game, x, y, 'creature');
     game.physics.p2.enable(this,false);
 
+    //physics
     this.body.fixedRotation = true;
     this.body.collideWorldBounds=true;
-//    this.body.setZeroDamping();
 
 
     this.body.onBeginContact.add(blockHit, this);
@@ -20,7 +23,8 @@ evolution.Creature= function (game,x,y) {
     }
 
 
-    this.floatSpeed=5;
+
+    this.floatSpeed=0.5;
 
     //set creature size
     this.scale.setTo(this.dna.baseTraits.sizeSpeed.getValue("size"),
@@ -32,7 +36,15 @@ evolution.Creature= function (game,x,y) {
     //has to be after setCircle otherwise the material is lost
     this.body.setMaterial(evolution.Materials.getCreatureMaterial());
 
-    //methods
+    //GUI
+    this.healthbar = new evolution.gui.Healthbar(game,this.width);
+    this.addChild(this.healthbar);
+    this.healthbar.x= (-this.width/2);
+    this.healthbar.y= (-this.height/2-30);
+    this.healthbar.redraw(this.hitPoints,this.totalHitpoints);
+
+
+    //Methods
 
     this.setIdle=function(){
         this.state="idle";
@@ -46,9 +58,9 @@ evolution.Creature= function (game,x,y) {
 
         var movementVector=new Phaser.Point(randomPoint.x-this.x,randomPoint.y-this.y);
         movementVector.normalize();
+        //this.body.velocity.x=this.body.velocity.x+(movementVector.x*this.floatSpeed);
+        //this.body.velocity.y=this.body.velocity.y+(movementVector.y*this.floatSpeed);
 
-//        this.body.velocity.x+=this.body.velocity.x+(movementVector.x*this.floatSpeed);
-        //       this.body.velocity.y+=this.body.velocity.y+(movementVector.y*this.floatSpeed);
 
 
         if (this.state=="idle"){
@@ -56,7 +68,7 @@ evolution.Creature= function (game,x,y) {
         }
     }
 
-    //this.setIdle();
+    this.setIdle();
 
 
 };
