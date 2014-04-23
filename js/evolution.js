@@ -11,7 +11,7 @@ evolution.core=(function(){
 
     var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var height =  Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    var gameBounds={width: width*2, height: height*2};
+    var gameBounds={width: width*4, height: height*4};
     var game=new Phaser.Game(width, height, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
     function preload() {

@@ -32,23 +32,22 @@ evolution.Creature= function (game,x,y) {
 
     //methods
 
-    this.enemyHitCheck=function(enemyBody){
-        if (this.isTouching(enemyBody)){
-            this.damage(10);
-            this.healthbar.redraw(this.health,this.maxHealth);
-            game.time.events.add(enemyBody.sprite.attackSpeed, function(){
-                this.enemyHitCheck(enemyBody);
-            }, this);
-        }
-    };
-
-
 
     this.init();
-    // behaviour
-    // *******************
-
 };
 
 evolution.Creature.prototype = Object.create(evolution.Character.prototype);
 evolution.Creature.prototype.constructor = evolution.Creature;
+
+// override functions
+// *******************
+
+evolution.Creature.prototype.init = function(){
+    evolution.Character.prototype.init.call(this);
+
+    //hunger
+    this.game.time.events.loop(900, function(){
+        this.damage(1);
+    }, this)
+
+};

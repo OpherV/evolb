@@ -6,7 +6,7 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.maxHealth=100;
     this.floatSpeed=10;
     this.moveSpeed=50;
-    this.idleVelocityRange=0.1; //below this range creatures start bobbing
+    this.idleVelocityRange=0; //below this range creatures start bobbing
 
     this.inContactWith=[]; //an array of bodies this is touching
 
@@ -59,7 +59,6 @@ evolution.Character.prototype.states= Object.freeze({
 
 // generic methods
 // ******************
-
 //Every class inheriting should call this on startup
 evolution.Character.prototype.init=function(){
     this.healthbar = new evolution.gui.Healthbar(this.game,this);
@@ -74,7 +73,6 @@ evolution.Character.prototype.isTouching=function(body){
 evolution.Character.prototype.enemyHitCheck=function(enemyBody){
     if (this.isTouching(enemyBody)){
         this.damage(10);
-        this.healthbar.redraw(this.health,this.maxHealth);
         this.game.time.events.add(enemyBody.sprite.attackSpeed, function(){
             this.enemyHitCheck(enemyBody);
         }, this);
@@ -104,6 +102,11 @@ evolution.Character.prototype.postKill=function(){
 // override default sprite functions
 // *******************
 
+evolution.Character.prototype.damage= function(amount) {
+    Phaser.Sprite.prototype.damage.call(this,amount);
+    this.healthbar.redraw();
+};
+
 evolution.Character.prototype.update = function() {
 
     if (this.state==this.states.FOLLOW_POINTER){
@@ -111,7 +114,7 @@ evolution.Character.prototype.update = function() {
             this.game.input.y+this.game.camera.y);
         evolution.core.moveToCoords(this, this.moveSpeed,moveToCoords.x, moveToCoords.y);
     }
-    if (this.state==this.states.DRIFTING && this.body.velocity.x<this.idleVelocityRange && this.body.velocity.y<this.idleVelocityRange){
+    if (this.state==this.states.DRIFTING && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
         this.state=this.states.IDLE;
         bob.call(this)
     }
@@ -131,7 +134,7 @@ function bob(){
 
 
     //only bob if not moving anywhere
-    if (this.state==this.states.IDLE && this.body.velocity.x<this.idleVelocityRange && this.body.velocity.y<this.idleVelocityRange){
+    if (this.state==this.states.IDLE && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
         this.game.time.events.add(this.game.rnd.realInRange(500,2000), bob, this);
     }
 }
