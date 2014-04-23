@@ -1,6 +1,7 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
     var displacementFilter;
+    var enemyLayer;
     var creaturesLayer;
     var rocks;
     var bg;
@@ -33,6 +34,7 @@ evolution.core=(function(){
 
         underwater=game.add.group();
         creaturesLayer=game.add.group();
+        enemyLayer=game.add.group();
         rocks=game.add.group();
         guiLayer=game.add.group();
 
@@ -46,9 +48,6 @@ evolution.core=(function(){
         bg.cameraOffset.x=0;
         bg.cameraOffset.y=0;
 
-        underwater.add(bg);
-        underwater.add(creaturesLayer);
-        underwater.add(guiLayer);
 
         var displacementTexture = PIXI.Texture.fromImage("assets/displacement_map.jpg");
         displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
@@ -80,7 +79,7 @@ evolution.core=(function(){
         //enemies
         for (x=0;x<3;x++){
             var enemy=new evolution.Enemy1(game,game.world.randomX,game.world.randomY);
-            underwater.add(enemy);
+            enemyLayer.add(enemy);
         }
 
         game.input.onDown.add(function(){
@@ -96,6 +95,13 @@ evolution.core=(function(){
         }, this);
 
 
+
+        //place layers in proper order
+        underwater.add(bg);
+        underwater.add(creaturesLayer);
+        underwater.add(enemyLayer);
+        underwater.add(rocks);
+        underwater.add(guiLayer);
     }
 
     var count=0;

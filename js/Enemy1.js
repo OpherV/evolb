@@ -7,6 +7,8 @@ evolution.Enemy1= function (game,x,y) {
 
     this.currentTarget=null;
     this.moveSpeed=50;
+    this.attackSpeed=500; //attack speed in millisecs
+    this.characterType="enemy";
 
 
     Phaser.Sprite.call(this, game, x, y, 'enemy1');
@@ -26,7 +28,7 @@ evolution.Enemy1= function (game,x,y) {
         var closestCreature=null;
         var closestDistance=null;
         var that=this;
-        creatures.forEach(function(creature){
+        creatures.forEachAlive(function(creature){
             //todo: is distance calculated via sprite center or top left?
             var distanceToCreature=Phaser.Point.distance(that,creature,true);
 

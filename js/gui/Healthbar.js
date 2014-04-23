@@ -9,7 +9,14 @@ evolution.gui.Healthbar= function (game,character) {
     this.redraw=function(hp,totalHp){
         this.clear();
         var x = (hp / totalHp) * 100;
-        var colour = rgbToHex((x > 50 ? 1-2*(x-50)/100.0 : 1.0) * 255, (x > 50 ? 1.0 : 2*x/100.0) * 255, 0);
+        var bgColor= rgbToHex(255,0,0);
+        this.beginFill(bgColor);
+        this.lineStyle(5, bgColor, 1);
+        this.moveTo(0,-5);
+        this.lineTo(this.barWidth, -5);
+        this.endFill();
+
+        var colour = rgbToHex(0,255,0);
 
         this.beginFill(colour);
         this.lineStyle(5, colour, 1);
