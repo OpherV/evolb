@@ -84,13 +84,13 @@ evolution.core=(function(){
 
         game.input.onDown.add(function(){
             creaturesLayer.forEach(function(creature){
-                creature.state="following";
+                creature.setFollowPointer();
             });
         }, this);
 
         game.input.onUp.add(function(){
             creaturesLayer.forEach(function(creature){
-                creature.setIdle();
+                creature.setDrifting();
             });
         }, this);
 

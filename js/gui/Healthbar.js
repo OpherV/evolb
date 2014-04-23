@@ -6,7 +6,10 @@ evolution.gui.Healthbar= function (game,character) {
     this.barWidth=character.width;
     Phaser.Graphics.call(this, game, 0, 0);
 
-    this.redraw=function(hp,totalHp){
+    this.redraw=function(){
+        var hp=this.character.health;
+        var totalHp=this.character.maxHealth;
+
         this.clear();
         var x = (hp / totalHp) * 100;
         var bgColor= rgbToHex(255,0,0);
