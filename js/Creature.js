@@ -1,6 +1,5 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.Creature= function (game,x,y) {
-
     this.dna=new Dna();
     this.dna.randomizeBaseTraits();
 
@@ -17,6 +16,11 @@ evolution.Creature= function (game,x,y) {
         if (body && body.sprite.key=="enemy1"){
             this.enemyHitCheck(body);
         }
+        if (body && body.sprite.key=="food"){
+            this.heal(body.sprite.healAmount);
+            body.sprite.destroy();
+        }
+
     }
 
 
@@ -46,8 +50,15 @@ evolution.Creature.prototype.init = function(){
     evolution.Character.prototype.init.call(this);
 
     //hunger
-    this.game.time.events.loop(900, function(){
+    this.hungerLoop=this.game.time.events.loop(500, function(){
         this.damage(1);
     }, this)
 
+};
+
+
+evolution.Creature.prototype.postKill = function(){
+    evolution.Character.prototype.postKill.call(this);
+    this.hungerLoop.loop=false;
+    //TODO kill timer properly
 };

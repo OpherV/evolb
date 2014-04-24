@@ -107,6 +107,11 @@ evolution.Character.prototype.damage= function(amount) {
     this.healthbar.redraw();
 };
 
+evolution.Character.prototype.heal= function(amount) {
+    this.health=Math.min(this.maxHealth,this.health+amount);
+    this.healthbar.redraw();
+};
+
 evolution.Character.prototype.update = function() {
 
     if (this.state==this.states.FOLLOW_POINTER){

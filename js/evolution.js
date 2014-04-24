@@ -1,8 +1,17 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
+    var NUM_OF_ENEMIES=20;
+    var NUM_OF_FOOD=25;
+    var NUM_OF_CREATURES=5;
+    var NUM_OF_ROCKS=120;
+
+    var CAMERA_SPEED=5;
+
+
     var displacementFilter;
     var enemyLayer;
     var creaturesLayer;
+    var powerupLayer;
     var rocks;
     var bg;
     var underwater;
@@ -20,6 +29,7 @@ evolution.core=(function(){
         game.load.script('abstracFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
         game.load.atlasJSONHash('enemy1', 'assets/enemy1_sprites.png', 'assets/enemy1.json');
+        game.load.atlasJSONHash('food', 'assets/food_sprites.png', 'assets/food.json');
 
     }
 
@@ -37,6 +47,7 @@ evolution.core=(function(){
         enemyLayer=game.add.group();
         rocks=game.add.group();
         guiLayer=game.add.group();
+        powerupLayer=game.add.group();
 
 
 
@@ -58,7 +69,7 @@ evolution.core=(function(){
 
 
         //draw rocks
-        for (x=0;x<50;x++){
+        for (x=0;x<NUM_OF_ROCKS;x++){
             var newRock = new evolution.Rock(game,game.world.randomX,game.world.randomY);
             rocks.add(newRock);
 
@@ -68,18 +79,26 @@ evolution.core=(function(){
 
 
         var centerSpawnPoint=new Phaser.Point(game.world.randomX, game.world.randomY);
-        for (var x=0;x<5;x++){
+        for (var x=0;x<NUM_OF_CREATURES;x++){
             var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-300,300),centerSpawnPoint.y+game.rnd.realInRange(-300,300));
             var newCreature=new evolution.Creature(game,spawnPoint.x,spawnPoint.y);
+            newCreature.id="id_"+x;
+
             creaturesLayer.add(newCreature);
             guiLayer.add(newCreature.healthbar);
 
         }
 
         //enemies
-        for (x=0;x<3;x++){
+        for (x=0;x<NUM_OF_ENEMIES;x++){
             var enemy=new evolution.Enemy1(game,game.world.randomX,game.world.randomY);
             enemyLayer.add(enemy);
+        }
+
+        //enemies
+        for (x=0;x<NUM_OF_FOOD;x++){
+            var newFood=new evolution.Food(game,game.world.randomX,game.world.randomY);
+            powerupLayer.add(newFood);
         }
 
         game.input.onDown.add(function(){
@@ -101,7 +120,11 @@ evolution.core=(function(){
         underwater.add(creaturesLayer);
         underwater.add(enemyLayer);
         underwater.add(rocks);
+        underwater.add(powerupLayer);
         underwater.add(guiLayer);
+
+        //focus camera
+        focusOnCreatures(true);
     }
 
     var count=0;
@@ -115,8 +138,9 @@ evolution.core=(function(){
     }
 
     function render(){
-        var creatureGroupCenter=_findCenterOfMass(creaturesLayer);
-        game.camera.focusOnXY(creatureGroupCenter.x,creatureGroupCenter.y);
+        if (creaturesLayer.countLiving()>0){
+            focusOnCreatures(false);
+        }
 
         //game.debug.cameraInfo(game.camera, 32, 32);
 
@@ -160,14 +184,35 @@ evolution.core=(function(){
         item.body.velocity.y += speed * Math.sin(angle);
     }
 
+    function focusOnCreatures(isInstant){
+        var creatureGroupCenter=_findCenterOfMass(creaturesLayer);
+
+        if (isInstant){
+            game.camera.focusOnXY(creatureGroupCenter.x,creatureGroupCenter.y);
+        }
+        else{
+            var movementVector=new Phaser.Point(creatureGroupCenter.x-(game.camera.x+width/2),
+                creatureGroupCenter.y-(game.camera.y+height/2));
+
+            //move in steps, if large distance
+            if (movementVector.getMagnitude()>=CAMERA_SPEED){
+                movementVector.setMagnitude(CAMERA_SPEED);
+            }
+
+            game.camera.x+=movementVector.x;
+            game.camera.y+=movementVector.y;
+        }
+
+    }
+
     function _findCenterOfMass(group){
         var totalX=0;
         var totalY=0;
-        group.forEach(function(item){
+        group.forEachAlive(function(item){
             totalX+=item.x;
             totalY+=item.y;
         });
-        return {x: totalX/group.length, y: totalY/group.length}
+        return {x: totalX/group.countLiving(), y: totalY/group.countLiving()}
     }
 
     return{
