@@ -237,7 +237,9 @@ evolution.Character.prototype.update = function() {
             this.game.input.y+this.game.camera.y);
         evolution.core.moveToCoords(this, this.moveSpeed,coords.x, coords.y);
     }
-    else if (this.state==this.states.DRIFTING && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
+
+
+    if (this.state==this.states.DRIFTING && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
         this.state=this.states.IDLE;
         bob.call(this)
     }
