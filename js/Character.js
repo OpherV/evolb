@@ -9,8 +9,8 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.maxSpeed=this.moveSpeed;
     this.idleVelocityRange=0; //below this range creatures start bobbing
 
-    this.hungerDelay=Phaser.Timer.SECOND*7; // amount of time until hunger starts kicking in
-    this.hungerTimeInterval=500;
+    this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
+    this.hungerTimeInterval=Phaser.Timer.SECOND;
 
     this.inContactWith=[]; //Bodies this is touching
     this.timeEvents = {};
@@ -127,9 +127,7 @@ evolution.Character.prototype.setWantsToBreed=function(){
 };
 
 evolution.Character.prototype.setHungry=function(){
-    this.timeEvents.hunger=this.game.time.events.loop(this.hungerTimeInterval, function(){
-        this.damage(1);
-    }, this)
+    this.timeEvents.hunger=this.game.time.events.loop(this.hungerTimeInterval, this.doHungerEvent, this)
 };
 
 evolution.Character.prototype.postKill=function(){
@@ -166,6 +164,10 @@ evolution.Character.prototype.findTarget= function() {
     }
 
     //TODO add hunting state
+};
+
+evolution.Character.prototype.doHungerEvent=function(){
+    this.damage(1);
 };
 
 

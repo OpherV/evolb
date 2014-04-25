@@ -78,6 +78,10 @@ evolution.Creature.prototype.spawn=function(){
 // override functions
 // *******************
 
+evolution.Character.prototype.doHungerEvent=function(){
+    this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"));
+};
+
 evolution.Creature.prototype.init = function(){
     evolution.Character.prototype.init.call(this);
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);

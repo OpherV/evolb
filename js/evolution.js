@@ -1,7 +1,7 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
-    var NUM_OF_ENEMIES=20;
-    var NUM_OF_FOOD=25;
+    var NUM_OF_ENEMIES=15;
+    var NUM_OF_FOOD=50;
     var NUM_OF_CREATURES=5;
     var NUM_OF_ROCKS=120;
 
