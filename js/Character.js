@@ -10,6 +10,8 @@ evolution.Character= function (game,x,y,spriteKey) {
 
     this.inContactWith=[]; //an array of bodies this is touching
 
+    this.isFollowingPointer=false;
+
     //construct sprite
     Phaser.Sprite.call(this, game, x, y, spriteKey);
 
@@ -53,7 +55,6 @@ evolution.Character.prototype.constructor = evolution.Character;
 evolution.Character.prototype.states= Object.freeze({
     IDLE: "idle",
     FOLLOWING: "following",
-    FOLLOW_POINTER: "follow pointer",
     DRIFTING: "drifting"
 });
 
@@ -83,9 +84,6 @@ evolution.Character.prototype.enemyHitCheck=function(enemyBody){
 // behaviour
 // *******************
 
-evolution.Character.prototype.setFollowPointer=function(){
-    this.state=this.states.FOLLOW_POINTER
-};
 
 evolution.Character.prototype.setIdle=function(){
     this.state=this.states.IDLE;
@@ -114,12 +112,12 @@ evolution.Character.prototype.heal= function(amount) {
 
 evolution.Character.prototype.update = function() {
 
-    if (this.state==this.states.FOLLOW_POINTER){
+    if (this.isFollowingPointer){
         var moveToCoords=new Phaser.Point(this.game.input.x+this.game.camera.x,
             this.game.input.y+this.game.camera.y);
         evolution.core.moveToCoords(this, this.moveSpeed,moveToCoords.x, moveToCoords.y);
     }
-    if (this.state==this.states.DRIFTING && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
+    else if (this.state==this.states.DRIFTING && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
         this.state=this.states.IDLE;
         bob.call(this)
     }
