@@ -1,6 +1,6 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
-    var NUM_OF_ENEMIES=15;
+    var NUM_OF_ENEMIES=5;
     var NUM_OF_FOOD=50;
     var NUM_OF_CREATURES=5;
     var NUM_OF_ROCKS=120;
@@ -26,6 +26,7 @@ evolution.core=(function(){
     function preload() {
         game.load.image('background', 'assets/background.png');
         game.load.image('creature', 'assets/creature.png');
+        game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
         game.load.script('abstracFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
         game.load.atlasJSONHash('enemy1', 'assets/enemy1_sprites.png', 'assets/enemy1.json');
@@ -85,7 +86,6 @@ evolution.core=(function(){
             newCreature.id="id_"+x;
 
             creaturesLayer.add(newCreature);
-            guiLayer.add(newCreature.healthbar);
 
         }
 
@@ -141,6 +141,11 @@ evolution.core=(function(){
         if (creaturesLayer.countLiving()>0){
             focusOnCreatures(false);
         }
+
+        //TODO: add this to charactersin generael
+        creaturesLayer.forEachAlive(function(creature){
+            creature.render();
+        });
 
         //game.debug.cameraInfo(game.camera, 32, 32);
 

@@ -10,6 +10,9 @@ evolution.Creature= function (game,x,y,dna) {
         this.dna.randomizeBaseTraits();
     }
 
+    //attach creature to dna
+    this.dna.creature=this;
+
     //construct chracter
     evolution.Character.call(this, game, x, y, 'creature');
 
@@ -25,14 +28,27 @@ evolution.Creature= function (game,x,y,dna) {
         var pendingDestruction=false;
 
         if (body.sprite.key=="enemy1"){
-            this.enemyHitCheck(body);
+            this.hitCheck(body,body.sprite.attackSpeed,function(){
+                this.stopBreeding();
+                this.damage(10,true);
+            });
         }
         if (body.sprite.key=="food"){
             this.heal(body.sprite.healAmount);
             pendingDestruction=true;
         }
 
-       if (body.sprite.key=="creature" && this.state==this.states.WANTS_TO_BREED){
+        //creature is a cannibal!
+        if (body.sprite.key=="creature" && this.dna.traits.cannibalism
+            && this.health/this.maxHealth<=0.25
+            ){
+            this.hitCheck(body,this.attackSpeed,function(){
+                body.sprite.damage(20,true);
+                this.heal(10);
+            });
+
+        }
+        else if (body.sprite.key=="creature" && this.state==this.states.WANTS_TO_BREED){
             this.startBreedingWith(body.sprite);
         }
 
@@ -70,7 +86,6 @@ evolution.Creature.prototype.spawn=function(){
     var newCreature = new evolution.Creature(this.game,this.x,this.y,spawnDna);
     evolution.core.getCreatures().add(newCreature);
     newCreature.init();
-    evolution.core.getGuiLayer().add(newCreature.healthbar);
     //TODO: recycle creature?
 };
 
@@ -84,7 +99,9 @@ evolution.Character.prototype.doHungerEvent=function(){
 
 evolution.Creature.prototype.init = function(){
     evolution.Character.prototype.init.call(this);
+    this.dna.activate();
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);
+
 };
 
 

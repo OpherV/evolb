@@ -65,3 +65,7 @@ evolution.TraitInstance.baseTraits={
     }
 };
 
+//this list contains all the the available traits
+evolution.TraitInstance.traitList=[
+    evolution.Traits.Cannibalism
+];

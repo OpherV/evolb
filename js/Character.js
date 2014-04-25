@@ -8,6 +8,7 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.moveSpeed=50;
     this.maxSpeed=this.moveSpeed;
     this.idleVelocityRange=0; //below this range creatures start bobbing
+    this.attackSpeed=500; //attack speed in millisecs
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND;
@@ -19,6 +20,9 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.currentBreedingWith=null;
 
     this.isFollowingPointer=false;
+
+    this.gui=game.add.group();
+
 
     //construct sprite
     Phaser.Sprite.call(this, game, x, y, spriteKey);
@@ -73,8 +77,14 @@ evolution.Character.prototype.states= Object.freeze({
 //Every class inheriting should call this on startup
 evolution.Character.prototype.init=function(){
     this.healthbar = new evolution.gui.Healthbar(this.game,this);
+    this.healthbar.x=-this.width/2;
+    this.healthbar.y=-this.height/2-5;
+    this.gui.addChild(this.healthbar);
     this.healthbar.redraw();
     this.setDrifting();
+
+    //add gui to gui layer
+    evolution.core.getGuiLayer().add(this.gui);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
 };
@@ -89,12 +99,11 @@ evolution.Character.prototype.isTouching=function(body){
     return (this.inContactWith.indexOf(body)>-1);
 };
 
-evolution.Character.prototype.enemyHitCheck=function(enemyBody){
-    if (this.isTouching(enemyBody)){
-        this.stopBreeding();
-        this.damage(10,true);
-        this.game.time.events.add(enemyBody.sprite.attackSpeed, function(){
-            this.enemyHitCheck(enemyBody);
+evolution.Character.prototype.hitCheck=function(body,checkInterval,callback){
+    if (this.isTouching(body)){
+        callback.call(this);
+        this.game.time.events.add(checkInterval, function(){
+            this.hitCheck(body,checkInterval,callback);
         }, this);
     }
 };
@@ -132,7 +141,7 @@ evolution.Character.prototype.setHungry=function(){
 };
 
 evolution.Character.prototype.postKill=function(){
-    this.healthbar.visible=false;
+    this.gui.visible=false;
 
     for (var timerName in this.timeEvents){
         this.timeEvents[timerName].timer.remove(this.timeEvents[timerName]);
@@ -181,9 +190,11 @@ evolution.Character.prototype.startBreedingWith=function(target){
 
     this.state=this.states.BREEDING;
     this.currentBreedingWith.state=this.states.BREEDING;
+    this.healthbar.redraw();
 
     this.game.time.events.add(2000,function(){
-        if (this.currentBreedingWith){
+        //make sure both parents are alive
+        if (this.alive && this.currentBreedingWith && this.currentBreedingWith.alive){
             this.spawn();
         }
         this.stopBreeding();
@@ -212,6 +223,13 @@ evolution.Character.prototype.spawn=function(){
 
 // override default sprite functions
 // *******************
+
+evolution.Character.prototype.render=function(){
+    this.gui.x=this.x;
+    this.gui.y=this.y;
+};
+
+
 
 evolution.Character.prototype.damage= function(amount,showDamage) {
     Phaser.Sprite.prototype.damage.call(this,amount);
@@ -248,6 +266,10 @@ evolution.Character.prototype.update = function() {
     }
     else if(this.state==this.states.BREEDING){
         this.tint=0X455FF5;
+    }
+
+    for (var traitName in this.dna.traits){
+        this.dna.traits[traitName].parentTrait.onUpdate(this);
     }
 
 };

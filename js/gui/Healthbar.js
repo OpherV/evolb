@@ -41,10 +41,3 @@ evolution.gui.Healthbar= function (game,character) {
 
 evolution.gui.Healthbar.prototype = Object.create(Phaser.Graphics.prototype);
 evolution.gui.Healthbar.prototype.constructor = evolution.gui.Healthbar;
-
-
-evolution.gui.Healthbar.prototype.postUpdate = function() {
-
-    this.x=this.character.x-this.character.width/2;
-    this.y=this.character.y-this.character.height/2-5;
-};
