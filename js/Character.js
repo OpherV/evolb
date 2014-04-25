@@ -79,9 +79,10 @@ evolution.Character.prototype.init=function(){
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
 };
 
-evolution.Character.prototype.flashTint=function(color){
+evolution.Character.prototype.flashTint=function(color,duration){
+    if (!duration){ var duration=100;}
     this.tint=color;
-    this.game.time.events.add(100,function(){ this.tint=0XFFFFFF},this);
+    this.game.time.events.add(duration,function(){ this.tint=0XFFFFFF},this);
 };
 
 evolution.Character.prototype.isTouching=function(body){
@@ -90,8 +91,8 @@ evolution.Character.prototype.isTouching=function(body){
 
 evolution.Character.prototype.enemyHitCheck=function(enemyBody){
     if (this.isTouching(enemyBody)){
-        this.damage(10,true);
         this.stopBreeding();
+        this.damage(10,true);
         this.game.time.events.add(enemyBody.sprite.attackSpeed, function(){
             this.enemyHitCheck(enemyBody);
         }, this);
@@ -222,7 +223,7 @@ evolution.Character.prototype.damage= function(amount,showDamage) {
 
 evolution.Character.prototype.heal= function(amount) {
     this.health=Math.min(this.maxHealth,this.health+amount);
-    this.flashTint(0XBBFF54);
+    this.flashTint(0XBBFF54,300);
     if (this.health==this.maxHealth){
         this.setWantsToBreed();
     }
