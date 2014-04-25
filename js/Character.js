@@ -14,6 +14,9 @@ evolution.Character= function (game,x,y,spriteKey) {
 
     this.inContactWith=[]; //Bodies this is touching
     this.timeEvents = {};
+    this.currentConstraint=null;
+    this.currentTarget=null;
+    this.currentBreedingWith=null;
 
     this.isFollowingPointer=false;
 
@@ -76,13 +79,19 @@ evolution.Character.prototype.init=function(){
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
 };
 
+evolution.Character.prototype.flashTint=function(color){
+    this.tint=color;
+    this.game.time.events.add(100,function(){ this.tint=0XFFFFFF},this);
+};
+
 evolution.Character.prototype.isTouching=function(body){
     return (this.inContactWith.indexOf(body)>-1);
 };
 
 evolution.Character.prototype.enemyHitCheck=function(enemyBody){
     if (this.isTouching(enemyBody)){
-        this.damage(10);
+        this.damage(10,true);
+        this.stopBreeding();
         this.game.time.events.add(enemyBody.sprite.attackSpeed, function(){
             this.enemyHitCheck(enemyBody);
         }, this);
@@ -106,8 +115,10 @@ evolution.Character.prototype.setWantsToBreed=function(){
     this.state=this.states.WANTS_TO_BREED;
 
     //remove the hunger loop timer
-    this.timeEvents.hunger.timer.remove(this.timeEvents.hunger.timer);
-    delete this.timeEvents.hunger;
+    if (this.timeEvents.hunger){
+        this.timeEvents.hunger.timer.remove(this.timeEvents.hunger.timer);
+        delete this.timeEvents.hunger;
+    }
 
     this.game.time.events.add(this.hungerDelay, function(){
         this.setDrifting();
@@ -157,16 +168,40 @@ evolution.Character.prototype.findTarget= function() {
     //TODO add hunting state
 };
 
+
+evolution.Character.prototype.startBreedingWith=function(target){
+    this.currentBreedingWith=target;
+    this.currentConstraint = this.game.physics.p2.createDistanceConstraint(this, target, this.width/2+target.width/2);
+
+    target.currentBreedingWith=target;
+    target.currentConstraint=this.currentConstraint;
+
+};
+
+evolution.Character.prototype.stopBreeding=function(){
+    if (this.currentBreedingWith){
+        this.currentBreedingWith.currentBreedingWith=null;
+        this.currentBreedingWith=null;
+    }
+    if(this.currentConstraint){
+        this.game.physics.p2.world.removeConstraint(this.currentConstraint);
+    }
+};
+
 // override default sprite functions
 // *******************
 
-evolution.Character.prototype.damage= function(amount) {
+evolution.Character.prototype.damage= function(amount,showDamage) {
     Phaser.Sprite.prototype.damage.call(this,amount);
+    if (showDamage){
+        this.flashTint(0XFF5460);
+    }
     this.healthbar.redraw();
 };
 
 evolution.Character.prototype.heal= function(amount) {
     this.health=Math.min(this.maxHealth,this.health+amount);
+    this.flashTint(0XBBFF54);
     if (this.health==this.maxHealth){
         this.setWantsToBreed();
     }

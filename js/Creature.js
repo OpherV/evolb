@@ -13,11 +13,23 @@ evolution.Creature= function (game,x,y) {
 
 
     function beginContactHandler(body, shapeA, shapeB, equation) {
-        if (body && body.sprite.key=="enemy1"){
+        if (!(body && body.sprite && body.sprite!=null)){ return; }
+
+        var pendingDestruction=false;
+
+        if (body.sprite.key=="enemy1"){
             this.enemyHitCheck(body);
         }
-        if (body && body.sprite.key=="food"){
+        if (body.sprite.key=="food"){
             this.heal(body.sprite.healAmount);
+            pendingDestruction=true;
+        }
+
+       if (body.sprite.key=="creature" && this.state==this.states.WANTS_TO_BREED){
+            this.startBreedingWith(body.sprite);
+        }
+
+        if (pendingDestruction){
             body.sprite.destroy();
         }
 
