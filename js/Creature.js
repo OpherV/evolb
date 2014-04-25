@@ -1,7 +1,14 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Creature= function (game,x,y) {
-    this.dna=new Dna();
-    this.dna.randomizeBaseTraits();
+evolution.Creature= function (game,x,y,dna) {
+    if (dna){
+        //use given DNA
+        this.dna=dna;
+    }
+    else{
+        //create a new DNA
+        this.dna=new evolution.Dna();
+        this.dna.randomizeBaseTraits();
+    }
 
     //construct chracter
     evolution.Character.call(this, game, x, y, 'creature');
@@ -54,6 +61,19 @@ evolution.Creature= function (game,x,y) {
 
 evolution.Creature.prototype = Object.create(evolution.Character.prototype);
 evolution.Creature.prototype.constructor = evolution.Creature;
+
+// behaviours
+// ***************
+
+evolution.Creature.prototype.spawn=function(){
+    var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna);
+    var newCreature = new evolution.Creature(this.game,this.x,this.y,spawnDna);
+    evolution.core.getCreatures().add(newCreature);
+    newCreature.init();
+    evolution.core.getGuiLayer().add(newCreature.healthbar);
+    //TODO: recycle creature?
+};
+
 
 // override functions
 // *******************

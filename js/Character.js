@@ -176,16 +176,35 @@ evolution.Character.prototype.startBreedingWith=function(target){
     target.currentBreedingWith=target;
     target.currentConstraint=this.currentConstraint;
 
+    this.state=this.states.BREEDING;
+    this.currentBreedingWith.state=this.states.BREEDING;
+
+    this.game.time.events.add(2000,function(){
+        if (this.currentBreedingWith){
+            this.spawn();
+        }
+        this.stopBreeding();
+    },this);
+
 };
 
 evolution.Character.prototype.stopBreeding=function(){
     if (this.currentBreedingWith){
+        this.currentBreedingWith.tint=0XFFFFFF;
+        this.currentBreedingWith.state=this.states.DRIFTING;
         this.currentBreedingWith.currentBreedingWith=null;
         this.currentBreedingWith=null;
     }
     if(this.currentConstraint){
         this.game.physics.p2.world.removeConstraint(this.currentConstraint);
     }
+    this.state=this.states.DRIFTING;
+    this.tint=0XFFFFFF;
+};
+
+
+//spawns a new creature from this one
+evolution.Character.prototype.spawn=function(){
 };
 
 // override default sprite functions
@@ -221,6 +240,9 @@ evolution.Character.prototype.update = function() {
     }
     else if(this.state==this.states.WANTS_TO_BREED && this.currentTarget){
         this.moveToSprite(this.currentTarget,this.floatSpeed);
+    }
+    else if(this.state==this.states.BREEDING){
+        this.tint=0X455FF5;
     }
 
 };

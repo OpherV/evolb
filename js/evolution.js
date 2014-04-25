@@ -218,6 +218,7 @@ evolution.core=(function(){
     return{
         game: game,
         moveToCoords: _moveToCoords,
-        getCreatures: function(){return creaturesLayer;}
+        getCreatures: function(){return creaturesLayer;},
+        getGuiLayer: function(){return guiLayer;}
     }
 })();
