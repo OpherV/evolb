@@ -48,17 +48,10 @@ evolution.Creature.prototype.constructor = evolution.Creature;
 
 evolution.Creature.prototype.init = function(){
     evolution.Character.prototype.init.call(this);
-
-    //hunger
-    this.hungerLoop=this.game.time.events.loop(500, function(){
-        this.damage(1);
-    }, this)
-
+    this.game.time.events.add(this.hungerDelay,this.setHungry,this);
 };
 
 
 evolution.Creature.prototype.postKill = function(){
     evolution.Character.prototype.postKill.call(this);
-    this.hungerLoop.loop=false;
-    //TODO kill timer properly
 };
