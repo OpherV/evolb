@@ -16,7 +16,7 @@ evolution.Traits.Cannibalism={
         cannibalStars.starTween = character.game.add.tween(cannibalStars)
             .to( { angle: 360 }, 3000, Phaser.Easing.Linear.None).loop().start();
 
-        cannibalStars.alpha=0.4;
+        cannibalStars.alpha=0.55;
 
         character.gui.cannibalStars=cannibalStars;
         character.gui.addChild(cannibalStars);

@@ -16,7 +16,6 @@ evolution.Creature= function (game,x,y,dna) {
     //construct chracter
     evolution.Character.call(this, game, x, y, 'creature');
 
-
     //events
     //*************************
     this.body.onBeginContact.add(beginContactHandler, this);
@@ -24,38 +23,9 @@ evolution.Creature= function (game,x,y,dna) {
 
     function beginContactHandler(body, shapeA, shapeB, equation) {
         if (!(body && body.sprite && body.sprite!=null)){ return; }
-
-        var pendingDestruction=false;
-
-        if (body.sprite.key=="enemy1"){
-            this.hitCheck(body,body.sprite.attackSpeed,function(){
-                this.stopBreeding();
-                this.damage(10,true);
-            });
+        if (this.contactHandler[body.sprite.key]){
+            this.contactHandler[body.sprite.key].call(this,body);
         }
-        if (body.sprite.key=="food"){
-            this.heal(body.sprite.healAmount);
-            pendingDestruction=true;
-        }
-
-        //creature is a cannibal!
-        if (body.sprite.key=="creature" && this.dna.traits.cannibalism
-            && this.health/this.maxHealth<=0.25
-            ){
-            this.hitCheck(body,this.attackSpeed,function(){
-                body.sprite.damage(20,true);
-                this.heal(10);
-            });
-
-        }
-        else if (body.sprite.key=="creature" && this.state==this.states.WANTS_TO_BREED){
-            this.startBreedingWith(body.sprite);
-        }
-
-        if (pendingDestruction){
-            body.sprite.destroy();
-        }
-
     }
 
 
@@ -93,7 +63,29 @@ evolution.Creature.prototype.spawn=function(){
 // override functions
 // *******************
 
-evolution.Character.prototype.doHungerEvent=function(){
+evolution.Creature.prototype.contactHandler={
+    "enemy1": function(body){
+        this.stopBreeding();
+        this.damage(10,true);
+    },
+    "food": function(body){
+        this.heal(body.sprite.healAmount);
+        body.sprite.destroy();
+    },
+    "creature": function(body){
+        //creature is a cannibal!
+        if (this.dna.traits.cannibalism && this.health/this.maxHealth<=this.dna.traits.cannibalism.getValue("feedPercent")){
+                //TODO: set this as a percentage of the trait
+                body.sprite.damage(20,true);
+                this.heal(18);
+        }
+        else if (this.state==this.states.WANTS_TO_BREED){
+            this.startBreedingWith(body.sprite);
+        }
+    }
+};
+
+evolution.Creature.prototype.doHungerEvent=function(){
     this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"));
 };
 

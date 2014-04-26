@@ -8,12 +8,13 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.moveSpeed=50;
     this.maxSpeed=this.moveSpeed;
     this.idleVelocityRange=0; //below this range creatures start bobbing
-    this.attackSpeed=500; //attack speed in millisecs
+    this.attackSpeed=200; //attack speed in millisecs
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND;
 
     this.inContactWith=[]; //Bodies this is touching
+
     this.timeEvents = {};
     this.currentConstraint=null;
     this.currentTarget=null;
@@ -87,6 +88,7 @@ evolution.Character.prototype.init=function(){
     evolution.core.getGuiLayer().add(this.gui);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
+    this.timeEvents.hitTest=this.game.time.events.loop(this.attackSpeed, this.hitCycle, this);
 };
 
 evolution.Character.prototype.flashTint=function(color,duration){
@@ -94,6 +96,21 @@ evolution.Character.prototype.flashTint=function(color,duration){
     this.tint=color;
     this.game.time.events.add(duration,function(){ this.tint=0XFFFFFF},this);
 };
+
+
+//test against all touching bodies
+evolution.Character.prototype.hitCycle=function(){
+    var body;
+    for (var x=0;x<this.inContactWith.length;x++){
+        body=this.inContactWith[x];
+        //call the proper contact handler function
+        if (body.sprite && Object.getPrototypeOf(this).contactHandler[body.sprite.key]){
+            Object.getPrototypeOf(this).contactHandler[body.sprite.key].call(this,body);
+        }
+    }
+};
+
+
 
 evolution.Character.prototype.isTouching=function(body){
     return (this.inContactWith.indexOf(body)>-1);
@@ -145,6 +162,7 @@ evolution.Character.prototype.postKill=function(){
 
     for (var timerName in this.timeEvents){
         this.timeEvents[timerName].timer.remove(this.timeEvents[timerName]);
+        delete this.timeEvents[timerName];
     }
 
 };
