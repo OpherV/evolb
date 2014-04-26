@@ -79,7 +79,7 @@ evolution.Creature.prototype.contactHandler={
                 body.sprite.damage(20,true);
                 this.heal(18);
         }
-        else if (this.state==this.states.WANTS_TO_BREED){
+        else if (this.state==this.states.WANTS_TO_BREED && body.sprite.state!=this.states.BREEDING){
             this.startBreedingWith(body.sprite);
         }
     }
