@@ -8,7 +8,7 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.moveSpeed=50;
     this.maxSpeed=this.moveSpeed;
     this.idleVelocityRange=0; //below this range creatures start bobbing
-    this.attackSpeed=200; //attack speed in millisecs
+    this.attackSpeed=500; //attack speed in millisecs
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND;
@@ -21,6 +21,11 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.currentBreedingWith=null;
 
     this.isFollowingPointer=false;
+
+
+    //enemey related
+    this.aggroTriggerDistance=400; //distance for aggro to trigger
+    this.maxAggroDistance=700; //beyond this distance enemies disengage
 
     this.gui=game.add.group();
 
@@ -70,7 +75,8 @@ evolution.Character.states= Object.freeze({
     FOLLOWING: "following",
     DRIFTING: "drifting",
     WANTS_TO_BREED: "wants_to_breed",
-    BREEDING: "breeding"
+    BREEDING: "breeding",
+    HUNTING: "hunting"
 });
 
 // generic methods
@@ -97,6 +103,8 @@ evolution.Character.prototype.flashTint=function(color,duration){
     this.game.time.events.add(duration,function(){ this.tint=0XFFFFFF},this);
 };
 
+//inheriting classes will override this to implement contact event handlers
+evolution.Character.prototype.contactHandler={};
 
 //test against all touching bodies
 evolution.Character.prototype.hitCycle=function(){
@@ -137,6 +145,11 @@ evolution.Character.prototype.setIdle=function(){
 evolution.Character.prototype.setDrifting=function(){
     this.state=evolution.Character.states.DRIFTING;
 };
+
+evolution.Character.prototype.setHunting=function(){
+    this.state=evolution.Character.states.HUNTING;
+};
+
 
 evolution.Character.prototype.setWantsToBreed=function(){
     this.state=evolution.Character.states.WANTS_TO_BREED;
@@ -190,8 +203,13 @@ evolution.Character.prototype.findTarget= function() {
             this.currentTarget=possibleClosestTarget;
         }
     }
+    else if(this.state==evolution.Character.states.HUNTING){
+        var possibleClosestTarget=this.getClosestCreature(this.aggroTriggerDistance);
+        if (possibleClosestTarget){
+            this.currentTarget=possibleClosestTarget;
+        }
+    }
 
-    //TODO add hunting state
 };
 
 evolution.Character.prototype.doHungerEvent=function(){
@@ -250,6 +268,8 @@ evolution.Character.prototype.render=function(){
 
 
 evolution.Character.prototype.damage= function(amount,showDamage) {
+    this.stopBreeding(); //stop breed when taking damage
+
     Phaser.Sprite.prototype.damage.call(this,amount);
     if (showDamage){
         this.flashTint(0XFF5460);
@@ -282,12 +302,17 @@ evolution.Character.prototype.update = function() {
     else if(this.state==evolution.Character.states.WANTS_TO_BREED && this.currentTarget){
         this.moveToSprite(this.currentTarget,this.floatSpeed);
     }
+    else if(this.state==evolution.Character.states.HUNTING && this.currentTarget){
+        this.moveToSprite(this.currentTarget,this.moveSpeed);
+    }
     else if(this.state==evolution.Character.states.BREEDING){
         this.tint=0X455FF5;
     }
 
-    for (var traitName in this.dna.traits){
-        this.dna.traits[traitName].parentTrait.onUpdate(this);
+    if (this.dna){
+        for (var traitName in this.dna.traits){
+            this.dna.traits[traitName].parentTrait.onUpdate(this);
+        }
     }
 
 };
@@ -312,7 +337,7 @@ function bob(){
     }
 }
 
-evolution.Character.prototype.getClosestCreature=function(minimalDistance){
+evolution.Character.prototype.getClosestCreature=function(maximalDistance){
     var creatures=evolution.core.getCreatures();
     var closestCreature=null;
     var closestDistance=null;
@@ -320,7 +345,7 @@ evolution.Character.prototype.getClosestCreature=function(minimalDistance){
     creatures.forEachAlive(function(creature){
         var distanceToCreature=Phaser.Point.distance(that,creature,true);
 
-        if (creature!=that && distanceToCreature<minimalDistance && (closestCreature==null || distanceToCreature<closestDistance)){
+        if (creature!=that && distanceToCreature<maximalDistance && (closestCreature==null || distanceToCreature<closestDistance)){
             closestCreature=creature;
             closestDistance=distanceToCreature;
         }

@@ -64,10 +64,6 @@ evolution.Creature.prototype.spawn=function(){
 // *******************
 
 evolution.Creature.prototype.contactHandler={
-    "enemy1": function(body){
-        this.stopBreeding();
-        this.damage(10,true);
-    },
     "food": function(body){
         this.heal(body.sprite.healAmount);
         body.sprite.destroy();
