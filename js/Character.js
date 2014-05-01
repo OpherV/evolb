@@ -9,6 +9,7 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.maxSpeed=this.moveSpeed;
     this.idleVelocityRange=0; //below this range creatures start bobbing
     this.attackSpeed=500; //attack speed in millisecs
+    this.damageOutput=0;
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND;
@@ -84,8 +85,8 @@ evolution.Character.states= Object.freeze({
 //Every class inheriting should call this on startup
 evolution.Character.prototype.init=function(){
     this.healthbar = new evolution.gui.Healthbar(this.game,this);
-    this.healthbar.x=-this.width/2;
-    this.healthbar.y=-this.height/2-5;
+    this.healthbar.x=-this.width/3.6;
+    this.healthbar.y=-this.height/3;
     this.gui.addChild(this.healthbar);
     this.healthbar.redraw();
     this.setDrifting();
@@ -207,6 +208,11 @@ evolution.Character.prototype.findTarget= function() {
         var possibleClosestTarget=this.getClosestCreature(this.aggroTriggerDistance);
         if (possibleClosestTarget){
             this.currentTarget=possibleClosestTarget;
+
+            //out of aggro range
+            if (Phaser.Point.distance(this,possibleClosestTarget)>this.maxAggroDistance){
+                this.currentTarget=null;
+            }
         }
     }
 
@@ -219,7 +225,8 @@ evolution.Character.prototype.doHungerEvent=function(){
 
 evolution.Character.prototype.startBreedingWith=function(target){
     this.currentBreedingWith=target;
-    this.currentConstraint = this.game.physics.p2.createDistanceConstraint(this, target, this.width/2+target.width/2);
+    //TODO: figure out how to calculate this from body. currently only applies to creature sprite
+    this.currentConstraint = this.game.physics.p2.createDistanceConstraint(this, target, this.width/3.5+target.width/3.5);
 
     target.currentBreedingWith=target;
     target.currentConstraint=this.currentConstraint;
@@ -268,8 +275,6 @@ evolution.Character.prototype.render=function(){
 
 
 evolution.Character.prototype.damage= function(amount,showDamage) {
-    this.stopBreeding(); //stop breed when taking damage
-
     Phaser.Sprite.prototype.damage.call(this,amount);
     if (showDamage){
         this.flashTint(0XFF5460);

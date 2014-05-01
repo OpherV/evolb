@@ -1,7 +1,7 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.Dna=function(){
     this.willMutate=false;
-    this.creature=null;
+    this.character=null;
 
     this.baseTraits={
         sizeSpeed: new evolution.TraitInstance(evolution.TraitInstance.baseTraits.sizeSpeed)
@@ -21,23 +21,39 @@ evolution.Dna.prototype.randomizeBaseTraits=function(){
 };
 
 
-//activates the set of traits on a creature
+//activates the set of traits on a character
 evolution.Dna.prototype.activate=function(){
     for (traitName in this.traits){
-        this.traits[traitName].parentTrait.onAdded(this.creature);
+        var trait=this.traits[traitName];
+
+        //add trait sprite
+        if (trait.parentTrait.sprites && trait.parentTrait.sprites.length>0){
+            //TODO: implement recycling
+            var traitSpriteIndex=Math.floor(trait.value*(trait.parentTrait.sprites.length-0.01));
+            trait.traitSprite=new Phaser.Sprite(this.character.game,
+                                                0,
+                                                0,
+                                                trait.parentTrait.sprites[traitSpriteIndex]);
+            trait.traitSprite.x=-trait.traitSprite.width/2;
+            trait.traitSprite.y=-trait.traitSprite.height/1.53;
+            this.character.addChild(trait.traitSprite);
+        }
+
+        trait.parentTrait.onAdded(this.character,trait);
     }
 };
 
-evolution.Dna.prototype.addTrait=function(trait){
-    this.traits[trait.name]=trait;
-    trait.parentTrait.onAdded(this.creature);
+//deactivates the set of traits on a character
+evolution.Dna.prototype.deactivate=function(){
+    for (traitName in this.traits){
+        var trait=this.traits[traitName];
+        trait.parentTrait.onRemoved(this.character);
+        if(trait.traitSprite){
+            trait.traitSprite.destroy();
+        }
+    }
 };
 
-
-evolution.Dna.prototype.removeTrait=function(trait){
-    trait.parentTrait.onRemoved(this.creature);
-    this.traits[trait.name]=null;
-};
 
 //static functions
 //*****************
@@ -45,6 +61,9 @@ evolution.Dna.prototype.removeTrait=function(trait){
 
 //combines parent dna to form child dna
 evolution.Dna.combine=function(dna1,dna2){
+    var chanceOfMutation=0.3;
+    var chanceRemoveTrait=0.15;
+
     var newDna = new evolution.Dna();
     for(var traitName in dna1.baseTraits){
         var takeFromFirst=Math.random()<.5; //random boolean;
@@ -78,10 +97,19 @@ evolution.Dna.combine=function(dna1,dna2){
 
 
     //TODO proper mutation of traits
-    if (Math.random()<=0.15){
-        var newTrait=new evolution.TraitInstance(evolution.Traits.Cannibalism);
-        newTrait.randomize();
-        newDna.traits[newTrait.parentTrait.name]=newTrait;
+    if (Math.random()<=chanceOfMutation){
+        var removeTrait=Math.random()<=chanceRemoveTrait;
+        if (removeTrait){
+            var traitIndex=evolution.core.game.rnd.integerInRange(0,newDna.traits.length-1);
+            delete newDna.traits[traitIndex];
+        }
+        else{
+            //add trait
+            var newTraitIndex=evolution.core.game.rnd.integerInRange(0,evolution.TraitInstance.traitList.length-1);
+            var newTrait=new evolution.TraitInstance(evolution.TraitInstance.traitList[newTraitIndex]);
+            newTrait.randomize();
+            newDna.traits[newTrait.parentTrait.name]=newTrait;
+        }
     }
 
     return newDna;

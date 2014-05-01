@@ -11,7 +11,7 @@ evolution.Creature= function (game,x,y,dna) {
     }
 
     //attach creature to dna
-    this.dna.creature=this;
+    this.dna.character=this;
 
     //construct chracter
     evolution.Character.call(this, game, x, y, 'creature');
@@ -32,7 +32,8 @@ evolution.Creature= function (game,x,y,dna) {
     //set creature size
     this.scale.setTo(this.dna.baseTraits.sizeSpeed.getValue("size"),
         this.dna.baseTraits.sizeSpeed.getValue("size"));
-    this.body.setCircle(this.width/2);
+    this.body.setCircle(this.width/3.5);
+    this.anchor.setTo(0.5,0.65);
 
     this.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
 
@@ -77,6 +78,12 @@ evolution.Creature.prototype.contactHandler={
         }
         else if (this.state==evolution.Character.states.WANTS_TO_BREED && body.sprite.state!=evolution.Character.states.BREEDING){
             this.startBreedingWith(body.sprite);
+        }
+    },
+    "enemy1": function(body){
+        //creature is a cannibal!
+        if (this.damageOutput>0){
+            body.sprite.damage(this.damageOutput,true);
         }
     }
 };

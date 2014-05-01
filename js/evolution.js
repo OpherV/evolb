@@ -25,13 +25,25 @@ evolution.core=(function(){
 
     function preload() {
         game.load.image('background', 'assets/background.png');
-        game.load.image('creature', 'assets/creature.png');
+        game.load.image('creature', 'assets/sprites/blob.png');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
-        game.load.script('abstracFilter', 'js/filters/AbstractFilter.js');
+        game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
         game.load.atlasJSONHash('enemy1', 'assets/enemy1_sprites.png', 'assets/enemy1.json');
         game.load.atlasJSONHash('food', 'assets/food_sprites.png', 'assets/food.json');
 
+
+        game.load.image('cannibal_1', 'assets/sprites/1cannibal.png');
+        game.load.image('cannibal_2', 'assets/sprites/2cannibal.png');
+        game.load.image('cannibal_3', 'assets/sprites/3cannibal.png');
+
+        game.load.image('armor_1', 'assets/sprites/1shield.png');
+        game.load.image('armor_2', 'assets/sprites/2shield.png');
+        game.load.image('armor_3', 'assets/sprites/3shield.png');
+
+        game.load.image('spike_1', 'assets/sprites/1spike.png');
+        game.load.image('spike_2', 'assets/sprites/2spike.png');
+        game.load.image('spike_3', 'assets/sprites/6spike.png');
     }
 
     function create() {

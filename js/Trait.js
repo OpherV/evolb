@@ -2,6 +2,7 @@ evolution=(window.evolution?window.evolution:{});
 evolution.TraitInstance=function(parentTrait){
     this.parentTrait=parentTrait;
     this.value=0.5;
+    this.traitSprite=null; //sprite to represent the trait
 };
 
 evolution.TraitInstance.parameters={
@@ -53,8 +54,8 @@ evolution.TraitInstance.baseTraits={
             reverse: true
         },
         size:{
-            lowLimit: 0.15,
-            highLimit: 0.7
+            lowLimit: 0.3,
+            highLimit: 0.85
         },
         hungerDamage:{
             lowLimit: 1,
@@ -67,5 +68,7 @@ evolution.TraitInstance.baseTraits={
 
 //this list contains all the the available traits
 evolution.TraitInstance.traitList=[
-    evolution.Traits.Cannibalism
+    evolution.Traits.Cannibalism,
+    evolution.Traits.Armor,
+    evolution.Traits.Offense
 ];
