@@ -65,7 +65,7 @@ evolution.Character.prototype.constructor = evolution.Character;
 // enums
 // *******************
 
-evolution.Character.prototype.states= Object.freeze({
+evolution.Character.states= Object.freeze({
     IDLE: "idle",
     FOLLOWING: "following",
     DRIFTING: "drifting",
@@ -131,15 +131,15 @@ evolution.Character.prototype.hitCheck=function(body,checkInterval,callback){
 
 
 evolution.Character.prototype.setIdle=function(){
-    this.state=this.states.IDLE;
+    this.state=evolution.Character.states.IDLE;
 };
 
 evolution.Character.prototype.setDrifting=function(){
-    this.state=this.states.DRIFTING;
+    this.state=evolution.Character.states.DRIFTING;
 };
 
 evolution.Character.prototype.setWantsToBreed=function(){
-    this.state=this.states.WANTS_TO_BREED;
+    this.state=evolution.Character.states.WANTS_TO_BREED;
 
     //remove the hunger loop timer
     if (this.timeEvents.hunger){
@@ -184,7 +184,7 @@ evolution.Character.prototype.moveToSprite= function(target,speed) {
 
 evolution.Character.prototype.findTarget= function() {
 
-    if (this.state==this.states.WANTS_TO_BREED){
+    if (this.state==evolution.Character.states.WANTS_TO_BREED){
         var possibleClosestTarget=this.getClosestCreature(1000);
         if (possibleClosestTarget){
             this.currentTarget=possibleClosestTarget;
@@ -206,8 +206,8 @@ evolution.Character.prototype.startBreedingWith=function(target){
     target.currentBreedingWith=target;
     target.currentConstraint=this.currentConstraint;
 
-    this.state=this.states.BREEDING;
-    this.currentBreedingWith.state=this.states.BREEDING;
+    this.state=evolution.Character.states.BREEDING;
+    this.currentBreedingWith.state=evolution.Character.states.BREEDING;
     this.healthbar.redraw();
 
     this.game.time.events.add(2000,function(){
@@ -223,14 +223,14 @@ evolution.Character.prototype.startBreedingWith=function(target){
 evolution.Character.prototype.stopBreeding=function(){
     if (this.currentBreedingWith){
         this.currentBreedingWith.tint=0XFFFFFF;
-        this.currentBreedingWith.state=this.states.DRIFTING;
+        this.currentBreedingWith.state=evolution.Character.states.DRIFTING;
         this.currentBreedingWith.currentBreedingWith=null;
         this.currentBreedingWith=null;
     }
     if(this.currentConstraint){
         this.game.physics.p2.world.removeConstraint(this.currentConstraint);
     }
-    this.state=this.states.DRIFTING;
+    this.state=evolution.Character.states.DRIFTING;
     this.tint=0XFFFFFF;
 };
 
@@ -275,14 +275,14 @@ evolution.Character.prototype.update = function() {
     }
 
 
-    if (this.state==this.states.DRIFTING && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
-        this.state=this.states.IDLE;
+    if (this.state==evolution.Character.states.DRIFTING && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
+        this.state=evolution.Character.states.IDLE;
         bob.call(this)
     }
-    else if(this.state==this.states.WANTS_TO_BREED && this.currentTarget){
+    else if(this.state==evolution.Character.states.WANTS_TO_BREED && this.currentTarget){
         this.moveToSprite(this.currentTarget,this.floatSpeed);
     }
-    else if(this.state==this.states.BREEDING){
+    else if(this.state==evolution.Character.states.BREEDING){
         this.tint=0X455FF5;
     }
 
@@ -307,7 +307,7 @@ function bob(){
 
 
     //only bob if not moving anywhere
-    if (this.state==this.states.IDLE && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
+    if (this.state==evolution.Character.states.IDLE && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
         this.game.time.events.add(this.game.rnd.realInRange(500,2000), bob, this);
     }
 }

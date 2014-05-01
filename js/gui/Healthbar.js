@@ -18,7 +18,7 @@ evolution.gui.Healthbar= function (game,character) {
         this.lineTo(this.barWidth, -5);
         this.endFill();
 
-        if (this.character.state==this.character.states.WANTS_TO_BREED){
+        if (this.character.state==evolution.Character.states.WANTS_TO_BREED){
             var colour = rgbToHex(0,0,255);
         }
         else{
