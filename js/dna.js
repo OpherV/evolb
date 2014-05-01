@@ -78,7 +78,7 @@ evolution.Dna.combine=function(dna1,dna2){
 
 
     //TODO proper mutation of traits
-    if (Math.random()<=0.5){
+    if (Math.random()<=0.15){
         var newTrait=new evolution.TraitInstance(evolution.Traits.Cannibalism);
         newTrait.randomize();
         newDna.traits[newTrait.parentTrait.name]=newTrait;
