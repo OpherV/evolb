@@ -12,9 +12,13 @@ evolution.core=(function(){
     var enemyLayer;
     var creaturesLayer;
     var powerupLayer;
-    var bg;
     var underwater;
     var guiLayer;
+    var bg,labBg;
+
+    var layers={
+        behindAquarium: null
+    };
 
     var spriteArrays={
         all: [],
@@ -24,10 +28,11 @@ evolution.core=(function(){
     var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var height =  Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     var gameBounds={width: width*4, height: height*4};
-    var game=new Phaser.Game(width, height, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+    var game=new Phaser.Game(width, height, Phaser.WEBGL, '', { preload: preload, create: create, update: update, render: render });
 
     function preload() {
         game.load.image('background', 'assets/background.png');
+        game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
         game.load.image('creature', 'assets/sprites/blob.png');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
@@ -64,9 +69,15 @@ evolution.core=(function(){
         groups.rocks=game.add.group();
         guiLayer=game.add.group();
         powerupLayer=game.add.group();
+        layers.behindAquarium=game.add.group();
 
-
-
+        labBg=game.add.sprite(8053, 4697, 'lab_bg');
+        labBg.fixedToCamera=true;
+        labBg.width*=2.2;
+        labBg.height*=2.2;
+        labBg.cameraOffset.x=0;
+        labBg.cameraOffset.y=0;
+        layers.behindAquarium.add(labBg);
 
         bg=game.add.sprite(900, 540, 'background');
         bg.fixedToCamera=true;
@@ -74,13 +85,15 @@ evolution.core=(function(){
         bg.height*=3;
         bg.cameraOffset.x=0;
         bg.cameraOffset.y=0;
+        bg.alpha=0.5;
+        layers.behindAquarium.add(bg);
 
 
         var displacementTexture = PIXI.Texture.fromImage("assets/displacement_map.jpg");
         displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
         displacementFilter.scale.x = 25;
         displacementFilter.scale.y = 25;
-        bg.filters =[displacementFilter];
+        layers.behindAquarium.filters =[displacementFilter];
 
 
         var spawnDistance=200;
@@ -159,7 +172,7 @@ evolution.core=(function(){
 
 
         //place layers in proper order
-        underwater.add(bg);
+        underwater.add(layers.behindAquarium);
         underwater.add(creaturesLayer);
         underwater.add(enemyLayer);
         underwater.add(groups.rocks);
@@ -202,13 +215,18 @@ evolution.core=(function(){
 
     //move bg for parallex effect
     function _bgParallex(){
-        var bgMovementX=bg.width-width;
-        var bgMovementY=bg.height-height;
+        _calculateParallex(bg);
+        _calculateParallex(labBg);
+    }
+
+    function _calculateParallex(bgSprite){
+        var bgMovementX=bgSprite.width-width;
+        var bgMovementY=bgSprite.height-height;
 
         var moveXPercent=(game.camera.x)/(gameBounds.width-width);
         var moveYPercent=(game.camera.y)/(gameBounds.height-height);
-        bg.cameraOffset.x=-bgMovementX*moveXPercent;
-        bg.cameraOffset.y=-bgMovementY*moveYPercent;
+        bgSprite.cameraOffset.x=-bgMovementX*moveXPercent;
+        bgSprite.cameraOffset.y=-bgMovementY*moveYPercent;
     }
 
     function _moveToCoords(item,speed,x,y) {
