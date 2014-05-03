@@ -7,16 +7,19 @@ evolution.core=(function(){
 
     var CAMERA_SPEED=5;
 
-
+    var groups={};
     var displacementFilter;
     var enemyLayer;
     var creaturesLayer;
     var powerupLayer;
-    var rocks;
     var bg;
     var underwater;
     var guiLayer;
-    var gameSprites={};
+
+    var spriteArrays={
+        all: [],
+        rocks: []
+    };
 
     var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var height =  Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -58,7 +61,7 @@ evolution.core=(function(){
         underwater=game.add.group();
         creaturesLayer=game.add.group();
         enemyLayer=game.add.group();
-        rocks=game.add.group();
+        groups.rocks=game.add.group();
         guiLayer=game.add.group();
         powerupLayer=game.add.group();
 
@@ -80,36 +83,64 @@ evolution.core=(function(){
         bg.filters =[displacementFilter];
 
 
+        var spawnDistance=200;
+        //avoid spawning too close to world bounds
+        var centerSpawnPoint=new Phaser.Point(game.rnd.integerInRange(spawnDistance*2,game.world.width-spawnDistance*2),
+                                              game.rnd.integerInRange(spawnDistance*2,game.world.height-spawnDistance*2));
+        for (var x=0;x<NUM_OF_CREATURES;x++){
+            var newCreature=new evolution.Creature(game,game.world.width/2,game.world.height/2);
+            newCreature.id="id_"+x;
+            creaturesLayer.add(newCreature);
+
+            _placeWithoutCollision(newCreature,[spriteArrays.all],function(sprite){
+                var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-spawnDistance,spawnDistance),
+                                                  centerSpawnPoint.y+game.rnd.realInRange(-spawnDistance,spawnDistance));
+                sprite.body.x=spawnPoint.x;
+                sprite.body.y=spawnPoint.y;
+            });
+
+            spriteArrays.all.push(newCreature);
+        }
 
         //draw rocks
         for (x=0;x<NUM_OF_ROCKS;x++){
-            var newRock = new evolution.Rock(game,game.world.randomX,game.world.randomY);
-            rocks.add(newRock);
+            var newRock = new evolution.Rock(game,0,0);
+            groups.rocks.add(newRock);
 
-            //console.log(isColliding(newRock));
-            gameSprites[newRock.key.key]=newRock;
+            _placeWithoutCollision(newRock,[spriteArrays.all]);
+            spriteArrays.rocks.push(newRock);
         }
 
-
-        var centerSpawnPoint=new Phaser.Point(game.world.randomX, game.world.randomY);
-        for (var x=0;x<NUM_OF_CREATURES;x++){
-            var spawnPoint = new Phaser.Point(centerSpawnPoint.x+game.rnd.realInRange(-300,300),centerSpawnPoint.y+game.rnd.realInRange(-300,300));
-            var newCreature=new evolution.Creature(game,spawnPoint.x,spawnPoint.y);
-            newCreature.id="id_"+x;
-
-            creaturesLayer.add(newCreature);
-
-        }
 
         //enemies
         for (x=0;x<NUM_OF_ENEMIES;x++){
-            var enemy=new evolution.Enemy1(game,game.world.randomX,game.world.randomY);
+            var enemy=new evolution.Enemy1(game,0,0);
             enemyLayer.add(enemy);
+
+            _placeWithoutCollision(enemy,[spriteArrays.all,spriteArrays.rocks],function(enemy){
+                //place enemy outside of aggo range
+                var inAggroRange=true;
+                while (inAggroRange){
+                    inAggroRange=false;
+                    enemy.body.x=game.world.randomX;
+                    enemy.body.y=game.world.randomY;
+                    creaturesLayer.forEachAlive(function(creature){
+                        if(Phaser.Point.distance(enemy.body,creature.body)<enemy.aggroTriggerDistance*1.5){
+                            inAggroRange=true;
+                            return;
+                        }
+                    });
+                }
+            });
+
+            spriteArrays.all.push(enemy);
         }
 
-        //enemies
+        //food
         for (x=0;x<NUM_OF_FOOD;x++){
-            var newFood=new evolution.Food(game,game.world.randomX,game.world.randomY);
+            var newFood=new evolution.Food(game,0,0);
+            _placeWithoutCollision(newFood,[spriteArrays.all,spriteArrays.rocks]);
+            spriteArrays.all.push(newFood);
             powerupLayer.add(newFood);
         }
 
@@ -131,7 +162,7 @@ evolution.core=(function(){
         underwater.add(bg);
         underwater.add(creaturesLayer);
         underwater.add(enemyLayer);
-        underwater.add(rocks);
+        underwater.add(groups.rocks);
         underwater.add(powerupLayer);
         underwater.add(guiLayer);
 
@@ -180,17 +211,6 @@ evolution.core=(function(){
         bg.cameraOffset.y=-bgMovementY*moveYPercent;
     }
 
-
-    function isColliding(item){
-        for (gameItem in gameSprites){
-            console.log(gameSprites[gameItem],item)
-            if (item.overlap(gameSprites[gameItem])){
-                return true;
-            }
-        }
-        return false;
-    };
-
     function _moveToCoords(item,speed,x,y) {
         var dx = x - item.body.x;
         var dy = y - item.body.y;
@@ -222,12 +242,47 @@ evolution.core=(function(){
 
     }
 
+    function _placeWithoutCollision(sprite,spriteArrays,placeFunction){
+        if (!placeFunction){
+            placeFunction=function(sprite){
+                sprite.body.x=game.world.randomX;
+                sprite.body.y=game.world.randomY;
+            }
+        }
+
+        var isColliding=true;
+        var maxAttempts=10; //the number of attempts to place with not collision
+        var placeAttemptCounter=0;
+        while (isColliding && placeAttemptCounter<maxAttempts){
+            //no collision, end loop
+            isColliding=false;
+            placeFunction(sprite);
+            placeAttemptCounter++;
+            sprite.body.data.updateAABB();
+
+            for(var y=0;y<spriteArrays.length;y++){
+                var spriteArray=spriteArrays[y];
+                for(var x=0;x<spriteArray.length;x++){
+                    var checkAgainstSprite=spriteArray[x];
+                    if(sprite.body.data.aabb.overlaps(checkAgainstSprite.body.data.aabb)){
+                        //console.log(sprite.id,"colliding");
+                        isColliding=true;
+                        break;
+                    }
+                }
+                //don't go over any more groups
+                if (isColliding){ break;}
+            }
+        }
+        //console.log(placeAttemptCounter);
+    }
+
     function _findCenterOfMass(group){
         var totalX=0;
         var totalY=0;
         group.forEachAlive(function(item){
-            totalX+=item.x;
-            totalY+=item.y;
+            totalX+=item.body.x;
+            totalY+=item.body.y;
         });
         return {x: totalX/group.countLiving(), y: totalY/group.countLiving()}
     }
