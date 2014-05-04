@@ -1,9 +1,13 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
-    var NUM_OF_ENEMIES=10;
+    var NUM_OF_ENEMIES=5;
     var NUM_OF_FOOD=50;
     var NUM_OF_CREATURES=5;
     var NUM_OF_ROCKS=120;
+
+    var LEVEL_WIDTH=8000;
+    var LEVEL_HEIGHT=0.5*LEVEL_WIDTH;
+    var LAB_OFFSET=200;
 
     var CAMERA_SPEED=5;
 
@@ -14,10 +18,12 @@ evolution.core=(function(){
     var powerupLayer;
     var underwater;
     var guiLayer;
-    var bg,labBg;
+    var aquarium,aquariumMasked,aquarium_blue,labBg,labBgMasked,shine;
 
     var layers={
-        behindAquarium: null
+        behindAquarium: null,
+        inAquarium: null,
+        foreground: null
     };
 
     var spriteArrays={
@@ -27,10 +33,13 @@ evolution.core=(function(){
 
     var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var height =  Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    var gameBounds={width: width*4, height: height*4};
+    var gameBounds={width: LEVEL_WIDTH+LAB_OFFSET*2, height: LEVEL_HEIGHT+LAB_OFFSET*2};
     var game=new Phaser.Game(width, height, Phaser.WEBGL, '', { preload: preload, create: create, update: update, render: render });
 
     function preload() {
+        game.load.image('tank_lines', 'assets/sprites/tank_lines.png');
+        game.load.image('tank_blue', 'assets/sprites/tank_blue.png');
+        game.load.image('shine', 'assets/sprites/shine_test.png');
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
         game.load.image('creature', 'assets/sprites/blob.png');
@@ -69,7 +78,17 @@ evolution.core=(function(){
         groups.rocks=game.add.group();
         guiLayer=game.add.group();
         powerupLayer=game.add.group();
+        layers.inAquarium=game.add.group();
         layers.behindAquarium=game.add.group();
+        layers.foreground=game.add.group();
+
+        labBgMasked=game.add.sprite(8053, 4697, 'lab_bg');
+        labBgMasked.fixedToCamera=true;
+        labBgMasked.width*=1.7;
+        labBgMasked.height*=1.7;
+        labBgMasked.cameraOffset.x=0;
+        labBgMasked.cameraOffset.y=0;
+        layers.inAquarium.add(labBgMasked);
 
         labBg=game.add.sprite(8053, 4697, 'lab_bg');
         labBg.fixedToCamera=true;
@@ -79,22 +98,60 @@ evolution.core=(function(){
         labBg.cameraOffset.y=0;
         layers.behindAquarium.add(labBg);
 
-        bg=game.add.sprite(900, 540, 'background');
-        bg.fixedToCamera=true;
-        bg.width*=6;
-        bg.height*=6;
-        bg.cameraOffset.x=0;
-        bg.cameraOffset.y=0;
-        bg.alpha=0.7;
-        layers.behindAquarium.add(bg);
+        shine=game.add.sprite(3065, 2276, 'shine');
+        shine.fixedToCamera=true;
+        shine.width*=3;
+        shine.height*=3;
+        shine.cameraOffset.x=0;
+        shine.cameraOffset.y=0;
+        layers.foreground.add(shine);
+
+
+
+        aquariumMasked=game.add.sprite(6330, 3618, 'tank_lines');
+        aquariumMasked.width=LEVEL_WIDTH;
+        aquariumMasked.height=LEVEL_HEIGHT;
+        aquariumMasked.x=LAB_OFFSET;
+        aquariumMasked.y=LAB_OFFSET;
+        aquariumMasked.alpha=1;
+        layers.inAquarium.add(aquariumMasked);
+
+        aquarium=game.add.sprite(6330, 3618, 'tank_lines');
+        aquarium.width=LEVEL_WIDTH;
+        aquarium.height=LEVEL_HEIGHT;
+        aquarium.x=LAB_OFFSET;
+        aquarium.y=LAB_OFFSET;
+        aquarium.alpha=1;
+        layers.behindAquarium.add(aquarium);
+
+        aquarium_blue=game.add.sprite(6330, 3618, 'tank_blue');
+        aquarium_blue.width=LEVEL_WIDTH;
+        aquarium_blue.height=LEVEL_HEIGHT;
+        aquarium_blue.x=LAB_OFFSET;
+        aquarium_blue.y=LAB_OFFSET;
+        aquarium_blue.alpha=1;
+        layers.inAquarium.add(aquarium_blue);
+
+
+        var aquariumMask=game.add.graphics(0,0);
+        aquariumMask.beginFill(0xffffff,1);
+        aquariumMask.drawRect(0,0,LEVEL_WIDTH-LEVEL_WIDTH*0.025-LEVEL_WIDTH*0.0157,LEVEL_HEIGHT-LEVEL_HEIGHT*0.008);
+        aquariumMask.endFill();
+        aquariumMask.y=LAB_OFFSET;
+        aquariumMask.x=LAB_OFFSET+LEVEL_WIDTH*0.0157;
+        layers.inAquarium.mask=aquariumMask;
+        layers.foreground.mask=aquariumMask;
 
 
         var displacementTexture = PIXI.Texture.fromImage("assets/displacement_map.jpg");
         displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
-        displacementFilter.scale.x = 25;
-        displacementFilter.scale.y = 25;
-        layers.behindAquarium.filters =[displacementFilter];
+        displacementFilter.scale.x = 15;
+        displacementFilter.scale.y = 15;
+        layers.inAquarium.filters =[displacementFilter];
 
+
+
+        _addAquariumWalls();
 
         var spawnDistance=200;
         //avoid spawning too close to world bounds
@@ -159,10 +216,12 @@ evolution.core=(function(){
 
         //place layers in proper order
         underwater.add(layers.behindAquarium);
+        underwater.add(layers.inAquarium);
         underwater.add(creaturesLayer);
         underwater.add(enemyLayer);
         underwater.add(groups.rocks);
         underwater.add(powerupLayer);
+        underwater.add(layers.foreground);
         underwater.add(guiLayer);
 
 
@@ -177,14 +236,23 @@ evolution.core=(function(){
             if (bodies.length>0){
                 var sprite=bodies[0].parent.sprite;
                 infoPanel.selectCharacter(sprite);
+
+            }
+            else{
+                infoPanel.close();
+                creaturesLayer.forEachAlive(function(creature){
+                    evolution.core.moveToCoords(creature, creature.moveSpeed,clickPoint.x, clickPoint.y);
+                });
             }
 
-            creaturesLayer.forEachAlive(function(creature){
-                evolution.core.moveToCoords(creature, creature.moveSpeed,clickPoint.x, clickPoint.y);
-            });
 
         },this);
 
+
+
+
+
+        //ground.renderable = false;
 
         //focus camera
         focusOnCreatures(true);
@@ -220,13 +288,67 @@ evolution.core=(function(){
     /// util functions
     // ****************************
 
-    //move bg for parallex effect
-    function _bgParallex(){
-        _calculateParallex(bg);
-        _calculateParallex(labBg);
+
+    function _addAquariumWalls(){
+        var leftEdgeOffset=aquariumMasked.width*0.0157;
+        var rightEdgeOffset=aquariumMasked.width*0.025;
+        var debug=false;
+
+        var leftWall=new Phaser.Sprite(game,0,0);
+        game.physics.p2.enable(leftWall,debug);
+        leftWall.body.setRectangle(LAB_OFFSET+leftEdgeOffset,LEVEL_HEIGHT);
+        leftWall.body.x = (LAB_OFFSET+leftEdgeOffset)/2;
+        leftWall.body.y = LAB_OFFSET+LEVEL_HEIGHT/2;
+        leftWall.body.static = true;
+        game.add.existing(leftWall);
+
+
+        var rightWall=new Phaser.Sprite(game,0,0);
+        game.physics.p2.enable(rightWall,debug);
+        rightWall.body.setRectangle(LAB_OFFSET+rightEdgeOffset,LEVEL_HEIGHT);
+        rightWall.body.x = LAB_OFFSET+LEVEL_WIDTH-rightEdgeOffset+(LAB_OFFSET+rightEdgeOffset)/2;
+        rightWall.body.y = LAB_OFFSET+LEVEL_HEIGHT/2;
+        rightWall.body.static = true;
+        game.add.existing(rightWall);
+
+        var bottomWall=new Phaser.Sprite(game,0,0);
+        game.physics.p2.enable(bottomWall,debug);
+        bottomWall.body.setRectangle(LEVEL_WIDTH+LAB_OFFSET*2,LAB_OFFSET);
+        bottomWall.body.x = (LAB_OFFSET+LEVEL_WIDTH)/2;
+        bottomWall.body.y = LAB_OFFSET+LEVEL_HEIGHT+LAB_OFFSET/2-LEVEL_HEIGHT*0.008;
+        bottomWall.body.static = true;
+        game.add.existing(bottomWall);
+
+        var topWall=new Phaser.Sprite(game,0,0);
+        game.physics.p2.enable(topWall,debug);
+        topWall.body.setRectangle(LEVEL_WIDTH+LAB_OFFSET*2,LAB_OFFSET);
+        topWall.body.x = (LAB_OFFSET+LEVEL_WIDTH)/2;
+        topWall.body.y = LAB_OFFSET/2+LEVEL_HEIGHT*0.008;
+        topWall.body.static = true;
+        game.add.existing(topWall);
+
+        spriteArrays.all.push(leftWall);
+        spriteArrays.all.push(rightWall);
+        spriteArrays.all.push(bottomWall);
+        spriteArrays.all.push(topWall);
+
     }
 
-    function _calculateParallex(bgSprite){
+    //move bg for parallex effect
+    function _bgParallex(){
+        _calculateParallex(aquariumMasked);
+        _calculateParallex(labBgMasked);
+        _calculateParallex(labBg);
+        _calculateParallex(shine);
+    }
+
+    function _calculateParallex(bgSprite,topPadding,rightPadding,bottomPadding,leftPadding){
+        topPadding=topPadding || 0;
+        rightPadding=rightPadding|| 0;
+        bottomPadding=bottomPadding|| 0;
+        leftPadding=leftPadding|| 0;
+        //todo implement this?
+
         var bgMovementX=bgSprite.width-width;
         var bgMovementY=bgSprite.height-height;
 
@@ -270,8 +392,9 @@ evolution.core=(function(){
     function _placeWithoutCollision(sprite,spriteArrays,placeFunction){
         if (!placeFunction){
             placeFunction=function(sprite){
-                sprite.body.x=game.world.randomX;
-                sprite.body.y=game.world.randomY;
+                sprite.body.x=game.rnd.realInRange(LAB_OFFSET+LEVEL_WIDTH*0.0157,
+                                                    LAB_OFFSET+LEVEL_WIDTH-LEVEL_WIDTH*0.025);
+                sprite.body.y=game.rnd.realInRange(LAB_OFFSET,LAB_OFFSET+LEVEL_HEIGHT-LEVEL_HEIGHT*0.008);
             }
         }
 
