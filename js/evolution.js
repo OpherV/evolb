@@ -1,6 +1,6 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
-    var NUM_OF_ENEMIES=5;
+    var NUM_OF_ENEMIES=10;
     var NUM_OF_FOOD=50;
     var NUM_OF_CREATURES=5;
     var NUM_OF_ROCKS=120;
@@ -73,8 +73,8 @@ evolution.core=(function(){
 
         labBg=game.add.sprite(8053, 4697, 'lab_bg');
         labBg.fixedToCamera=true;
-        labBg.width*=2.2;
-        labBg.height*=2.2;
+        labBg.width*=1.7;
+        labBg.height*=1.7;
         labBg.cameraOffset.x=0;
         labBg.cameraOffset.y=0;
         layers.behindAquarium.add(labBg);
@@ -85,7 +85,7 @@ evolution.core=(function(){
         bg.height*=3;
         bg.cameraOffset.x=0;
         bg.cameraOffset.y=0;
-        bg.alpha=0.5;
+        bg.alpha=0.7;
         layers.behindAquarium.add(bg);
 
 
