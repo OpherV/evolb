@@ -1,5 +1,6 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Character= function (game,x,y,spriteKey) {
+evolution.Character= function (game,id,x,y,spriteKey) {
+    this.id=id;
     this.game=game;
 
     // basic properties
@@ -14,7 +15,7 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND;
 
-    this.inContactWith=[]; //Bodies this is touching
+    this.inContactWith={}; //Bodies this is touching
 
     this.timeEvents = {};
     this.currentConstraint=null;
@@ -46,18 +47,17 @@ evolution.Character= function (game,x,y,spriteKey) {
     this.events.onKilled.add(function() {this.postKill()},this);
 
     function beginContactHandler(body, shapeA, shapeB, equation) {
-        //add toinContactWith array
-        if (body && this.inContactWith.indexOf(body)==-1){
-            this.inContactWith.push(body);
+        //add to inContactWith
+        if (body && !this.inContactWith[body.sprite.id] ){
+            this.inContactWith[body.sprite.id]=body;
         }
     }
 
     function endContactHandler(body, shapeA, shapeB, equation) {
-        if (body){
+        if (body && body.sprite){
             //remove from inContactWith array
-            var index=this.inContactWith.indexOf(body);
-            if (index>-1){
-                this.inContactWith.splice(index, 1);
+            if (this.inContactWith[body.sprite.id]){
+                delete this.inContactWith[body.sprite.id]
             }
         }
     }
@@ -110,8 +110,8 @@ evolution.Character.prototype.contactHandler={};
 //test against all touching bodies
 evolution.Character.prototype.hitCycle=function(){
     var body;
-    for (var x=0;x<this.inContactWith.length;x++){
-        body=this.inContactWith[x];
+    for (var id in this.inContactWith){
+        body=this.inContactWith[id];
         //call the proper contact handler function
         if (body.sprite && Object.getPrototypeOf(this).contactHandler[body.sprite.key]){
             Object.getPrototypeOf(this).contactHandler[body.sprite.key].call(this,body);
@@ -122,7 +122,7 @@ evolution.Character.prototype.hitCycle=function(){
 
 
 evolution.Character.prototype.isTouching=function(body){
-    return (this.inContactWith.indexOf(body)>-1);
+    return (body.sprite.id in this.inContactWith);
 };
 
 evolution.Character.prototype.hitCheck=function(body,checkInterval,callback){

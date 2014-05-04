@@ -1,5 +1,6 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Food= function (game,x,y) {
+evolution.Food= function (game,id,x,y) {
+    this.id=id;
     this.game=game;
 
     this.healAmount=50;

@@ -1,10 +1,8 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Enemy1= function (game,x,y) {
-
-
+evolution.Enemy1= function (game,id,x,y) {
 
     //construct chracter
-    evolution.Character.call(this, game, x, y, 'enemy1');
+    evolution.Character.call(this, game, id,  x, y, 'enemy1');
 
     this.animations.add('eat');
     this.animations.play('eat', 8, true);

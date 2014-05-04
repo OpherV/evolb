@@ -2,7 +2,7 @@ evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
     var NUM_OF_ENEMIES=10;
     var NUM_OF_FOOD=50;
-    var NUM_OF_CREATURES=5;
+    var NUM_OF_CREATURES=2;
     var NUM_OF_ROCKS=120;
 
     var CAMERA_SPEED=5;
@@ -101,8 +101,7 @@ evolution.core=(function(){
         var centerSpawnPoint=new Phaser.Point(game.rnd.integerInRange(spawnDistance*2,game.world.width-spawnDistance*2),
                                               game.rnd.integerInRange(spawnDistance*2,game.world.height-spawnDistance*2));
         for (var x=0;x<NUM_OF_CREATURES;x++){
-            var newCreature=new evolution.Creature(game,game.world.width/2,game.world.height/2);
-            newCreature.id="id_"+x;
+            var newCreature=new evolution.Creature(game,_generateId(),game.world.width/2,game.world.height/2);
             creaturesLayer.add(newCreature);
 
             _placeWithoutCollision(newCreature,[spriteArrays.all],function(sprite){
@@ -117,7 +116,7 @@ evolution.core=(function(){
 
         //draw rocks
         for (x=0;x<NUM_OF_ROCKS;x++){
-            var newRock = new evolution.Rock(game,0,0);
+            var newRock = new evolution.Rock(game,_generateId(),0,0);
             groups.rocks.add(newRock);
 
             _placeWithoutCollision(newRock,[spriteArrays.all]);
@@ -127,7 +126,7 @@ evolution.core=(function(){
 
         //enemies
         for (x=0;x<NUM_OF_ENEMIES;x++){
-            var enemy=new evolution.Enemy1(game,0,0);
+            var enemy=new evolution.Enemy1(game,_generateId(),0,0);
             enemyLayer.add(enemy);
 
             _placeWithoutCollision(enemy,[spriteArrays.all,spriteArrays.rocks],function(enemy){
@@ -151,7 +150,7 @@ evolution.core=(function(){
 
         //food
         for (x=0;x<NUM_OF_FOOD;x++){
-            var newFood=new evolution.Food(game,0,0);
+            var newFood=new evolution.Food(game,_generateId(),0,0);
             _placeWithoutCollision(newFood,[spriteArrays.all,spriteArrays.rocks]);
             spriteArrays.all.push(newFood);
             powerupLayer.add(newFood);
@@ -305,9 +304,17 @@ evolution.core=(function(){
         return {x: totalX/group.countLiving(), y: totalY/group.countLiving()}
     }
 
+    _generateId.counter=0;
+    function _generateId(){
+        var newId="sprite_"+_generateId.counter;
+        _generateId.counter++;
+        return newId;
+    }
+
     return{
         game: game,
         moveToCoords: _moveToCoords,
+        generateId: _generateId,
         getCreatures: function(){return creaturesLayer;},
         getGuiLayer: function(){return guiLayer;},
         version: "0.1"

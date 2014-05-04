@@ -1,5 +1,7 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Rock=function(game,x,y){
+evolution.Rock=function(game,id,x,y){
+    this.id=id;
+
     Phaser.Sprite.call(this, game, x, y);
     //define texture
     if (!evolution.Rock.rockTexture){
