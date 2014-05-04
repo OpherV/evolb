@@ -11,7 +11,7 @@ evolution.gui.Healthbar= function (game,character) {
         var totalHp=this.character.maxHealth;
 
         this.clear();
-        var bgColor= rgbToHex(255,0,0);
+        var bgColor= evolution.core.rgbToHex(255,0,0);
         this.beginFill(bgColor);
         this.lineStyle(5, bgColor, 1);
         this.moveTo(0,-5);
@@ -19,10 +19,10 @@ evolution.gui.Healthbar= function (game,character) {
         this.endFill();
 
         if (this.character.state==evolution.Character.states.WANTS_TO_BREED){
-            var colour = rgbToHex(0,0,255);
+            var colour = evolution.core.rgbToHex(0,0,255);
         }
         else{
-            var colour = rgbToHex(0,255,0);
+            var colour = evolution.core.rgbToHex(0,255,0);
         }
 
         this.beginFill(colour);
@@ -32,9 +32,6 @@ evolution.gui.Healthbar= function (game,character) {
         this.endFill();
     };
 
-    function rgbToHex(r, g, b) {
-        return "0x" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-    }
 
 
 };

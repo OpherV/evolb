@@ -2,7 +2,7 @@ evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
     var NUM_OF_ENEMIES=10;
     var NUM_OF_FOOD=50;
-    var NUM_OF_CREATURES=2;
+    var NUM_OF_CREATURES=5;
     var NUM_OF_ROCKS=120;
 
     var CAMERA_SPEED=5;
@@ -81,8 +81,8 @@ evolution.core=(function(){
 
         bg=game.add.sprite(900, 540, 'background');
         bg.fixedToCamera=true;
-        bg.width*=3;
-        bg.height*=3;
+        bg.width*=6;
+        bg.height*=6;
         bg.cameraOffset.x=0;
         bg.cameraOffset.y=0;
         bg.alpha=0.7;
@@ -156,19 +156,6 @@ evolution.core=(function(){
             powerupLayer.add(newFood);
         }
 
-        game.input.onDown.add(function(){
-            creaturesLayer.forEachAlive(function(creature){
-                creature.isFollowingPointer=true;
-            });
-        }, this);
-
-        game.input.onUp.add(function(){
-            creaturesLayer.forEachAlive(function(creature){
-                creature.isFollowingPointer=false;
-            });
-        }, this);
-
-
 
         //place layers in proper order
         underwater.add(layers.behindAquarium);
@@ -177,6 +164,27 @@ evolution.core=(function(){
         underwater.add(groups.rocks);
         underwater.add(powerupLayer);
         underwater.add(guiLayer);
+
+
+        var infoPanel=new evolution.gui.InfoPanel(game);
+        underwater.add(infoPanel);
+        infoPanel.init();
+
+        game.input.onDown.add(function(pointer){
+            var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
+            //TODO make sure to update creature list
+            var bodies=game.physics.p2.hitTest(clickPoint,creaturesLayer.children);
+            if (bodies.length>0){
+                var sprite=bodies[0].parent.sprite;
+                infoPanel.selectCharacter(sprite);
+            }
+
+            creaturesLayer.forEachAlive(function(creature){
+                evolution.core.moveToCoords(creature, creature.moveSpeed,clickPoint.x, clickPoint.y);
+            });
+
+        },this);
+
 
         //focus camera
         focusOnCreatures(true);
@@ -311,10 +319,15 @@ evolution.core=(function(){
         return newId;
     }
 
+    function _rgbToHex(r, g, b) {
+        return "0x" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
     return{
         game: game,
         moveToCoords: _moveToCoords,
         generateId: _generateId,
+        rgbToHex:_rgbToHex,
         getCreatures: function(){return creaturesLayer;},
         getGuiLayer: function(){return guiLayer;},
         version: "0.1"

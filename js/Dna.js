@@ -61,7 +61,7 @@ evolution.Dna.prototype.deactivate=function(){
 
 //combines parent dna to form child dna
 evolution.Dna.combine=function(dna1,dna2){
-    var chanceOfMutation=0.3;
+    var chanceOfMutation=1;
     var chanceRemoveTrait=0.15;
 
     var newDna = new evolution.Dna();

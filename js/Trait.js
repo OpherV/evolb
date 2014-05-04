@@ -46,8 +46,8 @@ evolution.TraitInstance.EXPONENTIAL=function(x){return Math.pow(x,2)};
 
 evolution.TraitInstance.baseTraits={
     sizeSpeed: {
-        lowName: "Big & Slow",
-        highName: "Small & Fast",
+        lowName: "Small & Fast",
+        highName: "Big & Slow",
         speed: {
             lowLimit: 70,
             highLimit: 150,
