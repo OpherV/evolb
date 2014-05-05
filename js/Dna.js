@@ -8,9 +8,7 @@ evolution.Dna=function(){
         mutationChance: new evolution.TraitInstance(evolution.TraitInstance.baseTraits.mutationChance)
     };
 
-    this.traits={
-
-    };
+    this.traits={};
 };
 
 evolution.Dna.prototype.constructor=evolution.Dna;
@@ -30,23 +28,32 @@ evolution.Dna.prototype.randomizeBaseTraits=function(){
 
 //activates the set of traits on a character
 evolution.Dna.prototype.activate=function(){
-    for (traitName in this.traits){
-        var trait=this.traits[traitName];
+    for (traitName in this.baseTraits){
+        activateTrait.call(this,this.baseTraits[traitName]);
+    }
 
+    for (traitName in this.traits){
+        activateTrait.call(this,this.traits[traitName]);
+    }
+
+    function activateTrait(trait){
         //add trait sprite
         if (trait.parentTrait.sprites && trait.parentTrait.sprites.length>0){
             //TODO: implement recycling
             var traitSpriteIndex=Math.floor(trait.value*(trait.parentTrait.sprites.length-0.01));
             trait.traitSprite=new Phaser.Sprite(this.character.game,
-                                                0,
-                                                0,
-                                                trait.parentTrait.sprites[traitSpriteIndex]);
+                0,
+                0,
+                trait.parentTrait.sprites[traitSpriteIndex]);
             trait.traitSprite.x=-trait.traitSprite.width/2;
             trait.traitSprite.y=-trait.traitSprite.height/1.53;
             this.character.addChild(trait.traitSprite);
         }
 
-        trait.parentTrait.onAdded(this.character,trait);
+        if (trait.parentTrait.onAdded){
+            trait.parentTrait.onAdded(this.character,trait);
+        }
+
     }
 };
 
@@ -67,8 +74,8 @@ evolution.Dna.prototype.deactivate=function(){
 
 
 //combines parent dna to form child dna
-evolution.Dna.combine=function(dna1,dna2){
-    var chanceOfMutation=0.5;
+evolution.Dna.combine=function(dna1,dna2,chanceOfMutation){
+    //var chanceOfMutation=0.5;
     var chanceRemoveTrait=0.15;
 
     var newDna = new evolution.Dna();

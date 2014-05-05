@@ -3,14 +3,20 @@ evolution.Character= function (game,id,x,y,spriteKey) {
     this.id=id;
     this.game=game;
 
-    // basic properties
-    this.maxHealth=100;
-    this.floatSpeed=10;
-    this.moveSpeed=50;
-    this.maxSpeed=this.moveSpeed;
-    this.idleVelocityRange=0; //below this range creatures start bobbing
-    this.attackSpeed=500; //attack speed in millisecs
-    this.damageOutput=0;
+    this.stats={
+        maxHealth: 100,
+        floatSpeed: 10,
+        moveSpeed: 50,
+        maxSpeed: 50,
+        idleVelocityRange: 0, //below this range creatures start bobbing
+        attackSpeed: 500,
+        damageOutput: 0,// attack speed in millisecs
+        mutationChance: 0
+    };
+
+
+    this.modifiedStats={}; //these are the stats after any modifiers
+
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND;
@@ -34,8 +40,7 @@ evolution.Character= function (game,id,x,y,spriteKey) {
 
     //construct sprite
     Phaser.Sprite.call(this, game, x, y, spriteKey);
-
-    this.revive(this.maxHealth);
+    this.revive(this.stats.maxHealth);
     game.physics.p2.enable(this,false);
     this.body.fixedRotation = true;
     this.body.collideWorldBounds=true;
@@ -84,6 +89,10 @@ evolution.Character.states= Object.freeze({
 // ******************
 //Every class inheriting should call this on startup
 evolution.Character.prototype.init=function(){
+    for (var stat in this.stats){
+        this.modifiedStats[stat]=this.stats[stat];
+    }
+
     this.healthbar = new evolution.gui.Healthbar(this.game,this);
     this.healthbar.x=-this.width/2;
     this.healthbar.y=-this.height/2-9;
@@ -95,7 +104,7 @@ evolution.Character.prototype.init=function(){
     evolution.core.getGuiLayer().add(this.gui);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
-    this.timeEvents.hitTest=this.game.time.events.loop(this.attackSpeed, this.hitCycle, this);
+    this.timeEvents.hitTest=this.game.time.events.loop(this.modifiedStats.attackSpeed, this.hitCycle, this);
 };
 
 evolution.Character.prototype.flashTint=function(color,duration){
@@ -186,7 +195,7 @@ evolution.Character.prototype.moveInDirecton= function(movementVector) {
     var finalVelocity=new Phaser.Point(-this.body.world.mpx(this.body.velocity.x)+movementVector.x,
                                         -this.body.world.mpx(this.body.velocity.y)+movementVector.y);
     //make sure not to go over maxspeed
-    finalVelocity.setMagnitude(Math.min(finalVelocity.getMagnitude(),this.maxSpeed));
+    finalVelocity.setMagnitude(Math.min(finalVelocity.getMagnitude(),this.modifiedStats.maxSpeed));
     this.body.velocity.x=finalVelocity.x;
     this.body.velocity.y=finalVelocity.y;
 }
@@ -290,9 +299,9 @@ evolution.Character.prototype.damage= function(amount,showDamage) {
 };
 
 evolution.Character.prototype.heal= function(amount) {
-    this.health=Math.min(this.maxHealth,this.health+amount);
+    this.health=Math.min(this.modifiedStats.maxHealth,this.health+amount);
     this.flashTint(0XBBFF54,300);
-    if (this.health==this.maxHealth){
+    if (this.health==this.modifiedStats.maxHealth){
         this.setWantsToBreed();
     }
     this.healthbar.redraw();
@@ -303,11 +312,11 @@ evolution.Character.prototype.update = function() {
     if (this.isFollowingPointer){
         var coords=new Phaser.Point(this.game.input.x+this.game.camera.x,
             this.game.input.y+this.game.camera.y);
-        evolution.core.moveToCoords(this, this.moveSpeed,coords.x, coords.y);
+        evolution.core.moveToCoords(this, this.modifiedStats.moveSpeed,coords.x, coords.y);
     }
 
 
-    if (this.state==evolution.Character.states.DRIFTING && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
+    if (this.state==evolution.Character.states.DRIFTING && this.body.velocity.x<=this.modifiedStats.idleVelocityRange && this.body.velocity.y<=this.modifiedStats.idleVelocityRange){
         this.state=evolution.Character.states.IDLE;
         bob.call(this)
     }
@@ -315,7 +324,7 @@ evolution.Character.prototype.update = function() {
         this.moveToTarget(this.currentTarget,1);
     }
     else if(this.state==evolution.Character.states.HUNTING && this.currentTarget){
-        this.moveToTarget(this.currentTarget,this.moveSpeed);
+        this.moveToTarget(this.currentTarget,this.modifiedStats.moveSpeed);
     }
     else if(this.state==evolution.Character.states.BREEDING){
         //this.tint=0X455FF5;
@@ -339,12 +348,12 @@ function bob(){
     var movementVector=new Phaser.Point(randomPoint.x-this.x,randomPoint.y-this.y);
     movementVector.normalize();
 
-    this.body.velocity.x+=this.body.velocity.x+(movementVector.x*this.floatSpeed);
-    this.body.velocity.y+=this.body.velocity.y+(movementVector.y*this.floatSpeed);
+    this.body.velocity.x+=this.body.velocity.x+(movementVector.x*this.modifiedStats.floatSpeed);
+    this.body.velocity.y+=this.body.velocity.y+(movementVector.y*this.modifiedStats.floatSpeed);
 
 
     //only bob if not moving anywhere
-    if (this.state==evolution.Character.states.IDLE && this.body.velocity.x<=this.idleVelocityRange && this.body.velocity.y<=this.idleVelocityRange){
+    if (this.state==evolution.Character.states.IDLE && this.body.velocity.x<=this.modifiedStats.idleVelocityRange && this.body.velocity.y<=this.modifiedStats.idleVelocityRange){
         this.game.time.events.add(this.game.rnd.realInRange(500,2000), bob, this);
     }
 }

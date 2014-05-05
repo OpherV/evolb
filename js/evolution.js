@@ -2,7 +2,7 @@ evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
     var NUM_OF_ENEMIES=15;
     var NUM_OF_FOOD=60;
-    var NUM_OF_MUTATIONS = 20;
+    var NUM_OF_MUTATIONS = 10;
     var NUM_OF_CREATURES=5;
     var NUM_OF_ROCKS=60;
 
@@ -11,6 +11,8 @@ evolution.core=(function(){
     var LAB_OFFSET=200;
 
     var CAMERA_SPEED=5;
+
+    var PLAYER_CONTROL_RANGE=400;
 
     var groups={};
     var displacementFilter;
@@ -264,7 +266,10 @@ evolution.core=(function(){
             else{
                 infoPanel.close();
                 creaturesLayer.forEachAlive(function(creature){
-                    creature.moveToTarget(clickPoint,creature.moveSpeed);
+                    //creatures farther from the pointer are less effected
+                    var effectiveDistance=Math.min(PLAYER_CONTROL_RANGE,Phaser.Point.distance(creature,clickPoint));
+                    var moveSpeedRatio= -Math.pow(effectiveDistance/PLAYER_CONTROL_RANGE,7)+1;
+                    creature.moveToTarget(clickPoint,creature.modifiedStats.moveSpeed*moveSpeedRatio);
                 });
             }
 

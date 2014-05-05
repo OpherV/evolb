@@ -36,8 +36,8 @@ evolution.Creature= function (game,id,x,y,dna) {
     this.body.clearShapes();
     this.body.setCircle(this.height/2);
 
-    this.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
-    this.maxSpeed=this.moveSpeed;
+    this.stats.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
+    this.stats.maxSpeed=this.stats.moveSpeed;
 
     //has to be after setCircle otherwise the material is lost
     this.body.setMaterial(evolution.Materials.getCreatureMaterial());
@@ -60,7 +60,7 @@ evolution.Creature.prototype.constructor = evolution.Creature;
 // ***************
 
 evolution.Creature.prototype.spawn=function(){
-    var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna);
+    var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna,this.modifiedStats.mutationChance);
     var newCreature = new evolution.Creature(this.game,evolution.core.generateId(), this.x,this.y,spawnDna);
     evolution.core.getCreatures().add(newCreature);
     newCreature.init();
@@ -82,7 +82,7 @@ evolution.Creature.prototype.contactHandler={
     },
     "creature": function(body){
         //creature is a cannibal!
-        if (this.dna.traits.cannibalism && this.health/this.maxHealth<=this.dna.traits.cannibalism.getValue("feedPercent")){
+        if (this.dna.traits.cannibalism && this.health/this.modifiedStats.maxHealth<=this.dna.traits.cannibalism.getValue("feedPercent")){
                 //TODO: set this as a percentage of the trait
                 body.sprite.damage(40,true);
                 this.heal(38);
@@ -93,8 +93,8 @@ evolution.Creature.prototype.contactHandler={
     },
     "enemy1": function(body){
         //creature is a cannibal!
-        if (this.damageOutput>0){
-            body.sprite.damage(this.damageOutput,true);
+        if (this.modifiedStats.damageOutput>0){
+            body.sprite.damage(this.modifiedStats.damageOutput,true);
         }
     }
 };

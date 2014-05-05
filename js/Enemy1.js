@@ -3,16 +3,16 @@ evolution.Enemy1= function (game,id,x,y) {
 
     //construct chracter
     evolution.Character.call(this, game, id,  x, y, 'enemy1');
-    this.scale.setTo(0.6);
+    this.scale.setTo(0.4);
 
     this.animations.add('eat',[1,2,3,4,5,6,5,4,3,2]);
     this.animations.play('eat', 40, true);
 
     this.body.setCircle(this.width/2);
 
-    this.moveSpeed=50;
-    this.maxSpeed=120;
-    this.attackSpeed=500; //attack speed in millisecs
+    this.stats.moveSpeed=10;
+    this.stats.maxSpeed=100;
+    this.stats.attackSpeed=500; //attack speed in millisecs
 
     this.init();
 

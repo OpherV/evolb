@@ -11,7 +11,7 @@ evolution.Traits.Offense={
     },
     sprites: ["spike_1","spike_2","spike_3"],
     onAdded:function(character,trait){
-        character.damageOutput+=trait.getValue("damageBonus");
+        character.modifiedStats.damageOutput+=trait.getValue("damageBonus");
     },
     onRemoved: function(character){
 

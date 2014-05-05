@@ -8,7 +8,7 @@ evolution.gui.Healthbar= function (game,character) {
 
     this.redraw=function(){
         var hp=this.character.health;
-        var totalHp=this.character.maxHealth;
+        var totalHp=this.character.modifiedStats.maxHealth;
 
         this.clear();
         var bgColor= evolution.core.rgbToHex(255,0,0);

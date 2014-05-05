@@ -64,15 +64,7 @@ evolution.TraitInstance.baseTraits={
             easingFunction: evolution.TraitInstance.EXPONENTIAL
         }
     },
-    mutationChance: {
-        lowName: "No mutation",
-        highName: "Mutation",
-        defaultValue: 0.05,
-        mutationChance: {
-            lowLimit: 100,
-            highLimit: 0
-        }
-    }
+    mutationChance: evolution.Traits.Mutation
 };
 
 //this list contains all the the available traits

@@ -29,7 +29,7 @@ evolution.Traits.Cannibalism={
         character.gui.cannibalStars=null;
     },
     onUpdate: function(character){
-        if (character.health/character.maxHealth<=character.dna.traits.cannibalism.getValue("feedPercent")
+        if (character.health/character.modifiedStats.maxHealth<=character.dna.traits.cannibalism.getValue("feedPercent")
             && character.gui.cannibalStars.alpha<1){
             character.gui.cannibalStars.alpha=1;
         }
