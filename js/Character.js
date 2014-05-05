@@ -26,7 +26,7 @@ evolution.Character= function (game,id,x,y,spriteKey) {
 
 
     //enemey related
-    this.aggroTriggerDistance=400; //distance for aggro to trigger
+    this.aggroTriggerDistance=1000; //distance for aggro to trigger
     this.maxAggroDistance=700; //beyond this distance enemies disengage
 
     this.gui=game.add.group();

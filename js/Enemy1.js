@@ -10,7 +10,7 @@ evolution.Enemy1= function (game,id,x,y) {
 
     this.body.setCircle(this.width/2);
 
-    this.moveSpeed=50;
+    this.moveSpeed=120;
     this.attackSpeed=500; //attack speed in millisecs
 
     this.init();

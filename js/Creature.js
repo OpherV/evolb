@@ -83,8 +83,8 @@ evolution.Creature.prototype.contactHandler={
         //creature is a cannibal!
         if (this.dna.traits.cannibalism && this.health/this.maxHealth<=this.dna.traits.cannibalism.getValue("feedPercent")){
                 //TODO: set this as a percentage of the trait
-                body.sprite.damage(20,true);
-                this.heal(18);
+                body.sprite.damage(40,true);
+                this.heal(38);
         }
         else if (this.state==evolution.Character.states.WANTS_TO_BREED && body.sprite.state!=evolution.Character.states.BREEDING){
             this.startBreedingWith(body.sprite);
