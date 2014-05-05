@@ -63,6 +63,15 @@ evolution.TraitInstance.baseTraits={
             reverse: true,
             easingFunction: evolution.TraitInstance.EXPONENTIAL
         }
+    },
+    mutationChance: {
+        lowName: "No mutation",
+        highName: "Mutation",
+        defaultValue: 0.05,
+        mutationChance: {
+            lowLimit: 100,
+            highLimit: 0
+        }
     }
 };
 

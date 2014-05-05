@@ -2,22 +2,25 @@ evolution=(window.evolution?window.evolution:{});
 evolution.Rock=function(game,id,x,y){
     this.id=id;
 
-    Phaser.Sprite.call(this, game, x, y);
-    //define texture
-    if (!evolution.Rock.rockTexture){
-        evolution.Rock.rockTexture = game.add.bitmapData(128, 128);
-        evolution.Rock.rockTexture.context.beginPath();
-        evolution.Rock.rockTexture.context.rect(0,0,128,128);
-        evolution.Rock.rockTexture.context.fillStyle = '#BBBBBB';
-        evolution.Rock.rockTexture.context.fill();
-    }
+    var rockNumber=game.rnd.integerInRange(1,3);
 
-    this.loadTexture(evolution.Rock.rockTexture);
+    Phaser.Sprite.call(this, game, x, y,'rock'+rockNumber);
+//    var scaleFactor=0.5+Math.random()*2;
+//    this.scale.x=scaleFactor;
+//    this.scale.y=scaleFactor;
+
     game.physics.p2.enable(this,false);
-    //this.body.setMaterial(evolution.Materials.getRockMaterial());
+
+
+    this.body.clearShapes();
+    this.body.loadPolygon('rocks', 'rock'+rockNumber);
+
     this.body.setMaterial(evolution.Materials.getRockMaterial());
     this.body.static = true;
+    this.body.angle=game.rnd.angle();
+    this.angle=this.body.angle;
     this.body.fixedRotation = true;
+
 
 
 

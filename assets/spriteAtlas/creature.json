@@ -1,0 +1,36 @@
+{"frames": {
+
+"horny.png":
+{
+	"frame": {"x":2,"y":2,"w":184,"h":145},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":184,"h":145},
+	"sourceSize": {"w":184,"h":145}
+},
+"regular_guy.png":
+{
+	"frame": {"x":2,"y":149,"w":174,"h":129},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
+	"sourceSize": {"w":174,"h":129}
+},
+"sex.png":
+{
+	"frame": {"x":2,"y":280,"w":184,"h":137},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":184,"h":137},
+	"sourceSize": {"w":184,"h":137}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "creature.png",
+	"format": "RGBA8888",
+	"size": {"w":188,"h":419},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f565d746db8e4f5bcb480f1aa630bda2:cd046c71e4b37951c41f17e8fa954e2a:71b246fd6097976acdac867c98c6da41$"
+}
+}

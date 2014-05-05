@@ -1,9 +1,10 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
-    var NUM_OF_ENEMIES=5;
-    var NUM_OF_FOOD=50;
+    var NUM_OF_ENEMIES=8;
+    var NUM_OF_FOOD=80;
+    var NUM_OF_MUTATIONS = 20;
     var NUM_OF_CREATURES=5;
-    var NUM_OF_ROCKS=120;
+    var NUM_OF_ROCKS=60;
 
     var LEVEL_WIDTH=8000;
     var LEVEL_HEIGHT=0.5*LEVEL_WIDTH;
@@ -42,13 +43,19 @@ evolution.core=(function(){
         game.load.image('shine', 'assets/sprites/shine_test.png');
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
-        game.load.image('creature', 'assets/sprites/blob.png');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
-        game.load.atlasJSONHash('enemy1', 'assets/enemy1_sprites.png', 'assets/enemy1.json');
-        game.load.atlasJSONHash('food', 'assets/food_sprites.png', 'assets/food.json');
 
+        game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/enemy1.json');
+        game.load.atlasJSONHash('food', 'assets/food_sprites.png', 'assets/food.json');
+        game.load.atlasJSONHash('creature', 'assets/sprites/creature.png', 'assets/spriteAtlas/creature.json' );
+        game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
+
+
+        game.load.image('rock1', 'assets/sprites/rock1.png');
+        game.load.image('rock2', 'assets/sprites/rock2.png');
+        game.load.image('rock3', 'assets/sprites/rock3.png');
 
         game.load.image('cannibal_1', 'assets/sprites/1cannibal.png');
         game.load.image('cannibal_2', 'assets/sprites/2cannibal.png');
@@ -61,6 +68,14 @@ evolution.core=(function(){
         game.load.image('spike_1', 'assets/sprites/1spike.png');
         game.load.image('spike_2', 'assets/sprites/2spike.png');
         game.load.image('spike_3', 'assets/sprites/6spike.png');
+
+
+        //physics
+
+        //	Load our physics data exported from PhysicsEditor
+        game.load.physics('rocks', 'assets/physics/rocks.json');
+
+
     }
 
     function create() {
@@ -211,6 +226,14 @@ evolution.core=(function(){
             _placeWithoutCollision(newFood,[spriteArrays.all,spriteArrays.rocks]);
             spriteArrays.all.push(newFood);
             powerupLayer.add(newFood);
+        }
+
+        //food
+        for (x=0;x<NUM_OF_MUTATIONS;x++){
+            var newMutation=new evolution.Mutation(game,_generateId(),0,0);
+            _placeWithoutCollision(newMutation,[spriteArrays.all,spriteArrays.rocks]);
+            spriteArrays.all.push(newMutation);
+            powerupLayer.add(newMutation);
         }
 
 

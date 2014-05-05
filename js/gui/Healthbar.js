@@ -3,7 +3,7 @@ evolution.gui=(window.evolution.gui?window.evolution.gui:{});
 evolution.gui.Healthbar= function (game,character) {
     this.game=game;
     this.character=character;
-    this.barWidth=character.width/2;
+    this.barWidth=character.width;
     Phaser.Graphics.call(this, game, 0, 0);
 
     this.redraw=function(){

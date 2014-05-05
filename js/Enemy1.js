@@ -3,9 +3,10 @@ evolution.Enemy1= function (game,id,x,y) {
 
     //construct chracter
     evolution.Character.call(this, game, id,  x, y, 'enemy1');
+    this.scale.setTo(0.6);
 
-    this.animations.add('eat');
-    this.animations.play('eat', 8, true);
+    this.animations.add('eat',[1,2,3,4,5,6,5,4,3,2]);
+    this.animations.play('eat', 40, true);
 
     this.body.setCircle(this.width/2);
 

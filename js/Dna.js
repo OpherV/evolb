@@ -4,7 +4,8 @@ evolution.Dna=function(){
     this.character=null;
 
     this.baseTraits={
-        sizeSpeed: new evolution.TraitInstance(evolution.TraitInstance.baseTraits.sizeSpeed)
+        sizeSpeed: new evolution.TraitInstance(evolution.TraitInstance.baseTraits.sizeSpeed),
+        mutationChance: new evolution.TraitInstance(evolution.TraitInstance.baseTraits.mutationChance)
     };
 
     this.traits={
@@ -16,7 +17,13 @@ evolution.Dna.prototype.constructor=evolution.Dna;
 
 evolution.Dna.prototype.randomizeBaseTraits=function(){
     for (var traitName in this.baseTraits){
-        this.baseTraits[traitName].randomize();
+        if (this.baseTraits[traitName].parentTrait.defaultValue){
+            this.baseTraits[traitName].value=this.baseTraits[traitName].parentTrait.defaultValue;
+        }
+        else{
+            this.baseTraits[traitName].randomize();
+        }
+
     }
 };
 
@@ -61,7 +68,7 @@ evolution.Dna.prototype.deactivate=function(){
 
 //combines parent dna to form child dna
 evolution.Dna.combine=function(dna1,dna2){
-    var chanceOfMutation=1;
+    var chanceOfMutation=0.5;
     var chanceRemoveTrait=0.15;
 
     var newDna = new evolution.Dna();

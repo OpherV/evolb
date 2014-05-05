@@ -85,8 +85,8 @@ evolution.Character.states= Object.freeze({
 //Every class inheriting should call this on startup
 evolution.Character.prototype.init=function(){
     this.healthbar = new evolution.gui.Healthbar(this.game,this);
-    this.healthbar.x=-this.width/3.6;
-    this.healthbar.y=-this.height/3;
+    this.healthbar.x=-this.width/2;
+    this.healthbar.y=-this.height/2-9;
     this.gui.addChild(this.healthbar);
     this.healthbar.redraw();
     this.setDrifting();
@@ -154,6 +154,7 @@ evolution.Character.prototype.setHunting=function(){
 
 evolution.Character.prototype.setWantsToBreed=function(){
     this.state=evolution.Character.states.WANTS_TO_BREED;
+    this.animations.play("horny");
 
     //remove the hunger loop timer
     if (this.timeEvents.hunger){
@@ -226,7 +227,7 @@ evolution.Character.prototype.doHungerEvent=function(){
 evolution.Character.prototype.startBreedingWith=function(target){
     this.currentBreedingWith=target;
     //TODO: figure out how to calculate this from body. currently only applies to creature sprite
-    this.currentConstraint = this.game.physics.p2.createDistanceConstraint(this, target, this.width/3.5+target.width/3.5);
+    this.currentConstraint = this.game.physics.p2.createDistanceConstraint(this, target, this.width/2+target.width/2);
 
     target.currentBreedingWith=target;
     target.currentConstraint=this.currentConstraint;
@@ -234,6 +235,9 @@ evolution.Character.prototype.startBreedingWith=function(target){
     this.state=evolution.Character.states.BREEDING;
     this.currentBreedingWith.state=evolution.Character.states.BREEDING;
     this.healthbar.redraw();
+
+    this.animations.play("sex");
+    this.currentBreedingWith.animations.play("sex");
 
     this.game.time.events.add(2000,function(){
         //make sure both parents are alive
@@ -248,6 +252,7 @@ evolution.Character.prototype.startBreedingWith=function(target){
 evolution.Character.prototype.stopBreeding=function(){
     if (this.currentBreedingWith){
         this.currentBreedingWith.tint=0XFFFFFF;
+        this.currentBreedingWith.animations.play("normal");
         this.currentBreedingWith.state=evolution.Character.states.DRIFTING;
         this.currentBreedingWith.currentBreedingWith=null;
         this.currentBreedingWith=null;
@@ -257,6 +262,7 @@ evolution.Character.prototype.stopBreeding=function(){
     }
     this.state=evolution.Character.states.DRIFTING;
     this.tint=0XFFFFFF;
+    this.animations.play("normal");
 };
 
 
@@ -311,7 +317,7 @@ evolution.Character.prototype.update = function() {
         this.moveToSprite(this.currentTarget,this.moveSpeed);
     }
     else if(this.state==evolution.Character.states.BREEDING){
-        this.tint=0X455FF5;
+        //this.tint=0X455FF5;
     }
 
     if (this.dna){

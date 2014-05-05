@@ -33,8 +33,8 @@ evolution.Creature= function (game,id,x,y,dna) {
     //set creature size
     this.scale.setTo(this.dna.baseTraits.sizeSpeed.getValue("size"),
         this.dna.baseTraits.sizeSpeed.getValue("size"));
-    this.body.setCircle(this.width/3.5);
-    this.anchor.setTo(0.5,0.65);
+    this.body.clearShapes();
+    this.body.setCircle(this.height/2);
 
     this.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
 
@@ -42,6 +42,11 @@ evolution.Creature= function (game,id,x,y,dna) {
     this.body.setMaterial(evolution.Materials.getCreatureMaterial());
 
     //methods
+
+    this.animations.add("normal",[1]);
+    this.animations.add("horny",[0]);
+    this.animations.add("sex",[2]);
+    this.animations.play("normal",1,true);
 
 
     this.init();
@@ -68,6 +73,10 @@ evolution.Creature.prototype.spawn=function(){
 evolution.Creature.prototype.contactHandler={
     "food": function(body){
         this.heal(body.sprite.healAmount);
+        body.sprite.destroy();
+    },
+    "mutation": function(body){
+        this.dna.baseTraits.mutationChance.value=1;
         body.sprite.destroy();
     },
     "creature": function(body){
@@ -97,7 +106,6 @@ evolution.Creature.prototype.init = function(){
     evolution.Character.prototype.init.call(this);
     this.dna.activate();
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);
-
 };
 
 

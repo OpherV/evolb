@@ -1,0 +1,36 @@
+{"frames": {
+
+"mutation1.png":
+{
+	"frame": {"x":2,"y":2,"w":100,"h":107},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":107},
+	"sourceSize": {"w":100,"h":107}
+},
+"mutation2.png":
+{
+	"frame": {"x":104,"y":2,"w":100,"h":107},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":107},
+	"sourceSize": {"w":100,"h":107}
+},
+"mutation3.png":
+{
+	"frame": {"x":206,"y":2,"w":100,"h":107},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":107},
+	"sourceSize": {"w":100,"h":107}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "mutation_sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":308,"h":111},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7c175b275fe402912af0d2c4082a781e:6d11a8ee91832afa503e37c32ccdf901:53587c214a70864cf191c3747aa4a89f$"
+}
+}
