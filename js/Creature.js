@@ -37,6 +37,7 @@ evolution.Creature= function (game,id,x,y,dna) {
     this.body.setCircle(this.height/2);
 
     this.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
+    this.maxSpeed=this.moveSpeed;
 
     //has to be after setCircle otherwise the material is lost
     this.body.setMaterial(evolution.Materials.getCreatureMaterial());

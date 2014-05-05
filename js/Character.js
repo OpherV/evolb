@@ -182,19 +182,20 @@ evolution.Character.prototype.postKill=function(){
 
 };
 
-evolution.Character.prototype.moveInDirecton= function(x,y) {
-    var movementVector=new Phaser.Point(this.body.velocity.x+x,this.body.velocity.x+y);
+evolution.Character.prototype.moveInDirecton= function(movementVector) {
+    var finalVelocity=new Phaser.Point(-this.body.world.mpx(this.body.velocity.x)+movementVector.x,
+                                        -this.body.world.mpx(this.body.velocity.y)+movementVector.y);
     //make sure not to go over maxspeed
-    movementVector.setMagnitude(Math.max(movementVector.getMagnitude(),this.maxSpeed));
-    this.body.velocity.x=movementVector.x;
-    this.body.velocity.y=movementVector.y;
+    finalVelocity.setMagnitude(Math.min(finalVelocity.getMagnitude(),this.maxSpeed));
+    this.body.velocity.x=finalVelocity.x;
+    this.body.velocity.y=finalVelocity.y;
 }
 
 //moves this creature in the direction of the target
-evolution.Character.prototype.moveToSprite= function(target,speed) {
+evolution.Character.prototype.moveToTarget= function(target,speed) {
     var movementVector=(new Phaser.Point(target.x,target.y)).subtract(this.x,this.y);
     movementVector.setMagnitude(speed);
-    this.moveInDirecton(movementVector.x,movementVector.y);
+    this.moveInDirecton(movementVector);
 };
 
 evolution.Character.prototype.findTarget= function() {
@@ -311,10 +312,10 @@ evolution.Character.prototype.update = function() {
         bob.call(this)
     }
     else if(this.state==evolution.Character.states.WANTS_TO_BREED && this.currentTarget){
-        this.moveToSprite(this.currentTarget,this.floatSpeed);
+        this.moveToTarget(this.currentTarget,1);
     }
     else if(this.state==evolution.Character.states.HUNTING && this.currentTarget){
-        this.moveToSprite(this.currentTarget,this.moveSpeed);
+        this.moveToTarget(this.currentTarget,this.moveSpeed);
     }
     else if(this.state==evolution.Character.states.BREEDING){
         //this.tint=0X455FF5;

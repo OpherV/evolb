@@ -264,7 +264,7 @@ evolution.core=(function(){
             else{
                 infoPanel.close();
                 creaturesLayer.forEachAlive(function(creature){
-                    evolution.core.moveToCoords(creature, creature.moveSpeed,clickPoint.x, clickPoint.y);
+                    creature.moveToTarget(clickPoint,creature.moveSpeed);
                 });
             }
 
