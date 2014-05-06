@@ -93,11 +93,6 @@ evolution.Character.prototype.init=function(){
         this.modifiedStats[stat]=this.stats[stat];
     }
 
-    this.healthbar = new evolution.gui.Healthbar(this.game,this);
-    this.healthbar.x=-this.width/2;
-    this.healthbar.y=-this.height/2-9;
-    this.gui.addChild(this.healthbar);
-    this.healthbar.redraw();
     this.setDrifting();
 
     //add gui to gui layer
@@ -163,7 +158,7 @@ evolution.Character.prototype.setHunting=function(){
 
 evolution.Character.prototype.setWantsToBreed=function(){
     this.state=evolution.Character.states.WANTS_TO_BREED;
-    this.animations.play("horny");
+//    this.animations.play("horny");
 
     //remove the hunger loop timer
     if (this.timeEvents.hunger){
@@ -246,8 +241,8 @@ evolution.Character.prototype.startBreedingWith=function(target){
     this.currentBreedingWith.state=evolution.Character.states.BREEDING;
     this.healthbar.redraw();
 
-    this.animations.play("sex");
-    this.currentBreedingWith.animations.play("sex");
+//    this.animations.play("sex");
+//    this.currentBreedingWith.animations.play("sex");
 
     this.game.time.events.add(2000,function(){
         //make sure both parents are alive
@@ -262,7 +257,7 @@ evolution.Character.prototype.startBreedingWith=function(target){
 evolution.Character.prototype.stopBreeding=function(){
     if (this.currentBreedingWith){
         this.currentBreedingWith.tint=0XFFFFFF;
-        this.currentBreedingWith.animations.play("normal");
+//        this.currentBreedingWith.animations.play("normal");
         this.currentBreedingWith.state=evolution.Character.states.DRIFTING;
         this.currentBreedingWith.currentBreedingWith=null;
         this.currentBreedingWith=null;
@@ -272,7 +267,7 @@ evolution.Character.prototype.stopBreeding=function(){
     }
     this.state=evolution.Character.states.DRIFTING;
     this.tint=0XFFFFFF;
-    this.animations.play("normal");
+//    this.animations.play("normal");
 };
 
 
@@ -327,7 +322,7 @@ evolution.Character.prototype.update = function() {
         this.moveToTarget(this.currentTarget,this.modifiedStats.moveSpeed);
     }
     else if(this.state==evolution.Character.states.BREEDING){
-        //this.tint=0X455FF5;
+        this.tint=0X455FF5;
     }
 
     if (this.dna){

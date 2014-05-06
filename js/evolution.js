@@ -12,7 +12,7 @@ evolution.core=(function(){
 
     var CAMERA_SPEED=5;
 
-    var PLAYER_CONTROL_RANGE=400;
+    var PLAYER_CONTROL_RANGE=500;
 
     var groups={};
     var displacementFilter;
@@ -46,13 +46,17 @@ evolution.core=(function(){
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
+        game.load.image('creature', 'assets/sprites/yellow_blob.png');
+
+
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
 
         game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/enemy1.json');
         game.load.atlasJSONHash('food', 'assets/food_sprites.png', 'assets/food.json');
-        game.load.atlasJSONHash('creature', 'assets/sprites/creature.png', 'assets/spriteAtlas/creature.json' );
+        //game.load.atlasJSONHash('creature', 'assets/sprites/creature.png', 'assets/spriteAtlas/creature.json' );
         game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
+        game.load.atlasJSONHash('creature_healthbar', 'assets/sprites/creature_healthbar.png', 'assets/spriteAtlas/creature_healthbar.json' );
 
 
         game.load.image('rock1', 'assets/sprites/rock1.png');

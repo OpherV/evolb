@@ -44,10 +44,10 @@ evolution.Creature= function (game,id,x,y,dna) {
 
     //methods
 
-    this.animations.add("normal",[1]);
-    this.animations.add("horny",[0]);
-    this.animations.add("sex",[2]);
-    this.animations.play("normal",1,true);
+//    this.animations.add("normal",[1]);
+//    this.animations.add("horny",[0]);
+//    this.animations.add("sex",[2]);
+//    this.animations.play("normal",1,true);
 
 
     this.init();
@@ -107,6 +107,13 @@ evolution.Creature.prototype.init = function(){
     evolution.Character.prototype.init.call(this);
     this.dna.activate();
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);
+
+
+    this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
+    this.healthbar.x = -this.healthbar.width/2;
+    this.healthbar.y = -this.healthbar.height/2;
+    this.addChild(this.healthbar);
+    this.healthbar.redraw();
 };
 
 
