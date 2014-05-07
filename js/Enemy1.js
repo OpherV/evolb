@@ -15,7 +15,7 @@ evolution.Enemy1= function (game,id,x,y) {
 
     this.stats.moveSpeed=10;
     this.stats.maxSpeed=85;
-    this.stats.attackSpeed=500; //attack speed in millisecs
+    this.stats.attackSpeed=350; //attack speed in millisecs
 
     this.init();
 

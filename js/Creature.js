@@ -76,8 +76,10 @@ evolution.Creature.prototype.constructor = evolution.Creature;
 // behaviours
 // ***************
 
-evolution.Creature.prototype.spawn=function(){
-    var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna,this.modifiedStats.mutationChance);
+evolution.Creature.prototype.spawn=function(father,mother){
+    console.log(father.modifiedStats.mutationChance,mother.modifiedStats.mutationChance);
+    var mutationChance=Math.max(father.modifiedStats.mutationChance,mother.modifiedStats.mutationChance);
+    var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna,mutationChance);
     var newCreature = new evolution.Creature(this.game,evolution.core.generateId(), this.x,this.y,spawnDna);
     evolution.core.getCreatures().add(newCreature);
     newCreature.isFollowingPointer=this.isFollowingPointer;
@@ -96,7 +98,7 @@ evolution.Creature.prototype.contactHandler={
         body.sprite.destroy();
     },
     "mutation": function(body){
-        this.dna.baseTraits.mutationChance.value=1;
+        this.modifiedStats.mutationChance=1;
         body.sprite.destroy();
     },
     "creature": function(body){

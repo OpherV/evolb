@@ -1,6 +1,6 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
-    var NUM_OF_ENEMIES=15;
+    var NUM_OF_ENEMIES=17;
     var NUM_OF_FOOD=60;
     var NUM_OF_MUTATIONS = 10;
     var NUM_OF_CREATURES=5;

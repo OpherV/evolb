@@ -78,6 +78,7 @@ evolution.Dna.prototype.deactivate=function(){
 evolution.Dna.combine=function(dna1,dna2,chanceOfMutation){
     //var chanceOfMutation=0.5;
     var chanceRemoveTrait=0.15;
+    console.log(chanceOfMutation);
 
     var newDna = new evolution.Dna();
     for(var traitName in dna1.baseTraits){

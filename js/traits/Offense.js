@@ -10,7 +10,7 @@ evolution.Traits.Offense={
         highLimit: 30
     },
     sprites: [{frame: 6, x: -72, y: -82},
-            {frame: 7, x: -80, y: -70},
+            {frame: 7, x: -80, y: -73},
             {frame: 8, x: -81, y: -80},
             {frame: 9, x: -119.5, y: -78}
     ],

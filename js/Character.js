@@ -276,7 +276,7 @@ evolution.Character.prototype.startBreedingWith=function(target){
     this.game.time.events.add(2000,function(){
         //make sure both parents are alive
         if (this.alive && this.currentBreedingWith && this.currentBreedingWith.alive){
-            this.spawn();
+            this.spawn(this,this.currentBreedingWith);
         }
         this.stopBreeding();
     },this);
@@ -305,7 +305,7 @@ evolution.Character.prototype.stopBreeding=function(){
 
 
 //spawns a new creature from this one
-evolution.Character.prototype.spawn=function(){
+evolution.Character.prototype.spawn=function(father,mother){
 };
 
 // override default sprite functions
@@ -321,7 +321,6 @@ evolution.Character.prototype.render=function(){
 evolution.Character.prototype.physicalDamage= function(amount,showDamage) {
     //reduce defense stats from damage
     var inflictedDamage=Math.max(0,amount-this.modifiedStats.defense);
-    console.log(inflictedDamage);
     if (inflictedDamage>0){
         Phaser.Sprite.prototype.damage.call(this,inflictedDamage);
         if (showDamage){
@@ -392,6 +391,12 @@ evolution.Character.prototype.update = function() {
     if (this.dna){
         for (var traitName in this.dna.traits){
             this.dna.traits[traitName].parentTrait.onUpdate(this);
+        }
+
+        for (var traitName in this.dna.baseTraits){
+            if (this.dna.baseTraits[traitName].parentTrait.onUpdate){
+                this.dna.baseTraits[traitName].parentTrait.onUpdate(this);
+            }
         }
     }
 
