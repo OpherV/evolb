@@ -22,6 +22,7 @@ evolution.core=(function(){
     var underwater;
     var guiLayer;
     var aquarium,aquariumMasked,aquarium_blue,labBg,labBgMasked,shine;
+    var pointerController;
 
     var layers={
         behindAquarium: null,
@@ -168,7 +169,7 @@ evolution.core=(function(){
         displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
         displacementFilter.scale.x = 15;
         displacementFilter.scale.y = 15;
-        layers.inAquarium.filters =[displacementFilter];
+        //layers.inAquarium.filters =[displacementFilter];
 
 
 
@@ -254,9 +255,16 @@ evolution.core=(function(){
         underwater.add(guiLayer);
 
 
+        //UI
+
         var infoPanel=new evolution.gui.InfoPanel(game);
         underwater.add(infoPanel);
         infoPanel.init();
+
+        pointerController=new Phaser.Graphics(game,0,0);
+        pointerController.fixedToCamera=true;
+        guiLayer.addChild(pointerController);
+
 
         game.input.onDown.add(function(pointer){
             var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
@@ -270,14 +278,18 @@ evolution.core=(function(){
             else{
                 infoPanel.close();
                 creaturesLayer.forEachAlive(function(creature){
-                    //creatures farther from the pointer are less effected
-                    var effectiveDistance=Math.min(PLAYER_CONTROL_RANGE,Phaser.Point.distance(creature,clickPoint));
-                    var moveSpeedRatio= -Math.pow(effectiveDistance/PLAYER_CONTROL_RANGE,7)+1;
-                    creature.moveToTarget(clickPoint,creature.modifiedStats.moveSpeed*moveSpeedRatio);
+                    creature.isFollowingPointer=true;
                 });
             }
 
 
+        },this);
+
+        game.input.onUp.add(function(pointer){
+            pointerController.clear();
+            creaturesLayer.forEachAlive(function(creature){
+                creature.isFollowingPointer=false;
+            });
         },this);
 
 
@@ -310,8 +322,8 @@ evolution.core=(function(){
             creature.render();
         });
 
-        //game.debug.cameraInfo(game.camera, 32, 32);
 
+        _updatePointerController();
         _bgParallex();
     }
 
@@ -365,6 +377,26 @@ evolution.core=(function(){
         spriteArrays.all.push(topWall);
 
     }
+    function _updatePointerController(){
+        var pointer=game.input.activePointer;
+        var minRadius=20;
+        var maxRadius=150;
+        var maxMouseDownTime=2500;
+
+        var controlRatio=pointer.duration/maxMouseDownTime;
+        pointer.controlRatio=controlRatio;
+
+        var controlRadius=Math.min(1,Math.pow(controlRatio,2))*(maxRadius-minRadius)+minRadius;
+        if (controlRatio>0){
+            pointerController.clear();
+            pointerController.cameraOffset.x=pointer.x;
+            pointerController.cameraOffset.y=pointer.y;
+            pointerController.beginFill(0xFFFFFF, 0.1);
+            pointerController.drawCircle(0, 0,controlRadius);
+
+        }
+
+    }
 
     //move bg for parallex effect
     function _bgParallex(){
@@ -390,15 +422,6 @@ evolution.core=(function(){
         bgSprite.cameraOffset.y=-bgMovementY*moveYPercent;
     }
 
-    function _moveToCoords(item,speed,x,y) {
-        var dx = x - item.body.x;
-        var dy = y - item.body.y;
-        itemRotation= Math.atan2(dy, dx);
-        item.body.rotation = itemRotation + game.math.degToRad(-90);
-        var angle = item.body.rotation + (Math.PI / 2);
-        item.body.velocity.x += speed * Math.cos(angle);
-        item.body.velocity.y += speed * Math.sin(angle);
-    }
 
     function focusOnCreatures(isInstant){
         var creatureGroupCenter=_findCenterOfMass(creaturesLayer);
@@ -480,8 +503,8 @@ evolution.core=(function(){
 
     return{
         game: game,
-        moveToCoords: _moveToCoords,
         generateId: _generateId,
+        PLAYER_CONTROL_RANGE: PLAYER_CONTROL_RANGE,
         rgbToHex:_rgbToHex,
         getCreatures: function(){return creaturesLayer;},
         getGuiLayer: function(){return guiLayer;},

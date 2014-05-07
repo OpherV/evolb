@@ -303,11 +303,15 @@ evolution.Character.prototype.heal= function(amount) {
 };
 
 evolution.Character.prototype.update = function() {
+    var pointer=this.game.input.activePointer;
 
     if (this.isFollowingPointer){
-        var coords=new Phaser.Point(this.game.input.x+this.game.camera.x,
-            this.game.input.y+this.game.camera.y);
-        evolution.core.moveToCoords(this, this.modifiedStats.moveSpeed,coords.x, coords.y);
+        //creatures farther from the pointer are less effected
+        var effectiveDistance=Math.min(evolution.core.PLAYER_CONTROL_RANGE,Phaser.Point.distance(this,pointer));
+        var moveSpeedRatio= -Math.pow(effectiveDistance/evolution.core.PLAYER_CONTROL_RANGE,7)+1;
+        this.moveToTarget(pointer,this.modifiedStats.moveSpeed*moveSpeedRatio*pointer.controlRatio);
+        console.log(Phaser.Point.distance(this,pointer));
+
     }
 
 
