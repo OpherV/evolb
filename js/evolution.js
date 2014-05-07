@@ -243,7 +243,7 @@ evolution.core=(function(){
 
         //EVENTS
         var blinkTimer=0;
-        var shouldBlink=game.rnd.integerInRange(1,7);
+        var shouldBlink=game.rnd.integerInRange(1,4);
         game.time.events.loop(200,function(){
             if (blinkTimer==shouldBlink){
                 var creature=null;
