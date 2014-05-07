@@ -378,7 +378,7 @@ evolution.core=(function(){
     function _updatePointerController(){
         var pointer=game.input.activePointer;
         var minRadius=20;
-        var maxRadius=125;
+        var maxRadius=90;
         var maxMouseDownTime=1000;
 
         var controlRatio=pointer.duration/maxMouseDownTime;

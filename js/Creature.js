@@ -63,7 +63,9 @@ evolution.Creature.prototype.spawn=function(){
     var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna,this.modifiedStats.mutationChance);
     var newCreature = new evolution.Creature(this.game,evolution.core.generateId(), this.x,this.y,spawnDna);
     evolution.core.getCreatures().add(newCreature);
+    newCreature.isFollowingPointer=this.isFollowingPointer;
     newCreature.init();
+
     //TODO: recycle creature?
 };
 
