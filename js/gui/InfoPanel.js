@@ -13,7 +13,7 @@ evolution.gui.InfoPanel= function (game) {
 
     var traitScales = new Phaser.Group(game);
 
-    var creatureRenderTexture=new Phaser.RenderTexture(game,height, height, 'infoPanelCreature');
+    var creatureRenderTexture=new Phaser.RenderTexture(game,height*1.5, height, 'infoPanelCreature');
     var creatureSprite = new Phaser.Sprite(game,0,0,'infoPanelCreature');
     creatureSprite.anchor.setTo(0.5,0.5);
 

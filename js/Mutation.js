@@ -4,6 +4,9 @@ evolution.Mutation= function (game,id,x,y) {
     this.game=game;
 
     Phaser.Sprite.call(this, game, x, y, 'mutation');
+    this.type=evolution.Character.types.POWERUP;
+    this.kind="mutation";
+
     this.animations.add('mutation');
     this.animations.play('mutation', 8, true);
     this.scale.setTo(0.6);

@@ -1,0 +1,44 @@
+{"frames": {
+
+"blink.png":
+{
+	"frame": {"x":2,"y":2,"w":174,"h":129},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
+	"sourceSize": {"w":174,"h":129}
+},
+"blobs-32.png":
+{
+	"frame": {"x":178,"y":2,"w":174,"h":129},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
+	"sourceSize": {"w":174,"h":129}
+},
+"horny_no_yellow.png":
+{
+	"frame": {"x":354,"y":2,"w":174,"h":129},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
+	"sourceSize": {"w":174,"h":129}
+},
+"sex_no_yellow.png":
+{
+	"frame": {"x":530,"y":2,"w":174,"h":129},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
+	"sourceSize": {"w":174,"h":129}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "creature_face_sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":706,"h":133},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:3ae3fea9bf5eaed39338ab867f3eaebc:6573d17f0932fccda17897b00c28aeda:327db42061f9b4a7bcbc4020f81e5f26$"
+}
+}

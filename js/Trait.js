@@ -58,8 +58,8 @@ evolution.TraitInstance.baseTraits={
             highLimit: 0.85
         },
         hungerDamage:{
-            lowLimit: 0.5,
-            highLimit: 1,
+            lowLimit: 0.75,
+            highLimit: 1.5,
             reverse: true,
             easingFunction: evolution.TraitInstance.EXPONENTIAL
         }

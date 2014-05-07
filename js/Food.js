@@ -6,6 +6,9 @@ evolution.Food= function (game,id,x,y) {
     this.healAmount=50;
 
     Phaser.Sprite.call(this, game, x, y, 'food');
+    this.type=evolution.Character.types.POWERUP;
+    this.kind="food";
+
     this.animations.add('bubble');
     this.animations.play('bubble', 8, true);
 

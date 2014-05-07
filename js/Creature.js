@@ -15,26 +15,44 @@ evolution.Creature= function (game,id,x,y,dna) {
     this.dna.character=this;
 
     //construct chracter
-    evolution.Character.call(this, game, id, x, y, 'creature');
+    evolution.Character.call(this, game, id, x, y,'playerCreature');
+    this.type=evolution.Character.types.PLAYER;
+    this.kind="creature";
 
-    //events
-    //*************************
-    this.body.onBeginContact.add(beginContactHandler, this);
+    //circling dots
+    this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
+    this.healthbar.x = -this.healthbar.width/2;
+    this.healthbar.y = -this.healthbar.height/2;
+    this.addChild(this.healthbar);
+    this.healthbar.redraw();
 
+    //yellow body
+    this.bodySprite=new Phaser.Sprite(game,0,0,'blob');
+    this.bodySprite.x=-this.bodySprite.width/2;
+    this.bodySprite.y=-this.bodySprite.height/2;
+    this.addChild(this.bodySprite);
 
-    function beginContactHandler(body, shapeA, shapeB, equation) {
-        if (!(body && body.sprite && body.sprite!=null)){ return; }
-        if (this.contactHandler[body.sprite.key]){
-            this.contactHandler[body.sprite.key].call(this,body);
-        }
-    }
+    this.bodySprite.animations.add("yellow",[0]);
+    this.bodySprite.animations.add("pink",[1]);
+    this.bodySprite.animations.play("yellow");
+
+    this.face=new Phaser.Sprite(game,0,0,'creature_face');
+    this.face.x=-this.face.width/2;
+    this.face.y=-this.face.height/2;
+    this.addChild(this.face);
+
+    this.face.animations.add("normal",[1]);
+    this.face.animations.add("horny",[2]);
+    this.face.animations.add("sex",[3]);
+    this.face.animations.add("blink",[0,1]);
+    this.face.animations.play("normal");
 
 
     //set creature size
     this.scale.setTo(this.dna.baseTraits.sizeSpeed.getValue("size"),
         this.dna.baseTraits.sizeSpeed.getValue("size"));
     this.body.clearShapes();
-    this.body.setCircle(this.height/2);
+    this.body.setCircle(this.bodySprite.height/2*this.scale.x);
 
     this.stats.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
     this.stats.maxSpeed=this.stats.moveSpeed;
@@ -42,12 +60,10 @@ evolution.Creature= function (game,id,x,y,dna) {
     //has to be after setCircle otherwise the material is lost
     this.body.setMaterial(evolution.Materials.getCreatureMaterial());
 
+
     //methods
 
-//    this.animations.add("normal",[1]);
-//    this.animations.add("horny",[0]);
-//    this.animations.add("sex",[2]);
-//    this.animations.play("normal",1,true);
+
 
 
     this.init();
@@ -109,16 +125,21 @@ evolution.Creature.prototype.init = function(){
     evolution.Character.prototype.init.call(this);
     this.dna.activate();
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);
-
-
-    this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
-    this.healthbar.x = -this.healthbar.width/2;
-    this.healthbar.y = -this.healthbar.height/2;
-    this.addChild(this.healthbar);
-    this.healthbar.redraw();
 };
 
 
 evolution.Creature.prototype.postKill = function(){
     evolution.Character.prototype.postKill.call(this);
+};
+
+evolution.Creature.prototype.blink=function(){
+    if (this.state==evolution.Character.states.IDLE || this.state==evolution.Character.states.DRIFTING){
+        this.face.animations.play("blink",8);
+    }
+};
+
+evolution.Creature.prototype.flashTint=function(color,duration){
+    if (!duration){ var duration=100;}
+    this.healthbar.tint=color;
+    this.game.time.events.add(duration,function(){ this.healthbar.tint=0XFFFFFF},this);
 };

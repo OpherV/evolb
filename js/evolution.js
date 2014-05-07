@@ -45,16 +45,15 @@ evolution.core=(function(){
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
-        game.load.image('creature', 'assets/sprites/yellow_blob.png');
-
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
 
         game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/enemy1.json');
         game.load.atlasJSONHash('food', 'assets/food_sprites.png', 'assets/food.json');
-        //game.load.atlasJSONHash('creature', 'assets/sprites/creature.png', 'assets/spriteAtlas/creature.json' );
         game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
+        game.load.atlasJSONHash('blob', 'assets/sprites/blob_sprites.png', 'assets/spriteAtlas/blob.json' );
+        game.load.atlasJSONHash('creature_face', 'assets/sprites/creature_face_sprites.png', 'assets/spriteAtlas/creature_face.json' );
         game.load.atlasJSONHash('creature_healthbar', 'assets/sprites/creature_healthbar.png', 'assets/spriteAtlas/creature_healthbar.json' );
 
 
@@ -167,7 +166,7 @@ evolution.core=(function(){
         displacementFilter=new PIXI.DisplacementFilter(displacementTexture);
         displacementFilter.scale.x = 15;
         displacementFilter.scale.y = 15;
-        //layers.inAquarium.filters =[displacementFilter];
+        layers.inAquarium.filters =[displacementFilter];
 
 
 
@@ -252,9 +251,31 @@ evolution.core=(function(){
         underwater.add(layers.foreground);
         underwater.add(guiLayer);
 
+        //EVENTS
+        var blinkTimer=0;
+        var shouldBlink=game.rnd.integerInRange(1,7);
+        game.time.events.loop(200,function(){
+            if (blinkTimer==shouldBlink){
+                var creature=null;
+                var tryCount=0;
+                while((!creature || creature && !creature.alive) && tryCount<10){
+                    creature=creaturesLayer.getRandom();
+                    tryCount++;
+                }
+
+                creature.blink();
+                blinkTimer=0;
+                shouldBlink=game.rnd.integerInRange(1,7);
+            }
+            else
+            {
+                blinkTimer++;
+            }
+
+        },this);
+
 
         //UI
-
         var infoPanel=new evolution.gui.InfoPanel(game);
         underwater.add(infoPanel);
         infoPanel.init();
@@ -264,6 +285,7 @@ evolution.core=(function(){
         guiLayer.addChild(pointerController);
 
 
+        //INPUT
         game.input.onDown.add(function(pointer){
             var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
             //TODO make sure to update creature list

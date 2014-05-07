@@ -2,6 +2,7 @@ evolution=(window.evolution?window.evolution:{});
 evolution.Character= function (game,id,x,y,spriteKey) {
     this.id=id;
     this.game=game;
+    this.type=evolution.Character.types.CHARACTER;
 
     this.stats={
         maxHealth: 100,
@@ -56,6 +57,11 @@ evolution.Character= function (game,id,x,y,spriteKey) {
         if (body && !this.inContactWith[body.sprite.id] ){
             this.inContactWith[body.sprite.id]=body;
         }
+
+        if (!(body && body.sprite && body.sprite!=null)){ return; }
+        if (this.contactHandler[body.sprite.kind]){
+            this.contactHandler[body.sprite.kind].call(this,body);
+        }
     }
 
     function endContactHandler(body, shapeA, shapeB, equation) {
@@ -66,6 +72,8 @@ evolution.Character= function (game,id,x,y,spriteKey) {
             }
         }
     }
+
+
 
 };
 
@@ -83,6 +91,13 @@ evolution.Character.states= Object.freeze({
     WANTS_TO_BREED: "wants_to_breed",
     BREEDING: "breeding",
     HUNTING: "hunting"
+});
+
+evolution.Character.types= Object.freeze({
+    CHARACTER: "character",
+    PLAYER: "player",
+    ENEMY: "enemy",
+    POWERUP: "powerup"
 });
 
 // generic methods
@@ -118,7 +133,7 @@ evolution.Character.prototype.hitCycle=function(){
         body=this.inContactWith[id];
         //call the proper contact handler function
         if (body.sprite && Object.getPrototypeOf(this).contactHandler[body.sprite.key]){
-            Object.getPrototypeOf(this).contactHandler[body.sprite.key].call(this,body);
+            Object.getPrototypeOf(this).contactHandler[body.sprite.kind].call(this,body);
         }
     }
 };
@@ -158,7 +173,9 @@ evolution.Character.prototype.setHunting=function(){
 
 evolution.Character.prototype.setWantsToBreed=function(){
     this.state=evolution.Character.states.WANTS_TO_BREED;
-//    this.animations.play("horny");
+    //TODO breaks encapsulation
+    this.face.animations.play("horny");
+    this.bodySprite.animations.play("pink");
 
     //remove the hunger loop timer
     if (this.timeEvents.hunger){
@@ -238,8 +255,9 @@ evolution.Character.prototype.doHungerEvent=function(){
 
 evolution.Character.prototype.startBreedingWith=function(target){
     this.currentBreedingWith=target;
-    //TODO: figure out how to calculate this from body. currently only applies to creature sprite
-    this.currentConstraint = this.game.physics.p2.createDistanceConstraint(this, target, this.width/2+target.width/2);
+    var boundingRadius=this.body.data.boundingRadius*20;
+    var targetBoundingRadius=target.body.data.boundingRadius*20;
+    this.currentConstraint = this.game.physics.p2.createDistanceConstraint(this, target, boundingRadius+targetBoundingRadius);
 
     target.currentBreedingWith=target;
     target.currentConstraint=this.currentConstraint;
@@ -248,8 +266,11 @@ evolution.Character.prototype.startBreedingWith=function(target){
     this.currentBreedingWith.state=evolution.Character.states.BREEDING;
     this.healthbar.redraw();
 
-//    this.animations.play("sex");
-//    this.currentBreedingWith.animations.play("sex");
+    //TODO breaks encapsulation
+    this.face.animations.play("sex");
+    this.bodySprite.animations.play("pink");
+    this.currentBreedingWith.face.animations.play("sex");
+    this.currentBreedingWith.animations.play("pink");
 
     this.game.time.events.add(2000,function(){
         //make sure both parents are alive
@@ -264,7 +285,9 @@ evolution.Character.prototype.startBreedingWith=function(target){
 evolution.Character.prototype.stopBreeding=function(){
     if (this.currentBreedingWith){
         this.currentBreedingWith.tint=0XFFFFFF;
-//        this.currentBreedingWith.animations.play("normal");
+        //TODO breaks encapsulation
+        this.currentBreedingWith.face.animations.play("normal");
+        this.currentBreedingWith.bodySprite.animations.play("yellow");
         this.currentBreedingWith.state=evolution.Character.states.DRIFTING;
         this.currentBreedingWith.currentBreedingWith=null;
         this.currentBreedingWith=null;
@@ -274,7 +297,9 @@ evolution.Character.prototype.stopBreeding=function(){
     }
     this.state=evolution.Character.states.DRIFTING;
     this.tint=0XFFFFFF;
-//    this.animations.play("normal");
+    //TODO breaks encapsulation
+    this.face.animations.play("normal");
+    this.bodySprite.animations.play("yellow");
 };
 
 
@@ -309,6 +334,10 @@ evolution.Character.prototype.heal= function(amount) {
     this.healthbar.redraw();
 };
 
+//make this character show a sign of being alive
+evolution.Character.prototype.blink= function() {};
+
+
 evolution.Character.prototype.update = function() {
     var pointer=this.game.input.activePointer;
     var pointerInWorld=new Phaser.Point(pointer.worldX,pointer.worldY);
@@ -340,6 +369,8 @@ evolution.Character.prototype.update = function() {
     }
     else if(this.state==evolution.Character.states.BREEDING){
         this.tint=0X455FF5;
+        //todo: breaks encapsulation
+        this.bodySprite.animations.play("pink");
     }
 
     if (this.dna){

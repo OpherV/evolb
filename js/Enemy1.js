@@ -3,6 +3,9 @@ evolution.Enemy1= function (game,id,x,y) {
 
     //construct chracter
     evolution.Character.call(this, game, id,  x, y, 'enemy1');
+    this.type=evolution.Character.types.ENEMY;
+    this.kind="enemy1";
+
     this.scale.setTo(0.4);
 
     this.animations.add('eat',[1,2,3,4,5,6,5,4,3,2]);
