@@ -12,8 +12,6 @@ evolution.core=(function(){
 
     var CAMERA_SPEED=5;
 
-    var PLAYER_CONTROL_RANGE=500;
-
     var groups={};
     var displacementFilter;
     var enemyLayer;
@@ -380,8 +378,8 @@ evolution.core=(function(){
     function _updatePointerController(){
         var pointer=game.input.activePointer;
         var minRadius=20;
-        var maxRadius=150;
-        var maxMouseDownTime=2500;
+        var maxRadius=125;
+        var maxMouseDownTime=1000;
 
         var controlRatio=pointer.duration/maxMouseDownTime;
         pointer.controlRatio=controlRatio;
@@ -504,7 +502,6 @@ evolution.core=(function(){
     return{
         game: game,
         generateId: _generateId,
-        PLAYER_CONTROL_RANGE: PLAYER_CONTROL_RANGE,
         rgbToHex:_rgbToHex,
         getCreatures: function(){return creaturesLayer;},
         getGuiLayer: function(){return guiLayer;},

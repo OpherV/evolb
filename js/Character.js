@@ -186,6 +186,13 @@ evolution.Character.prototype.postKill=function(){
 
 };
 
+evolution.Character.prototype.distanceToPointer=function(){
+  var activePointer=this.game.input.activePointer;
+  var pointer = new Phaser.Point(activePointer.worldX,activePointer.worldY);
+  return Phaser.Point.distance(this,pointer);
+};
+
+
 evolution.Character.prototype.moveInDirecton= function(movementVector) {
     var finalVelocity=new Phaser.Point(-this.body.world.mpx(this.body.velocity.x)+movementVector.x,
                                         -this.body.world.mpx(this.body.velocity.y)+movementVector.y);
@@ -304,13 +311,19 @@ evolution.Character.prototype.heal= function(amount) {
 
 evolution.Character.prototype.update = function() {
     var pointer=this.game.input.activePointer;
+    var pointerInWorld=new Phaser.Point(pointer.worldX,pointer.worldY);
 
     if (this.isFollowingPointer){
+        var maxPlayerControlRange=1000;
+        var moveRatio=Math.max(0.15,pointer.controlRatio); //minimum should be higher than 0
+
         //creatures farther from the pointer are less effected
-        var effectiveDistance=Math.min(evolution.core.PLAYER_CONTROL_RANGE,Phaser.Point.distance(this,pointer));
-        var moveSpeedRatio= -Math.pow(effectiveDistance/evolution.core.PLAYER_CONTROL_RANGE,7)+1;
-        this.moveToTarget(pointer,this.modifiedStats.moveSpeed*moveSpeedRatio*pointer.controlRatio);
-        console.log(Phaser.Point.distance(this,pointer));
+        //var effectiveDistance=Math.min(maxPlayerControlRange,Phaser.Point.distance(this,pointer));
+        //var moveSpeedRatio= -Math.pow(effectiveDistance/evolution.core.PLAYER_CONTROL_RANGE,7)+1;
+        if (Phaser.Point.distance(this,pointerInWorld)<=moveRatio*maxPlayerControlRange){
+            this.moveToTarget(pointerInWorld,this.modifiedStats.moveSpeed*moveRatio);
+        }
+//        console.log(Phaser.Point.distance(this,pointer));
 
     }
 
