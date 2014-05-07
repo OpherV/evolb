@@ -1,0 +1,92 @@
+{"frames": {
+
+"bone1.png":
+{
+	"frame": {"x":2,"y":2,"w":78,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":78,"h":24},
+	"sourceSize": {"w":78,"h":24}
+},
+"bone2.png":
+{
+	"frame": {"x":82,"y":2,"w":117,"h":36},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":36},
+	"sourceSize": {"w":117,"h":36}
+},
+"bone3.png":
+{
+	"frame": {"x":201,"y":2,"w":159,"h":49},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":159,"h":49},
+	"sourceSize": {"w":159,"h":49}
+},
+"shield1.png":
+{
+	"frame": {"x":362,"y":2,"w":207,"h":156},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":207,"h":156},
+	"sourceSize": {"w":207,"h":156}
+},
+"shield2.png":
+{
+	"frame": {"x":571,"y":2,"w":223,"h":175},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":223,"h":175},
+	"sourceSize": {"w":223,"h":175}
+},
+"shield3.png":
+{
+	"frame": {"x":796,"y":2,"w":258,"h":205},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":258,"h":205},
+	"sourceSize": {"w":258,"h":205}
+},
+"spike1.png":
+{
+	"frame": {"x":1056,"y":2,"w":36,"h":41},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
+	"sourceSize": {"w":36,"h":41}
+},
+"spike2.png":
+{
+	"frame": {"x":1094,"y":2,"w":154,"h":44},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":154,"h":44},
+	"sourceSize": {"w":154,"h":44}
+},
+"spike4.png":
+{
+	"frame": {"x":1250,"y":2,"w":154,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":154,"h":159},
+	"sourceSize": {"w":154,"h":159}
+},
+"spike6.png":
+{
+	"frame": {"x":1406,"y":2,"w":239,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":239,"h":159},
+	"sourceSize": {"w":239,"h":159}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "traits_sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":1647,"h":209},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:694a8238bfa711363a0bf5579a4da18d:0f77b68abb31639c2e8534c3208a9441:063a82455af2a4764b21af6a5a2f672b$"
+}
+}

@@ -31,7 +31,7 @@ evolution.Enemy1.prototype.constructor = evolution.Creature;
 evolution.Enemy1.prototype.contactHandler={
     "creature": function(body){
         body.sprite.stopBreeding();
-        body.sprite.damage(10,true);
+        body.sprite.physicalDamage(10,true);
     }
 };
 

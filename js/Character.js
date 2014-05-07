@@ -11,6 +11,7 @@ evolution.Character= function (game,id,x,y,spriteKey) {
         maxSpeed: 50,
         idleVelocityRange: 0, //below this range creatures start bobbing
         attackSpeed: 500,
+        defense: 0,
         damageOutput: 0,// attack speed in millisecs
         mutationChance: 0
     };
@@ -132,7 +133,7 @@ evolution.Character.prototype.hitCycle=function(){
     for (var id in this.inContactWith){
         body=this.inContactWith[id];
         //call the proper contact handler function
-        if (body.sprite && Object.getPrototypeOf(this).contactHandler[body.sprite.key]){
+        if (body.sprite && Object.getPrototypeOf(this).contactHandler[body.sprite.kind]){
             Object.getPrototypeOf(this).contactHandler[body.sprite.kind].call(this,body);
         }
     }
@@ -315,6 +316,21 @@ evolution.Character.prototype.render=function(){
     this.gui.y=this.y;
 };
 
+
+//returns the actual damage inflicted
+evolution.Character.prototype.physicalDamage= function(amount,showDamage) {
+    //reduce defense stats from damage
+    var inflictedDamage=Math.max(0,amount-this.modifiedStats.defense);
+    console.log(inflictedDamage);
+    if (inflictedDamage>0){
+        Phaser.Sprite.prototype.damage.call(this,inflictedDamage);
+        if (showDamage){
+            this.flashTint(0XFF5460);
+        }
+        this.healthbar.redraw();
+    }
+    return inflictedDamage;
+};
 
 
 evolution.Character.prototype.damage= function(amount,showDamage) {

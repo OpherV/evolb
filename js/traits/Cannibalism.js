@@ -9,7 +9,10 @@ evolution.Traits.Cannibalism={
         lowLimit: 0.2,
         highLimit: 0.7
     },
-    sprites: ["cannibal_1","cannibal_2","cannibal_3"],
+    sprites: [{frame: 0, x: -48, y: 0},
+              {frame: 1, x: -63, y: 0},
+              {frame: 2, x: -85, y: 0}
+               ],
     onAdded:function(character){
         var cannibalStars=new Phaser.Sprite(character.game,0,0,"cannibal_stars");
         cannibalStars.blendMode=PIXI.blendModes.ADD;

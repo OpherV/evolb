@@ -41,12 +41,13 @@ evolution.Dna.prototype.activate=function(){
         if (trait.parentTrait.sprites && trait.parentTrait.sprites.length>0){
             //TODO: implement recycling
             var traitSpriteIndex=Math.floor(trait.value*(trait.parentTrait.sprites.length-0.01));
-            trait.traitSprite=new Phaser.Sprite(this.character.game,
-                0,
-                0,
-                trait.parentTrait.sprites[traitSpriteIndex]);
-            trait.traitSprite.x=-trait.traitSprite.width/2;
-            trait.traitSprite.y=-trait.traitSprite.height/1.53;
+            var spriteProperties=trait.parentTrait.sprites[traitSpriteIndex];
+
+            trait.traitSprite=new Phaser.Sprite(this.character.game,0,0,'traits');
+            trait.traitSprite.x=spriteProperties.x;
+            trait.traitSprite.y=spriteProperties.y;
+            trait.traitSprite.animations.add('trait',[spriteProperties.frame]);
+            trait.traitSprite.animations.play('trait');
             this.character.addChild(trait.traitSprite);
         }
 

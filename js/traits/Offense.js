@@ -9,7 +9,11 @@ evolution.Traits.Offense={
         lowLimit: 0,
         highLimit: 30
     },
-    sprites: ["spike_1","spike_2","spike_3"],
+    sprites: [{frame: 6, x: -72, y: -82},
+            {frame: 7, x: -80, y: -70},
+            {frame: 8, x: -81, y: -80},
+            {frame: 9, x: -119.5, y: -78}
+    ],
     onAdded:function(character,trait){
         character.modifiedStats.damageOutput+=trait.getValue("damageBonus");
     },

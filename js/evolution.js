@@ -45,6 +45,10 @@ evolution.core=(function(){
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
+        game.load.image('rock1', 'assets/sprites/rock1.png');
+        game.load.image('rock2', 'assets/sprites/rock2.png');
+        game.load.image('rock3', 'assets/sprites/rock3.png');
+
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
@@ -55,23 +59,8 @@ evolution.core=(function(){
         game.load.atlasJSONHash('blob', 'assets/sprites/blob_sprites.png', 'assets/spriteAtlas/blob.json' );
         game.load.atlasJSONHash('creature_face', 'assets/sprites/creature_face_sprites.png', 'assets/spriteAtlas/creature_face.json' );
         game.load.atlasJSONHash('creature_healthbar', 'assets/sprites/creature_healthbar.png', 'assets/spriteAtlas/creature_healthbar.json' );
+        game.load.atlasJSONHash('traits', 'assets/sprites/traits_sprites.png', 'assets/spriteAtlas/traits.json' );
 
-
-        game.load.image('rock1', 'assets/sprites/rock1.png');
-        game.load.image('rock2', 'assets/sprites/rock2.png');
-        game.load.image('rock3', 'assets/sprites/rock3.png');
-
-        game.load.image('cannibal_1', 'assets/sprites/1cannibal.png');
-        game.load.image('cannibal_2', 'assets/sprites/2cannibal.png');
-        game.load.image('cannibal_3', 'assets/sprites/3cannibal.png');
-
-        game.load.image('armor_1', 'assets/sprites/1shield.png');
-        game.load.image('armor_2', 'assets/sprites/2shield.png');
-        game.load.image('armor_3', 'assets/sprites/3shield.png');
-
-        game.load.image('spike_1', 'assets/sprites/1spike.png');
-        game.load.image('spike_2', 'assets/sprites/2spike.png');
-        game.load.image('spike_3', 'assets/sprites/6spike.png');
 
 
         //physics

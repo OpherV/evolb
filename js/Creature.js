@@ -30,6 +30,7 @@ evolution.Creature= function (game,id,x,y,dna) {
     this.bodySprite=new Phaser.Sprite(game,0,0,'blob');
     this.bodySprite.x=-this.bodySprite.width/2;
     this.bodySprite.y=-this.bodySprite.height/2;
+    this.bodySprite.sprite=this; //important for hitCycle
     this.addChild(this.bodySprite);
 
     this.bodySprite.animations.add("yellow",[0]);
@@ -102,8 +103,8 @@ evolution.Creature.prototype.contactHandler={
         //creature is a cannibal!
         if (this.dna.traits.cannibalism && this.health/this.modifiedStats.maxHealth<=this.dna.traits.cannibalism.getValue("feedPercent")){
                 //TODO: set this as a percentage of the trait
-                body.sprite.damage(40,true);
-                this.heal(38);
+                var inflictedDamage=body.sprite.physicalDamage(40,true);
+                this.heal(inflictedDamage-1);
         }
         else if (this.state==evolution.Character.states.WANTS_TO_BREED && body.sprite.state!=evolution.Character.states.BREEDING){
             this.startBreedingWith(body.sprite);
