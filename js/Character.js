@@ -328,6 +328,8 @@ evolution.Character.prototype.physicalDamage= function(amount,showDamage) {
         }
         this.healthbar.redraw();
     }
+    this.bobupText("-"+inflictedDamage,"#ff0000");
+
     return inflictedDamage;
 };
 
@@ -347,10 +349,22 @@ evolution.Character.prototype.heal= function(amount) {
         this.setWantsToBreed();
     }
     this.healthbar.redraw();
+
+    this.bobupText("+"+amount,"#00ff00");
+
 };
 
 //make this character show a sign of being alive
 evolution.Character.prototype.blink= function() {};
+
+evolution.Character.prototype.bobupText= function(text,color) {
+    //TODO: reuse tween
+    var style = { font: "16px Arial", fill: color, align: "center" };
+    var healthText = new Phaser.Text(this.game,-12, -25, text, style);
+    this.gui.addChild(healthText);
+    this.game.add.tween(healthText).to({ y: -this.bodySprite.height/1.5}, 1000, Phaser.Easing.Linear.None).start();
+    this.game.add.tween(healthText).to({alpha: 0 }, 200, Phaser.Easing.Cubic.In,false,800).start();
+};
 
 
 evolution.Character.prototype.update = function() {
