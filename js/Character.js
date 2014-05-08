@@ -328,7 +328,7 @@ evolution.Character.prototype.physicalDamage= function(amount,showDamage) {
         }
         this.healthbar.redraw();
     }
-    this.bobupText("-"+inflictedDamage,"#ff0000");
+    this.bobupText("-"+Math.round(inflictedDamage),"#ff0000");
 
     return inflictedDamage;
 };
@@ -350,7 +350,7 @@ evolution.Character.prototype.heal= function(amount) {
     }
     this.healthbar.redraw();
 
-    this.bobupText("+"+amount,"#00ff00");
+    this.bobupText("+"+Math.round(amount),"#00ff00");
 
 };
 
