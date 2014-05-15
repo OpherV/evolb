@@ -1,7 +1,7 @@
 var level=
 {
-    "levelWidth": 1000,
-    "levelHeight": 600,
+    "levelWidth": 10000,
+    "levelHeight": 6000,
     "onLevelStart": function(){
         //focus camera
         this.focusOnCreatures(true);

@@ -13,8 +13,6 @@ evolution.core=(function(){
     var game=new Phaser.Game(width, height, Phaser.WEBGL, '', { preload: preload, create: create, update: update, render: render });
 
     function preload() {
-        game.load.image('tank_lines', 'assets/sprites/tank_lines.png');
-        game.load.image('tank_blue', 'assets/sprites/tank_blue.png');
         game.load.image('shine', 'assets/sprites/shine_test.png');
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
@@ -77,11 +75,6 @@ evolution.core=(function(){
     /// util functions
     // ****************************
 
-    PIXI.Texture.Draw = function (cb) {
-        var canvas = document.createElement('canvas');
-        if (typeof cb == 'function') cb(canvas);
-        return PIXI.Texture.fromCanvas(canvas);
-    };
 
 
     function _preloadLevel(key,url){
@@ -139,10 +132,29 @@ evolution.core=(function(){
         return "0x" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     }
 
+    function _getPointArray(pathString,steps){
+        var numberOfPoints=steps?steps:10;
+
+        var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        var pathObj = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        pathObj.setAttribute("d",pathString); //Set path's data
+        var pointArray=[];
+        for(var x=0;x<=numberOfPoints;x++){
+            var locationPercent=x/numberOfPoints;
+            var pointOnPath=pathObj.getPointAtLength(locationPercent*pathObj.getTotalLength());
+            var newPoint={x: pointOnPath.x, y:pointOnPath.y};
+            pointArray.push(newPoint);
+        }
+        return pointArray;
+    }
+
+
     return{
         game: game,
         generateId: _generateId,
         rgbToHex:_rgbToHex,
+        getPointArray: _getPointArray,
         version: "0.1"
     }
 })();

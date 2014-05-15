@@ -8,11 +8,12 @@ evolution.Level=function(game,levelWidth,levelHeight){
     this.levelHeight=levelHeight;
     this.game=game;
 
-    game.world.setBounds(-this.labOffset, -this.labOffset, this.levelWidth+this.labOffset, this.levelHeight+this.labOffset);
+    game.world.setBounds(-this.labOffset, -this.labOffset, this.levelWidth+this.labOffset*2, this.levelHeight+this.labOffset*2);
 
 
     this.layers={
         behindAquarium: null,
+        aquariumEffect: null,
         inAquarium: null,
         foreground: null,
         enemies: null,
@@ -33,19 +34,20 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
     this.labBgMasked=game.add.sprite(8053, 4697, 'lab_bg');
     this.labBgMasked.fixedToCamera=true;
-    this.labBgMasked.width*=1.7;
-    this.labBgMasked.height*=1.7;
+    this.labBgMasked.width=this.levelWidth*1.5;
+    this.labBgMasked.height=this.levelWidth*1.5;
     this.labBgMasked.cameraOffset.x=0;
     this.labBgMasked.cameraOffset.y=0;
-    this.layers.inAquarium.add(this.labBgMasked);
+    this.layers.aquariumEffect.add(this.labBgMasked);
 
     this.labBg=game.add.sprite(8053, 4697, 'lab_bg');
     this.labBg.fixedToCamera=true;
-    this.labBg.width*=1.7;
-    this.labBg.height*=1.7;
+    this.labBg.width=this.labBgMasked.width;
+    this.labBg.height=this.labBgMasked.height;
     this.labBg.cameraOffset.x=0;
     this.labBg.cameraOffset.y=0;
     this.layers.behindAquarium.add(this.labBg);
+    this.labBg.alpha=1;
 
     this.shine=game.add.sprite(3065, 2276, 'shine');
     this.shine.fixedToCamera=true;
@@ -57,57 +59,43 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
 
 
-    this.aquariumMasked=game.add.graphics(0,0,this.layers.inAquarium);
-
-
-    var ol=115;
-    var ot=100;
-    this.aquarium = game.add.sprite(-ol*2,-ot*2,PIXI.Texture.Draw(function (canvas) {
-        canvas.width=that.levelWidth+that.labOffset*2;   //you need to specify your canvas width and height otherwise it'll have a size of 0x0 and you'll get an empty sprite
-        canvas.height=that.levelWidth+that.labOffset*2;
-
-        var ctx = canvas.getContext('2d');  //get  canvas 2D context
-
-        ctx.beginPath();
-        ctx.arc(ol+50,ot+50,50,0.5*Math.PI,1.5*Math.PI);
-        ctx.moveTo(ol+50,ot+100);
-        ctx.lineTo(ol+120,ot+100);
-        ctx.lineTo(ol+120,ot+that.levelHeight-160);
-        ctx.quadraticCurveTo(ol+120,ot+that.levelHeight,ol+160+120,ot+that.levelHeight);
-        ctx.lineTo(ol+120+that.levelWidth-160,ot+that.levelHeight);
-        ctx.quadraticCurveTo(ol+120+that.levelWidth,ot+that.levelHeight,ol+120+that.levelWidth,ot+that.levelHeight-160);
-        ctx.lineTo(ol+120+that.levelWidth,ot+100);
-        ctx.lineTo(ol+120+that.levelWidth+80,ot+100);
-        ctx.arc(ol+120+that.levelWidth+80,ot+50,50,0.5*Math.PI,1.5*Math.PI,true);
-        ctx.lineTo(ol+50,ot);
-//        ctx.lineTo(that.levelWidth+55,offsetTop+0);
-//        ctx.arcTo(that.levelWidth+55,offsetTop+0,that.levelWidth+55,offsetTop-80,60);
-
-
-        ctx.lineWidth = 28;
-        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-        ctx.stroke();
-
-    }))//this.layers.behindAquarium);
-
-
-    this.aquarium_blue=game.add.sprite(6330, 3618, 'tank_blue');
-    this.aquarium_blue.width=levelWidth-this.labOffset;
-    this.aquarium_blue.height=levelHeight-this.labOffset;
-    this.aquarium_blue.alpha=1;
-    this.aquarium_blue.x=0;
-    this.aquarium_blue.y=0;
-    this.layers.inAquarium.add(this.aquarium_blue);
-
-
+    this.aquariumMasked=game.add.graphics(0,0,this.layers.aquariumEffect);
+    this.aquarium_blue=game.add.graphics(0, 0,this.layers.aquariumEffect);
+    this.aquarium = game.add.graphics(0,0,this.layers.inAquarium);
     this.aquariumMask=game.add.graphics(0,0);
-    this.aquariumMask.beginFill(0xffffff,1);
-    this.aquariumMask.drawRect(0,0,levelWidth-levelWidth*0.0180*2,levelHeight-levelHeight*0.008);
+
+
+    var aquariumPathString="M0 0"+
+                            "l0 "+(levelHeight-160)+
+                            "q0 160 160 160"+
+                            "l"+(levelWidth-160-160)+" 0"+
+                            "q160 0 160 -160"+
+                            "l0 "+(-levelHeight+160)+
+                            "l50 0"+
+                            "a50,-50 0 0,0 0,-100"+
+                            "l"+(-levelWidth-50-50)+" 0"+
+                            "a-50,50 0 0,0 0, 100"+
+                            "l64 0";
+    var aquariumPointArray=evolution.core.getPointArray(aquariumPathString,1000);
+
+    this.aquarium.lineStyle(28, 0XFFFFFF, 1);
+    this.aquarium_blue.beginFill(0X2f919e, 0.5);
+    this.aquarium_blue.lineStyle(28, 0XFFFFFF, 1);
+    this.aquariumMask.beginFill(0XFFFFFF, 1);
+
+    this.aquarium.moveTo(aquariumPointArray[0].x,aquariumPointArray[0].y);
+    this.aquarium_blue.moveTo(aquariumPointArray[0].x,aquariumPointArray[0].y);
+    this.aquariumMask.moveTo(aquariumPointArray[0].x,aquariumPointArray[0].y);
+    for(var x=0;x<aquariumPointArray.length;x++){
+        this.aquarium.lineTo(aquariumPointArray[x].x,aquariumPointArray[x].y);
+        this.aquarium_blue.lineTo(aquariumPointArray[x].x,aquariumPointArray[x].y);
+        this.aquariumMask.lineTo(aquariumPointArray[x].x,aquariumPointArray[x].y);
+    }
+    this.aquarium_blue.endFill();
     this.aquariumMask.endFill();
-    this.aquariumMask.y=0;
-    this.aquariumMask.x=levelWidth*0.0180;
+
     this.aquariumMask.alpha=1;
-    this.layers.inAquarium.mask=this.aquariumMask;
+    this.layers.aquariumEffect.mask=this.aquariumMask;
     this.layers.foreground.mask=this.aquariumMask;
 
 
@@ -116,14 +104,15 @@ evolution.Level=function(game,levelWidth,levelHeight){
     this.displacementFilter.scale.x = 15;
     this.displacementFilter.scale.y = 15;
     this.displacementCount=0;
-//    this.layers.inAquarium.filters =[this.displacementFilter];
+    this.layers.aquariumEffect.filters =[this.displacementFilter];
 
 
 
-    //this.addAquariumWalls();
+    this.addAquariumWalls();
 
     //place layers in proper order
     this.layers.level.add(this.layers.behindAquarium);
+    this.layers.level.add(this.layers.aquariumEffect);
     this.layers.level.add(this.layers.inAquarium);
     this.layers.level.add(this.layers.creatures);
     this.layers.level.add(this.layers.enemies);
@@ -207,6 +196,7 @@ evolution.Level.prototype.update=function(){
 
 
 evolution.Level.prototype.render=function(){
+
     if (this.layers.creatures.countLiving()>0){
         this.focusOnCreatures(false);
     }
@@ -223,24 +213,22 @@ evolution.Level.prototype.render=function(){
 
 
 evolution.Level.prototype.addAquariumWalls=function(){
-    var leftEdgeOffset=this.aquariumMasked.width*0.0157;
-    var rightEdgeOffset=this.aquariumMasked.width*0.025;
     var debug=false;
 
     var leftWall=new Phaser.Sprite(this.game,0,0);
     this.game.physics.p2.enable(leftWall,debug);
-    leftWall.body.setRectangle(this.labOffset+leftEdgeOffset,this.levelHeight);
-    leftWall.body.x = (this.labOffset+leftEdgeOffset)/2;
-    leftWall.body.y = this.labOffset+this.levelHeight/2;
+    leftWall.body.setRectangle(this.labOffset,this.levelHeight+this.labOffset);
+    leftWall.body.x = -this.labOffset/2;
+    leftWall.body.y = -this.labOffset/2+this.levelHeight/2;
     leftWall.body.static = true;
     this.game.add.existing(leftWall);
 
 
     var rightWall=new Phaser.Sprite(this.game,0,0);
     this.game.physics.p2.enable(rightWall,debug);
-    rightWall.body.setRectangle(this.labOffset+rightEdgeOffset,this.levelHeight);
-    rightWall.body.x = this.labOffset+this.levelWidth-rightEdgeOffset+(this.labOffset+rightEdgeOffset)/2;
-    rightWall.body.y = this.labOffset+this.levelHeight/2;
+    rightWall.body.setRectangle(this.labOffset,this.levelHeight+this.labOffset);
+    rightWall.body.x = this.levelWidth+(this.labOffset)/2;
+    rightWall.body.y = -this.labOffset/2+this.levelHeight/2;
     rightWall.body.static = true;
     this.game.add.existing(rightWall);
 
@@ -248,7 +236,7 @@ evolution.Level.prototype.addAquariumWalls=function(){
     this.game.physics.p2.enable(bottomWall,debug);
     bottomWall.body.setRectangle(this.levelWidth+this.labOffset*2,this.labOffset);
     bottomWall.body.x = (this.labOffset+this.levelWidth)/2;
-    bottomWall.body.y = this.labOffset+this.levelHeight+this.labOffset/2-this.levelHeight*0.008;
+    bottomWall.body.y = this.levelHeight+this.labOffset/2;
     bottomWall.body.static = true;
     this.game.add.existing(bottomWall);
 
@@ -256,7 +244,7 @@ evolution.Level.prototype.addAquariumWalls=function(){
     this.game.physics.p2.enable(topWall,debug);
     topWall.body.setRectangle(this.levelWidth+this.labOffset*2,this.labOffset);
     topWall.body.x = (this.labOffset+this.levelWidth)/2;
-    topWall.body.y = this.labOffset/2+this.levelHeight*0.008;
+    topWall.body.y = -this.labOffset/2;
     topWall.body.static = true;
     this.game.add.existing(topWall);
 
