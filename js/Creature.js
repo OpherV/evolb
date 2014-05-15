@@ -1,5 +1,5 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Creature= function (game,id,x,y,dna) {
+evolution.Creature= function (level,id,x,y,dna) {
 
     if (dna){
         //use given DNA
@@ -15,7 +15,7 @@ evolution.Creature= function (game,id,x,y,dna) {
     this.dna.character=this;
 
     //construct chracter
-    evolution.Character.call(this, game, id, x, y,'playerCreature');
+    evolution.Character.call(this, level, id, x, y,'playerCreature');
     this.type=evolution.Character.types.PLAYER;
     this.kind="creature";
 
@@ -27,7 +27,7 @@ evolution.Creature= function (game,id,x,y,dna) {
     this.healthbar.redraw();
 
     //yellow body
-    this.bodySprite=new Phaser.Sprite(game,0,0,'blob');
+    this.bodySprite=new Phaser.Sprite(this.game,0,0,'blob');
     this.bodySprite.x=-this.bodySprite.width/2;
     this.bodySprite.y=-this.bodySprite.height/2;
     this.bodySprite.sprite=this; //important for hitCycle
@@ -37,7 +37,7 @@ evolution.Creature= function (game,id,x,y,dna) {
     this.bodySprite.animations.add("pink",[1]);
     this.bodySprite.animations.play("yellow");
 
-    this.face=new Phaser.Sprite(game,0,0,'creature_face');
+    this.face=new Phaser.Sprite(this.game,0,0,'creature_face');
     this.face.x=-this.face.width/2;
     this.face.y=-this.face.height/2;
     this.addChild(this.face);

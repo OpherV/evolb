@@ -1,8 +1,8 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Enemy1= function (game,id,x,y) {
+evolution.Enemy1= function (level,id,x,y) {
 
     //construct chracter
-    evolution.Character.call(this, game, id,  x, y, 'enemy1');
+    evolution.Character.call(this, level, id,  x, y, 'enemy1');
     this.type=evolution.Character.types.ENEMY;
     this.kind="enemy1";
 

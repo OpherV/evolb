@@ -1,7 +1,8 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Character= function (game,id,x,y,spriteKey) {
+evolution.Character= function (level,id,x,y,spriteKey) {
     this.id=id;
-    this.game=game;
+    this.level=level;
+    this.game=level.game;
     this.type=evolution.Character.types.CHARACTER;
 
     this.stats={
@@ -37,13 +38,13 @@ evolution.Character= function (game,id,x,y,spriteKey) {
     this.aggroTriggerDistance=1000; //distance for aggro to trigger
     this.maxAggroDistance=700; //beyond this distance enemies disengage
 
-    this.gui=game.add.group();
+    this.gui=this.game.add.group();
 
 
     //construct sprite
-    Phaser.Sprite.call(this, game, x, y, spriteKey);
+    Phaser.Sprite.call(this, this.game, x, y, spriteKey);
     this.revive(this.stats.maxHealth);
-    game.physics.p2.enable(this,false);
+    this.game.physics.p2.enable(this,false);
     this.body.fixedRotation = true;
     this.body.collideWorldBounds=true;
 
@@ -112,7 +113,7 @@ evolution.Character.prototype.init=function(){
     this.setDrifting();
 
     //add gui to gui layer
-    evolution.core.getGuiLayer().add(this.gui);
+    this.level.layers.gui.add(this.gui);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
     this.timeEvents.hitTest=this.game.time.events.loop(this.modifiedStats.attackSpeed, this.hitCycle, this);
