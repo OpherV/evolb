@@ -1,5 +1,6 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.Level=function(game,levelWidth,levelHeight){
+    var that=this;
     this.labOffset=200;
     this.cameraSpeed=5;
 
@@ -56,21 +57,39 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
 
 
-    this.aquariumMasked=game.add.sprite(6330, 3618, 'tank_lines');
-    this.aquariumMasked.width=levelWidth-this.labOffset;
-    this.aquariumMasked.height=levelHeight-this.labOffset;
-    this.aquariumMasked.alpha=1;
-    this.aquariumMasked.x=0;
-    this.aquariumMasked.y=0;
-    this.layers.inAquarium.add(this.aquariumMasked);
+    this.aquariumMasked=game.add.graphics(0,0,this.layers.inAquarium);
 
-    this.aquarium=game.add.sprite(6330, 3618, 'tank_lines');
-    this.aquarium.width=levelWidth-this.labOffset;
-    this.aquarium.height=levelHeight-this.labOffset;
-    this.aquarium.alpha=1;
-    this.aquarium.x=0;
-    this.aquarium.y=0;
-    this.layers.behindAquarium.add(this.aquarium);
+
+    var ol=115;
+    var ot=100;
+    this.aquarium = game.add.sprite(-ol*2,-ot*2,PIXI.Texture.Draw(function (canvas) {
+        canvas.width=that.levelWidth+that.labOffset*2;   //you need to specify your canvas width and height otherwise it'll have a size of 0x0 and you'll get an empty sprite
+        canvas.height=that.levelWidth+that.labOffset*2;
+
+        var ctx = canvas.getContext('2d');  //get  canvas 2D context
+
+        ctx.beginPath();
+        ctx.arc(ol+50,ot+50,50,0.5*Math.PI,1.5*Math.PI);
+        ctx.moveTo(ol+50,ot+100);
+        ctx.lineTo(ol+120,ot+100);
+        ctx.lineTo(ol+120,ot+that.levelHeight-160);
+        ctx.quadraticCurveTo(ol+120,ot+that.levelHeight,ol+160+120,ot+that.levelHeight);
+        ctx.lineTo(ol+120+that.levelWidth-160,ot+that.levelHeight);
+        ctx.quadraticCurveTo(ol+120+that.levelWidth,ot+that.levelHeight,ol+120+that.levelWidth,ot+that.levelHeight-160);
+        ctx.lineTo(ol+120+that.levelWidth,ot+100);
+        ctx.lineTo(ol+120+that.levelWidth+80,ot+100);
+        ctx.arc(ol+120+that.levelWidth+80,ot+50,50,0.5*Math.PI,1.5*Math.PI,true);
+        ctx.lineTo(ol+50,ot);
+//        ctx.lineTo(that.levelWidth+55,offsetTop+0);
+//        ctx.arcTo(that.levelWidth+55,offsetTop+0,that.levelWidth+55,offsetTop-80,60);
+
+
+        ctx.lineWidth = 28;
+        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+        ctx.stroke();
+
+    }))//this.layers.behindAquarium);
+
 
     this.aquarium_blue=game.add.sprite(6330, 3618, 'tank_blue');
     this.aquarium_blue.width=levelWidth-this.labOffset;
@@ -97,7 +116,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
     this.displacementFilter.scale.x = 15;
     this.displacementFilter.scale.y = 15;
     this.displacementCount=0;
-    this.layers.inAquarium.filters =[this.displacementFilter];
+//    this.layers.inAquarium.filters =[this.displacementFilter];
 
 
 

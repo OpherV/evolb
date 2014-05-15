@@ -77,6 +77,13 @@ evolution.core=(function(){
     /// util functions
     // ****************************
 
+    PIXI.Texture.Draw = function (cb) {
+        var canvas = document.createElement('canvas');
+        if (typeof cb == 'function') cb(canvas);
+        return PIXI.Texture.fromCanvas(canvas);
+    };
+
+
     function _preloadLevel(key,url){
         game.load.script(key,url,function(){
             this[key]=level;
