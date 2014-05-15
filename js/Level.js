@@ -34,8 +34,8 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
     this.labBgMasked=game.add.sprite(8053, 4697, 'lab_bg');
     this.labBgMasked.fixedToCamera=true;
-    this.labBgMasked.width=this.levelWidth*1.5;
-    this.labBgMasked.height=this.levelWidth*1.5;
+    this.labBgMasked.width=this.levelWidth*0.3;
+    this.labBgMasked.height=this.levelWidth*0.3;
     this.labBgMasked.cameraOffset.x=0;
     this.labBgMasked.cameraOffset.y=0;
     this.layers.aquariumEffect.add(this.labBgMasked);
@@ -79,7 +79,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
     var aquariumPointArray=evolution.core.getPointArray(aquariumPathString,1000);
 
     this.aquarium.lineStyle(28, 0XFFFFFF, 1);
-    this.aquarium_blue.beginFill(0X2f919e, 0.5);
+    this.aquarium_blue.beginFill(0X2f919e, 0.83);
     this.aquarium_blue.lineStyle(28, 0XFFFFFF, 1);
     this.aquariumMask.beginFill(0XFFFFFF, 1);
 
