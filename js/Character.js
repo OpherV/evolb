@@ -19,7 +19,11 @@ evolution.Character= function (level,id,x,y,spriteKey) {
 
     this.modifiedStats={}; //these are the stats after any modifiers
 
+
+    //flags
+
     this.hasHunger=true; //can creature be damaged by hunger
+    this.canBeControlled=true; //can be controlled by player
 
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
@@ -373,7 +377,7 @@ evolution.Character.prototype.update = function() {
     var pointer=this.game.input.activePointer;
     var pointerInWorld=new Phaser.Point(pointer.worldX,pointer.worldY);
 
-    if (this.isFollowingPointer){
+    if (this.isFollowingPointer && this.canBeControlled){
         var maxPlayerControlRange=1000;
         var moveRatio=Math.max(0.15,pointer.controlRatio); //minimum should be higher than 0
 

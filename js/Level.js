@@ -4,6 +4,9 @@ evolution.Level=function(game,levelWidth,levelHeight){
     this.labOffset=200;
     this.cameraSpeed=5;
 
+    //flags
+    this.isControlEnabled=true;
+
     this.levelWidth=levelWidth;
     this.levelHeight=levelHeight;
     this.game=game;
@@ -158,28 +161,32 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
     //INPUT
     game.input.onDown.add(function(pointer){
-        var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
-        var bodies=game.physics.p2.hitTest(clickPoint,this.layers.creatures.children);
-        if (bodies.length>0){
-            var sprite=bodies[0].parent.sprite;
-            infoPanel.selectCharacter(sprite);
+
+        if (this.isControlEnabled){
+            var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
+            var bodies=game.physics.p2.hitTest(clickPoint,this.layers.creatures.children);
+            if (bodies.length>0){
+                var sprite=bodies[0].parent.sprite;
+                infoPanel.selectCharacter(sprite);
+
+            }
+            else{
+                infoPanel.close();
+                this.layers.creatures.forEachAlive(function(creature){
+                    creature.isFollowingPointer=true;
+                });
+            }
 
         }
-        else{
-            infoPanel.close();
-            this.layers.creatures.forEachAlive(function(creature){
-                creature.isFollowingPointer=true;
-            });
-        }
-
-
     },this);
 
     game.input.onUp.add(function(pointer){
-        this.pointerController.clear();
-        this.layers.creatures.forEachAlive(function(creature){
-            creature.isFollowingPointer=false;
-        });
+        if(this.isControlEnabled){
+            this.pointerController.clear();
+            this.layers.creatures.forEachAlive(function(creature){
+                creature.isFollowingPointer=false;
+            });
+        }
     },this);
 
 
@@ -206,8 +213,9 @@ evolution.Level.prototype.render=function(){
         creature.render();
     });
 
-
-    this.updatePointerController();
+    if(this.isControlEnabled){
+        this.updatePointerController();
+    }
     this.bgParallex();
 };
 
