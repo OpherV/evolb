@@ -35,6 +35,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
         all: []
     };
 
+
     this.labBgMasked=game.add.sprite(8053, 4697, 'lab_bg');
     this.labBgMasked.fixedToCamera=true;
     this.labBgMasked.width=this.levelWidth*0.3;
@@ -162,6 +163,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
     //INPUT
     game.input.onDown.add(function(pointer){
 
+        //character control
         if (this.isControlEnabled){
             var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
             var bodies=game.physics.p2.hitTest(clickPoint,this.layers.creatures.children);
@@ -178,6 +180,8 @@ evolution.Level=function(game,levelWidth,levelHeight){
             }
 
         }
+
+
     },this);
 
     game.input.onUp.add(function(pointer){
@@ -338,4 +342,76 @@ evolution.Level.prototype.updatePointerController=function(){
 
     }
 
+};
+
+evolution.Level.prototype.addTextGroup=function(textArray,callback){
+
+    var textQueue=textArray.slice(0); //clone the text array
+    var currentText=null;
+    var currentTextObj=null;
+
+    showNextMessage.call(this);
+    this.game.input.onDown.add(showNextMessage,this);
+
+    function showNextMessage(){
+        if (currentTextObj){ this.layers.gui.remove(currentTextObj); }
+        if (textQueue.length>0){
+            currentText=textQueue.shift();
+            currentTextObj=this.addTextBubble(100,100,currentText);
+
+        }
+        else{
+            this.game.input.onDown.remove(showNextMessage);
+            if (callback){callback.call(this);}
+        }
+    }
+
+
+};
+
+evolution.Level.prototype.addTextBubble=function(x,y,text){
+    var bubbleObject=this.game.add.graphics(0,0,this.layers.gui);
+    bubbleObject.fixedToCamera=true;
+    bubbleObject.cameraOffset.x=x;
+    bubbleObject.cameraOffset.y=y;
+
+    var bubbleWidth=300;
+    var bubbleHeight=150;
+    var padding=10;
+
+    bubbleObject.beginFill(0x1a6fb9, 0.8);
+    bubbleObject.drawRect(0,0,bubbleWidth,bubbleHeight);
+
+    var textObject=new Phaser.Text(this.game,padding,padding,text);
+    bubbleObject.addChild(textObject);
+    textObject.font = 'Quicksand';
+    textObject.fontSize = 18;
+    textObject.fill = '#ffffff';
+    textObject.wordWrap= true;
+    textObject.wordWrapWidth = bubbleWidth-padding*2;
+
+    var continueText=new Phaser.Text(this.game,150,bubbleHeight-30,"( click to continue )");
+    bubbleObject.addChild(continueText);
+    continueText.font = 'Quicksand';
+    continueText.fontSize = 14;
+    continueText.fill = '#ffffff';
+
+
+    return bubbleObject;
+};
+
+evolution.Level.prototype.showInstructionText=function(text){
+    var textObject=this.game.add.text(0,0,text,null,this.layers.gui);
+    textObject.font = 'Quicksand';
+    textObject.fontSize = 22;
+    textObject.fill = '#ffffff';
+    textObject.fixedToCamera=true;
+    textObject.cameraOffset.x=this.game.width/2-textObject.width/2;
+    textObject.cameraOffset.y=100;
+
+    textObject.alpha=0;
+
+    this.game.add.tween(textObject).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In).start();
+
+    return textObject;
 };

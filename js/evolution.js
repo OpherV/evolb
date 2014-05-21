@@ -12,6 +12,17 @@ evolution.core=(function(){
     var height =  Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     var game=new Phaser.Game(width, height, Phaser.WEBGL, '', { preload: preload, create: create, update: update, render: render });
 
+    WebFontConfig = {
+
+        active: function() { initialize(); },
+
+        //  The Google Fonts we want to load (specify as many as you like in the array)
+        google: {
+            families: ['Quicksand']
+        }
+
+    };
+
     function preload() {
         game.load.image('shine', 'assets/sprites/shine_test.png');
         game.load.image('background', 'assets/background.png');
@@ -24,6 +35,7 @@ evolution.core=(function(){
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
+        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 
         game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/enemy1.json');
         game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
@@ -53,9 +65,12 @@ evolution.core=(function(){
 
         evolution.Materials.init(game);
 
+
+    }
+
+    function initialize(){
         var tutorialLevel = evolution.LevelLoader.loadLevel(game,levels.tutorial);
         currentLevel=tutorialLevel;
-
     }
 
     function update () {
