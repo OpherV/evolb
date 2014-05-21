@@ -122,7 +122,7 @@ evolution.Creature.prototype.contactHandler={
 
 evolution.Creature.prototype.doHungerEvent=function(){
     if (this.hasHunger){
-        this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"));
+    this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"));
     }
 };
 

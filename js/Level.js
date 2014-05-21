@@ -292,6 +292,13 @@ evolution.Level.prototype.calculateParallex=function(bgSprite){
 };
 
 
+evolution.Level.prototype.getObjectById=function(id){
+    var foundSprite=this.spriteArrays.all.filter(function(sprite){
+        return sprite.id==id;
+    });
+    return foundSprite.length>0?foundSprite[0]:null;
+};
+
 evolution.Level.prototype.focusOnCreatures=function(isInstant){
     var creatureGroupCenter=this.findCenterOfMass(this.layers.creatures);
 
@@ -354,14 +361,21 @@ evolution.Level.prototype.addTextGroup=function(textArray,callback){
     this.game.input.onDown.add(showNextMessage,this);
 
     function showNextMessage(){
-        if (currentTextObj){ this.layers.gui.remove(currentTextObj); }
+        if (currentTextObj){
+            var oldTextObj=currentTextObj;
+            var fadeOutTween=this.game.add.tween(oldTextObj).to({ alpha: 0}, 600, Phaser.Easing.Cubic.In);
+            fadeOutTween.onComplete.addOnce(function(){
+                this.layers.gui.remove(oldTextObj);
+            },this);
+            fadeOutTween.start();
+        }
         if (textQueue.length>0){
             currentText=textQueue.shift();
-            currentTextObj=this.addTextBubble(100,100,currentText);
+            currentTextObj=this.addTextBubble(this.game.width/2-150,100,currentText);
 
         }
         else{
-            this.game.input.onDown.remove(showNextMessage);
+            this.game.input.onDown.remove(showNextMessage,this);
             if (callback){callback.call(this);}
         }
     }
@@ -374,6 +388,7 @@ evolution.Level.prototype.addTextBubble=function(x,y,text){
     bubbleObject.fixedToCamera=true;
     bubbleObject.cameraOffset.x=x;
     bubbleObject.cameraOffset.y=y;
+    bubbleObject.alpha=0;
 
     var bubbleWidth=300;
     var bubbleHeight=150;
@@ -397,21 +412,36 @@ evolution.Level.prototype.addTextBubble=function(x,y,text){
     continueText.fill = '#ffffff';
 
 
+    this.game.add.tween(bubbleObject).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In).start();
+
     return bubbleObject;
 };
 
+evolution.Level.prototype.hideInstructionText=function(){
+    if (this.instructionText){
+        var oldInstructionText=this.instructionText;
+        var fadeInTween=this.game.add.tween(oldInstructionText).to({ alpha: 0}, 600, Phaser.Easing.Cubic.In);
+        fadeInTween.onComplete.addOnce(function(){
+            this.layers.gui.remove(oldInstructionText);
+        },this);
+        fadeInTween.start();
+    }
+};
+
 evolution.Level.prototype.showInstructionText=function(text){
-    var textObject=this.game.add.text(0,0,text,null,this.layers.gui);
-    textObject.font = 'Quicksand';
-    textObject.fontSize = 22;
-    textObject.fill = '#ffffff';
-    textObject.fixedToCamera=true;
-    textObject.cameraOffset.x=this.game.width/2-textObject.width/2;
-    textObject.cameraOffset.y=100;
+    this.hideInstructionText();
 
-    textObject.alpha=0;
+    this.instructionText=this.game.add.text(0,0,text,null,this.layers.gui);
+    this.instructionText.font = 'Quicksand';
+    this.instructionText.fontSize = 22;
+    this.instructionText.fill = '#ffffff';
+    this.instructionText.fixedToCamera=true;
+    this.instructionText.cameraOffset.x=this.game.width/2-this.instructionText.width/2;
+    this.instructionText.cameraOffset.y=100;
 
-    this.game.add.tween(textObject).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In).start();
+    this.instructionText.alpha=0;
 
-    return textObject;
+    this.game.add.tween(this.instructionText).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In).start();
+
+    return this.instructionText;
 };

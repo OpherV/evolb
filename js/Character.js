@@ -22,9 +22,9 @@ evolution.Character= function (level,id,x,y,spriteKey) {
 
     //flags
 
-    this.hasHunger=true; //can creature be damaged by hunger
-    this.canBeControlled=true; //can be controlled by player
-
+    this.hasHunger = true; //can creature be damaged by hunger
+    this.canBeControlled = true; //can be controlled by player
+    this.canBreed = true;
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND;
@@ -351,7 +351,7 @@ evolution.Character.prototype.damage= function(amount,showDamage) {
 evolution.Character.prototype.heal= function(amount) {
     this.health=Math.min(this.modifiedStats.maxHealth,this.health+amount);
     this.flashTint(0XBBFF54,300);
-    if (this.health==this.modifiedStats.maxHealth){
+    if (this.health==this.modifiedStats.maxHealth && this.canBreed){
         this.setWantsToBreed();
     }
     this.healthbar.redraw();
@@ -443,7 +443,7 @@ function bob(){
 }
 
 evolution.Character.prototype.getClosestCreature=function(maximalDistance){
-    var creatures=evolution.core.getCreatures();
+    var creatures=this.level.layers.creatures;
     var closestCreature=null;
     var closestDistance=null;
     var that=this;

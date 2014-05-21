@@ -14,7 +14,7 @@ evolution.core=(function(){
 
     WebFontConfig = {
 
-        active: function() { initialize(); },
+        active: function() { },
 
         //  The Google Fonts we want to load (specify as many as you like in the array)
         google: {
@@ -65,7 +65,7 @@ evolution.core=(function(){
 
         evolution.Materials.init(game);
 
-
+        initialize();
     }
 
     function initialize(){
