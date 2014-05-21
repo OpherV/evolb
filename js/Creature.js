@@ -121,7 +121,9 @@ evolution.Creature.prototype.contactHandler={
 };
 
 evolution.Creature.prototype.doHungerEvent=function(){
-    this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"));
+    if (this.hasHunger){
+        this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"));
+    }
 };
 
 evolution.Creature.prototype.init = function(){

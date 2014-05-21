@@ -17,8 +17,9 @@ evolution.Character= function (level,id,x,y,spriteKey) {
         mutationChance: 0
     };
 
-
     this.modifiedStats={}; //these are the stats after any modifiers
+
+    this.hasHunger=true; //can creature be damaged by hunger
 
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
