@@ -186,10 +186,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
     game.input.onUp.add(function(pointer){
         if(this.isControlEnabled){
-            this.pointerController.clear();
-            this.layers.creatures.forEachAlive(function(creature){
-                creature.isFollowingPointer=false;
-            });
+            this.clearControlPointer();
         }
     },this);
 
@@ -330,6 +327,13 @@ evolution.Level.prototype.findCenterOfMass=function(group){
     return {x: totalX/group.countLiving(), y: totalY/group.countLiving()}
 };
 
+evolution.Level.prototype.clearControlPointer=function(){
+    this.pointerController.clear();
+    this.layers.creatures.forEachAlive(function(creature){
+        creature.isFollowingPointer=false;
+    });
+};
+
 evolution.Level.prototype.updatePointerController=function(){
     var pointer=this.game.input.activePointer;
     var minRadius=20;
@@ -352,6 +356,7 @@ evolution.Level.prototype.updatePointerController=function(){
 };
 
 evolution.Level.prototype.addTextGroup=function(textArray,callback){
+    this.clearControlPointer();
 
     var textQueue=textArray.slice(0); //clone the text array
     var currentText=null;
@@ -371,7 +376,7 @@ evolution.Level.prototype.addTextGroup=function(textArray,callback){
         }
         if (textQueue.length>0){
             currentText=textQueue.shift();
-            currentTextObj=this.addTextBubble(this.game.width/2-150,100,currentText);
+            currentTextObj=this.addTextBubble(this.game.width/2-150,150,currentText);
 
         }
         else{
@@ -405,11 +410,11 @@ evolution.Level.prototype.addTextBubble=function(x,y,text){
     textObject.wordWrap= true;
     textObject.wordWrapWidth = bubbleWidth-padding*2;
 
-    var continueText=new Phaser.Text(this.game,150,bubbleHeight-30,"( click to continue )");
+    var continueText=new Phaser.Text(this.game,150,bubbleHeight-25,"( click to continue )");
     bubbleObject.addChild(continueText);
     continueText.font = 'Quicksand';
     continueText.fontSize = 14;
-    continueText.fill = '#ffffff';
+    continueText.fill = '#99a7b3';
 
 
     this.game.add.tween(bubbleObject).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In).start();

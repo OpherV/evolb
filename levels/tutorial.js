@@ -10,6 +10,7 @@ var level=
         var firstCreature=new evolution.Creature(this,"1st",4600,3000,firstCreatureDna);
         firstCreature.hasHunger=false;
         firstCreature.canBreed=false;
+        firstCreature.canBob=false;
         this.layers.creatures.add(firstCreature);
 
 
@@ -61,10 +62,9 @@ var level=
 
         function startHungerPart(){
             firstCreature.hasHunger=true;
-            this.addTextGroup(["I think your creature is getting hungry",
+            this.addTextGroup(["I think your creature is getting hungry though",
                                "Hungry creatures lose their energy",
-                               "When a creature has no energy left it dies.\nDead creatures are no fun.",
-                               "Oh look, there's something to munch down there!"],fetchFoodPart);
+                               "When a creature has no energy left it dies.\n\nDead creatures are no fun :("],fetchFoodPart);
         }
 
         var food1Obj=this.getObjectById("food1");
@@ -76,12 +76,13 @@ var level=
         };
 
         function fetchFoodPart(){
-            this.showInstructionText("Move your creature to the food below to eat it");
-            this.isControlEnabled=true;
             this.game.add.tween(food1Obj).to({ alpha: 1}, 600, Phaser.Easing.Cubic.Out).start();
 
-
-            food1Obj.body.onBeginContact.add(touchedFoodHandler, this);
+            this.addTextGroup(["Oh look, there's something to munch down there!"],function(){
+                this.showInstructionText("Move your creature to the food below to eat it");
+                this.isControlEnabled=true;
+                food1Obj.body.onBeginContact.add(touchedFoodHandler, this);
+            });
         }
 
         function completedFood1Part(){
@@ -181,6 +182,13 @@ var level=
             x: 5550,
             y: 2800,
             params:{ rockType: 1, angle: 20 }
+        },
+        {
+            constructorName: "Rock",
+            layer: "rocks",
+            x: 5700,
+            y: 3050,
+            params:{ rockType: 2, angle: 80 }
         }
 
     ]

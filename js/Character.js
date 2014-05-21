@@ -25,6 +25,7 @@ evolution.Character= function (level,id,x,y,spriteKey) {
     this.hasHunger = true; //can creature be damaged by hunger
     this.canBeControlled = true; //can be controlled by player
     this.canBreed = true;
+    this.canBob = true;
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND;
@@ -392,7 +393,7 @@ evolution.Character.prototype.update = function() {
     }
 
 
-    if (this.state==evolution.Character.states.DRIFTING && this.body.velocity.x<=this.modifiedStats.idleVelocityRange && this.body.velocity.y<=this.modifiedStats.idleVelocityRange){
+    if (this.canBob && this.state==evolution.Character.states.DRIFTING && this.body.velocity.x<=this.modifiedStats.idleVelocityRange && this.body.velocity.y<=this.modifiedStats.idleVelocityRange){
         this.state=evolution.Character.states.IDLE;
         bob.call(this)
     }
