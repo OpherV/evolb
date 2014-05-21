@@ -6,6 +6,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
     //flags
     this.isControlEnabled=true;
+    this.levelEdit=false;
 
     this.levelWidth=levelWidth;
     this.levelHeight=levelHeight;
@@ -13,7 +14,11 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
     game.world.setBounds(-this.labOffset, -this.labOffset, this.levelWidth+this.labOffset*2, this.levelHeight+this.labOffset*2);
 
-
+    this.levelEditParams={
+        editMode: null,
+        editSprite: null
+    };
+    
     this.layers={
         behindAquarium: null,
         aquariumEffect: null,
@@ -164,32 +169,71 @@ evolution.Level=function(game,levelWidth,levelHeight){
     game.input.onDown.add(function(pointer){
 
         //character control
-        if (this.isControlEnabled){
+        if (this.isControlEnabled && !this.levelEdit){
             var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
             var bodies=game.physics.p2.hitTest(clickPoint,this.layers.creatures.children);
             if (bodies.length>0){
                 var sprite=bodies[0].parent.sprite;
                 infoPanel.selectCharacter(sprite);
-
             }
             else{
                 infoPanel.close();
                 this.layers.creatures.forEachAlive(function(creature){
                     creature.isFollowingPointer=true;
                 });
+
+
+            }
+
+        }
+
+        if (this.levelEdit){
+            var pointer=this.game.input.activePointer;
+            var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
+            var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
+            var bodies=game.physics.p2.hitTest(clickPoint,this.spriteArrays.all);
+            if (bodies.length>0){
+                var sprite=bodies[0].parent.sprite;
+                this.levelEditParams.editSprite=sprite;
+
+                if (this.keyR.isDown){
+                    var a=sprite.body;
+                    var b=worldPoint;
+                    this.levelEditParams.editMode="rotate";
+                    this.levelEditParams.editSprite.tint=0x00FF00;
+                    this.levelEditParams.originalAngle=Math.atan2(a.y - b.y, a.x - b.x);
+                    this.levelEditParams.originalRotation=sprite.body.rotation;
+                }
+                else{
+                    this.levelEditParams.editMode="drag";
+                    this.levelEditParams.editSprite.tint=0xFF0000;
+                    pointer.spriteOffsetX=sprite.body.x-pointer.worldX;
+                    pointer.spriteOffsetY=sprite.body.y-pointer.worldY;
+                }
             }
 
         }
 
 
+
+
     },this);
 
     game.input.onUp.add(function(pointer){
-        if(this.isControlEnabled){
+        if(this.isControlEnabled && !this.levelEdit){
             this.clearControlPointer();
         }
+
+        if (this.levelEdit && this.levelEditParams.editSprite){
+            this.levelEditParams.editSprite.tint=0xFFFFFF;
+            this.levelEditParams.editSprite=null;
+        }
+
     },this);
 
+    key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+    key1.onDown.add(this.toggleLevelEdit, this);
+    this.keyR = game.input.keyboard.addKey(Phaser.Keyboard.R);
 
 };
 
@@ -214,8 +258,27 @@ evolution.Level.prototype.render=function(){
         creature.render();
     });
 
-    if(this.isControlEnabled){
+    if(this.isControlEnabled && !this.levelEdit){
         this.updatePointerController();
+    }
+    if (this.levelEdit && this.levelEditParams.editSprite){
+        var pointer=this.game.input.activePointer;
+        var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
+        var editSprite=this.levelEditParams.editSprite;
+        if (this.levelEditParams.editMode=="drag"){
+            editSprite.body.x=pointer.worldX+pointer.spriteOffsetX;
+            editSprite.body.y=pointer.worldY+pointer.spriteOffsetY;
+        }
+        else if (this.levelEditParams.editMode=="rotate"){
+            var a=editSprite;
+            var b=worldPoint;
+            var newAngle=Math.atan2(a.y - b.y, a.x - b.x);
+
+            editSprite.body.rotation=this.levelEditParams.originalRotation+newAngle-this.levelEditParams.originalAngle;
+            editSprite.rotation=editSprite.body.rotation;
+        }
+
+
     }
     this.bgParallex();
 };
@@ -449,4 +512,26 @@ evolution.Level.prototype.showInstructionText=function(text){
     this.game.add.tween(this.instructionText).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In).start();
 
     return this.instructionText;
+};
+
+evolution.Level.prototype.toggleLevelEdit=function(){
+    if (this.levelEdit){
+        this.levelEditText.alpha=0;
+        this.levelEdit=false;
+    }
+    else{
+        if (!this.levelEditText){
+            this.levelEditText=this.game.add.text(0,0,"Level Edit",this.layers.gui);
+            this.levelEditText.fixedToCamera=true;
+            this.levelEditText.cameraOffset.x=50;
+            this.levelEditText.cameraOffset.y=50;
+            this.levelEditText.fill="#ffffff";
+        }
+        this.levelEditText.alpha=1;
+        this.levelEdit=true;
+
+        this.layers.rocks.forEach(function(rock){
+
+        })
+    }
 };
