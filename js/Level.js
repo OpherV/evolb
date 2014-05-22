@@ -211,6 +211,12 @@ evolution.Level=function(game,levelWidth,levelHeight){
                     pointer.spriteOffsetY=sprite.body.y-pointer.worldY;
                 }
             }
+            else{
+                if (this.keySpace.isDown){
+                    this.levelEditParams.editMode="pan";
+                    this.levelEditParams.originalCameraPosition=new Phaser.Point(this.game.camera.x,this.game.camera.y);
+                }
+            }
 
         }
 
@@ -224,16 +230,35 @@ evolution.Level=function(game,levelWidth,levelHeight){
             this.clearControlPointer();
         }
 
-        if (this.levelEdit && this.levelEditParams.editSprite){
-            this.levelEditParams.editSprite.tint=0xFFFFFF;
-            this.levelEditParams.editSprite=null;
+        if (this.levelEdit){
+
+            if (this.levelEditParams.editSprite){
+                this.levelEditParams.editSprite.tint=0xFFFFFF;
+                this.levelEditParams.editSprite=null;
+            }
+
+            this.levelEditParams.editMode=null;
         }
 
     },this);
 
     key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
     key1.onDown.add(this.toggleLevelEdit, this);
+
     this.keyR = game.input.keyboard.addKey(Phaser.Keyboard.R);
+    this.keySpace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.keySpace.onDown.add(function(){
+        if (that.levelEdit){
+            document.getElementsByTagName("canvas")[0].classList.add("pan");
+        };
+    });
+    this.keySpace.onUp.add(function(){
+        if (that.levelEdit){
+            document.getElementsByTagName("canvas")[0].classList.remove("pan");
+        };
+    });
+
+
 
 };
 
@@ -249,7 +274,7 @@ evolution.Level.prototype.update=function(){
 
 evolution.Level.prototype.render=function(){
 
-    if (this.layers.creatures.countLiving()>0){
+    if (!this.levelEdit && this.layers.creatures.countLiving()>0){
         this.focusOnCreatures(false);
     }
 
@@ -261,25 +286,32 @@ evolution.Level.prototype.render=function(){
     if(this.isControlEnabled && !this.levelEdit){
         this.updatePointerController();
     }
-    if (this.levelEdit && this.levelEditParams.editSprite){
+    if (this.levelEdit){
         var pointer=this.game.input.activePointer;
         var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
-        var editSprite=this.levelEditParams.editSprite;
-        if (this.levelEditParams.editMode=="drag"){
-            editSprite.body.x=pointer.worldX+pointer.spriteOffsetX;
-            editSprite.body.y=pointer.worldY+pointer.spriteOffsetY;
+
+        if (this.levelEditParams.editSprite){
+            var editSprite=this.levelEditParams.editSprite;
+            if (this.levelEditParams.editMode=="drag"){
+                editSprite.body.x=pointer.worldX+pointer.spriteOffsetX;
+                editSprite.body.y=pointer.worldY+pointer.spriteOffsetY;
+            }
+            else if (this.levelEditParams.editMode=="rotate"){
+                var a=editSprite;
+                var b=worldPoint;
+                var newAngle=Math.atan2(a.y - b.y, a.x - b.x);
+
+                editSprite.body.rotation=this.levelEditParams.originalRotation+newAngle-this.levelEditParams.originalAngle;
+                editSprite.rotation=editSprite.body.rotation;
+            }
         }
-        else if (this.levelEditParams.editMode=="rotate"){
-            var a=editSprite;
-            var b=worldPoint;
-            var newAngle=Math.atan2(a.y - b.y, a.x - b.x);
-
-            editSprite.body.rotation=this.levelEditParams.originalRotation+newAngle-this.levelEditParams.originalAngle;
-            editSprite.rotation=editSprite.body.rotation;
+        else if (this.levelEditParams.editMode=="pan"){
+            var orgCameraPos=this.levelEditParams.originalCameraPosition;
+            this.game.camera.x=orgCameraPos.x+pointer.positionDown.x-pointer.position.x;
+            this.game.camera.y=orgCameraPos.y+pointer.positionDown.y-pointer.position.y;
         }
-
-
     }
+
     this.bgParallex();
 };
 
