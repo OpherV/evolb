@@ -28,3 +28,25 @@ evolution.Rock=function(level,id,x,y,params){
 
 evolution.Rock.prototype = Object.create(Phaser.Sprite.prototype);
 evolution.Rock.prototype.constructor = evolution.Rock;
+
+
+evolution.Rock1=function(level,id,x,y,params){
+    params.rockType=1;
+    return (new evolution.Rock(level,id,x,y,params));
+};
+evolution.Rock1.prototype = Object.create(Phaser.Sprite.prototype);
+evolution.Rock1.prototype.constructor = evolution.Rock1;
+
+evolution.Rock2=function(level,id,x,y,params){
+    params.rockType=2;
+    return (new evolution.Rock(level,id,x,y,params));
+};
+evolution.Rock2.prototype = Object.create(Phaser.Sprite.prototype);
+evolution.Rock2.prototype.constructor = evolution.Rock2;
+
+evolution.Rock3=function(level,id,x,y,params){
+    params.rockType=3;
+    return (new evolution.Rock(level,id,x,y,params));
+};
+evolution.Rock3.prototype = Object.create(Phaser.Sprite.prototype);
+evolution.Rock3.prototype.constructor = evolution.Rock3;

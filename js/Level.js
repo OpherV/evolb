@@ -191,30 +191,40 @@ evolution.Level=function(game,levelWidth,levelHeight){
             var pointer=this.game.input.activePointer;
             var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
             var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
-            var bodies=game.physics.p2.hitTest(clickPoint,this.spriteArrays.all);
-            if (bodies.length>0){
-                var sprite=bodies[0].parent.sprite;
-                this.levelEditParams.editSprite=sprite;
 
-                if (this.keyR.isDown){
-                    var a=sprite.body;
-                    var b=worldPoint;
-                    this.levelEditParams.editMode="rotate";
-                    this.levelEditParams.editSprite.tint=0x00FF00;
-                    this.levelEditParams.originalAngle=Math.atan2(a.y - b.y, a.x - b.x);
-                    this.levelEditParams.originalRotation=sprite.body.rotation;
-                }
-                else{
-                    this.levelEditParams.editMode="drag";
-                    this.levelEditParams.editSprite.tint=0xFF0000;
-                    pointer.spriteOffsetX=sprite.body.x-pointer.worldX;
-                    pointer.spriteOffsetY=sprite.body.y-pointer.worldY;
-                }
+            if (this.keySpace.isDown){
+                this.levelEditParams.editMode="pan";
+                this.levelEditParams.originalCameraPosition=new Phaser.Point(this.game.camera.x,this.game.camera.y);
             }
             else{
-                if (this.keySpace.isDown){
-                    this.levelEditParams.editMode="pan";
-                    this.levelEditParams.originalCameraPosition=new Phaser.Point(this.game.camera.x,this.game.camera.y);
+                var bodies=game.physics.p2.hitTest(clickPoint,this.spriteArrays.all);
+                if (bodies.length>0){
+                    var sprite=bodies[0].parent.sprite;
+                    if (this.levelEditParams.editSprite){
+                        this.levelEditParams.editSprite.tint=0xFFFFFF;
+                    }
+                    this.levelEditParams.editSprite=sprite;
+                    this.levelEditParams.editSprite.tint=0x00FF00;
+
+                    if (this.keyR.isDown){
+                        var a=sprite.body;
+                        var b=worldPoint;
+                        this.levelEditParams.editMode="rotate";
+                        this.levelEditParams.originalAngle=Math.atan2(a.y - b.y, a.x - b.x);
+                        this.levelEditParams.originalRotation=sprite.body.rotation;
+                    }
+                    else if(this.keyW.isDown){
+                        this.levelEditParams.editMode="drag";
+                        pointer.spriteOffsetX=sprite.body.x-pointer.worldX;
+                        pointer.spriteOffsetY=sprite.body.y-pointer.worldY;
+                    }
+                }
+                else{
+                     //clicked empty space
+                    if (this.levelEditParams.editSprite){
+                        this.levelEditParams.editSprite.tint=0xFFFFFF;
+                        this.levelEditParams.editSprite=null;
+                    }
                 }
             }
 
@@ -231,31 +241,38 @@ evolution.Level=function(game,levelWidth,levelHeight){
         }
 
         if (this.levelEdit){
-
-            if (this.levelEditParams.editSprite){
-                this.levelEditParams.editSprite.tint=0xFFFFFF;
-                this.levelEditParams.editSprite=null;
-            }
-
             this.levelEditParams.editMode=null;
         }
 
     },this);
 
+    var that=this;
+
     key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
     key1.onDown.add(this.toggleLevelEdit, this);
 
     this.keyR = game.input.keyboard.addKey(Phaser.Keyboard.R);
+    this.keyBackspace = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
+    this.keyBackspace.onDown.add(function(){
+        if (that.levelEditParams.editSprite && that.keyBackspace.isDown){
+            var spriteToRemove=that.levelEditParams.editSprite;
+            that.levelEditParams.editSprite=null;
+            that.removeObject(spriteToRemove);
+        }
+    });
+
+    this.keyW = game.input.keyboard.addKey(Phaser.Keyboard.W);
     this.keySpace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.keySpace.onDown.add(function(){
         if (that.levelEdit){
             document.getElementsByTagName("canvas")[0].classList.add("pan");
-        };
+        }
     });
+
     this.keySpace.onUp.add(function(){
         if (that.levelEdit){
             document.getElementsByTagName("canvas")[0].classList.remove("pan");
-        };
+        }
     });
 
 
@@ -549,16 +566,16 @@ evolution.Level.prototype.showInstructionText=function(text){
 evolution.Level.prototype.toggleLevelEdit=function(){
     if (this.levelEdit){
         this.levelEditText.alpha=0;
+        document.body.querySelector("#editor").style.display="none";
         this.levelEdit=false;
     }
     else{
+        //initialize editing
         if (!this.levelEditText){
-            this.levelEditText=this.game.add.text(0,0,"Level Edit",this.layers.gui);
-            this.levelEditText.fixedToCamera=true;
-            this.levelEditText.cameraOffset.x=50;
-            this.levelEditText.cameraOffset.y=50;
-            this.levelEditText.fill="#ffffff";
+            initializeLevelEditor.call(this)
         }
+
+        document.body.querySelector("#editor").style.display="block";
         this.levelEditText.alpha=1;
         this.levelEdit=true;
 
@@ -567,3 +584,66 @@ evolution.Level.prototype.toggleLevelEdit=function(){
         })
     }
 };
+
+evolution.Level.prototype.addObject=function(objectData){
+    var id=objectData.id?objectData.id:evolution.core.generateId();
+    var alpha=objectData.hasOwnProperty("alpha")?objectData.alpha:1;
+    var params=objectData.params?objectData.params:{};
+    var objectInstance=new evolution[objectData.constructorName](this,id,objectData.x,objectData.y,params);
+    this.layers[objectData.layer].add(objectInstance);
+    this.spriteArrays.all.push(objectInstance);
+
+    objectInstance.alpha=alpha;
+};
+
+evolution.Level.prototype.removeObject=function(object){
+    object.kill();
+};
+
+//TODO create a proper level editor class
+function initializeLevelEditor(){
+    this.levelEditText=this.game.add.text(0,0,"Level Edit",this.layers.gui);
+    this.levelEditText.fixedToCamera=true;
+    this.levelEditText.cameraOffset.x=50;
+    this.levelEditText.cameraOffset.y=50;
+    this.levelEditText.fill="#ffffff";
+
+    var gameObjects=[
+        {
+            constructorName: "Rock1",
+            layer: "rocks"
+        },
+        {
+            constructorName: "Rock2",
+            layer: "rocks"
+        },
+        {
+            constructorName: "Rock3",
+            layer: "rocks"
+        },
+        {
+            constructorName: "Food",
+            layer: "powerUps"
+        }
+    ];
+
+    var selectObj=document.body.querySelector("#editor select");
+    for (var x=0;x<gameObjects.length;x++){
+        var optionData=gameObjects[x];
+        var optionObj=document.createElement("option");
+        optionObj.text=optionData.constructorName;
+        optionObj.objData=optionData;
+        selectObj.add(optionObj);
+    }
+
+    var that=this;
+    document.body.querySelector("#editor button").addEventListener("click", function(){
+        var selectOptionObj=selectObj.options[selectObj.selectedIndex];
+        var objData=JSON.parse(JSON.stringify(selectOptionObj.objData));
+
+        objData.x=that.game.camera.x+that.game.width/2;
+        objData.y=that.game.camera.y+that.game.height/2;
+
+        that.addObject(objData);
+    }, false);
+}

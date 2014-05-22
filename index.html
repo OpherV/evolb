@@ -36,9 +36,28 @@
             canvas.pan{
                 cursor: move;
             }
+
+            #editor{
+                display: none;
+                position: absolute;
+                left: 50px;
+                top: 100px;
+                padding: 5px;
+                background: white;
+            }
+            #editor select{
+                width: 150px;
+                display: inline-block;
+            }
+            #editor button{
+                display: inline-block;
+            }
         </style>
     </head>
     <body>
-
+        <div id="editor">
+            <select></select>
+            <button>Add</button>
+        </div>
     </body>
 </html>
