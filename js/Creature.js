@@ -1,10 +1,10 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.Creature= function (level,objectData) {
-    this.objectDate=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
 
-    if (this.objectDate.dna){
+    if (this.objectData.dna){
         //use given DNA
-        this.dna=this.objectDate.dna;
+        this.dna=this.objectData.dna;
     }
     else{
         //create a new DNA
@@ -16,7 +16,7 @@ evolution.Creature= function (level,objectData) {
     this.dna.character=this;
 
     //construct chracter
-    evolution.Character.call(this, level, this.objectDate.id, this.objectDate.x, this.objectDate.y,'playerCreature');
+    evolution.Character.call(this, level, this.objectData.id, this.objectData.x, this.objectData.y,'playerCreature');
     this.type=evolution.Character.types.PLAYER;
     this.kind="creature";
 

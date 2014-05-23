@@ -481,3 +481,12 @@ evolution.Level.getDefaultParams=function(params){
         id: params.id?params.id:evolution.core.generateId()
     };
 };
+
+evolution.Level.prototype.exportObjects=function(){
+    var levelObjects=this.spriteArrays.levelObjects;
+    var exportArray=[];
+    for (var x=0;x<levelObjects.length;x++){
+        exportArray.push(levelObjects[x].objectData);
+    }
+    return exportArray;
+};

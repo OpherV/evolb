@@ -1,14 +1,14 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.Food= function (level,objectData) {
 
-    this.objectDate=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
-    this.id=this.objectDate.id;
+    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+    this.id=this.objectData.id;
     this.level=level;
     this.game=level.game;
 
     this.healAmount=50;
 
-    Phaser.Sprite.call(this, this.game, this.objectDate.x, this.objectDate.y, 'food');
+    Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y, 'food');
     this.type=evolution.Character.types.POWERUP;
     this.kind="food";
 

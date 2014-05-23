@@ -1,8 +1,9 @@
 var level=
 {
-    "levelWidth": 10000,
-    "levelHeight": 6000,
-    "onLevelStart": function(){
+    name: "tutorial",
+    levelWidth: 10000,
+    levelHeight: 6000,
+    onLevelStart: function(){
         //focus camera
 
         var firstCreatureDna=new evolution.Dna();
@@ -105,18 +106,18 @@ var level=
         {
             constructorName: "Food",
             layer: "powerUps",
-            
+
                 id: "food1",
                 x: 5500,
                 y: 3400,
                 alpha: 0
-            
+
         },
         //rocks
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 5000,
                 y: 3500,
                 rockType: 3,
@@ -126,7 +127,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 4700,
                 y: 3500,
                 rockType: 2,
@@ -144,7 +145,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 4200,
                 y: 3100,
                 rockType: 1,
@@ -154,7 +155,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 4100,
                 y: 2800,
                 rockType: 3,
@@ -164,7 +165,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 4300,
                 y: 2500,
                 rockType: 2,
@@ -174,7 +175,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 4500,
                 y: 2500,
                 rockType: 1,
@@ -184,7 +185,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 4820,
                 y: 2500,
                 rockType: 3,
@@ -193,7 +194,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 5150,
                 y: 2500,
                 rockType: 1,
@@ -203,7 +204,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 5350,
                 y: 2700,
                 rockType: 3,
@@ -213,7 +214,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 5550,
                 y: 2800,
                 rockType: 1,
@@ -222,7 +223,7 @@ var level=
         {
             constructorName: "Rock",
             layer: "rocks",
-            
+
                 x: 5700,
                 y: 3050,
                 rockType: 2,

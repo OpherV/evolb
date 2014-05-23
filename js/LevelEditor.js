@@ -144,6 +144,8 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         }
     ];
 
+    var that=this;
+
     var selectObj=document.body.querySelector("#editor select");
     for (var x=0;x<gameObjects.length;x++){
         var optionData=gameObjects[x];
@@ -153,16 +155,33 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         selectObj.add(optionObj);
     }
 
-    var that=this;
-    document.body.querySelector("#editor button").addEventListener("click", function(){
+    document.body.querySelector("#editor .section.addElement button").addEventListener("click", function(){
         var selectOptionObj=selectObj.options[selectObj.selectedIndex];
         var objData=JSON.parse(JSON.stringify(selectOptionObj.objData));
 
         objData.x=that.game.camera.x+that.game.width/2;
         objData.y=that.game.camera.y+that.game.height/2;
 
-        that.level.addObject(objData);
+
+
+        var objectInstance=that.level.addObject(objData);
+        that.level.spriteArrays.levelObjects.push(objectInstance);
     }, false);
+
+
+    document.body.querySelector("#exportModal button.close").addEventListener("click", function(){
+        document.body.querySelector("#exportModal").style.display="none";
+    },false);
+
+    document.body.querySelector("#editor .export.section button").addEventListener("click", function(){
+        var exportModal=document.body.querySelector("#exportModal");
+        var exportTextArea=exportModal.querySelector("textarea");
+        exportModal.style.display="block";
+        exportTextArea.value=JSON.stringify(that.level.exportObjects());
+        exportTextArea.select();
+    },false);
+
+
 };
 
 
@@ -176,6 +195,8 @@ evolution.LevelEditor.prototype.render=function(){
             if (this.editMode=="drag"){
                 this.targetSprite.body.x=pointer.worldX+pointer.spriteOffsetX;
                 this.targetSprite.body.y=pointer.worldY+pointer.spriteOffsetY;
+                this.targetSprite.objectData.x=this.targetSprite.body.x;
+                this.targetSprite.objectData.y=this.targetSprite.body.y;
             }
             else if (this.editMode=="rotate"){
                 var a=this.targetSprite;
@@ -184,6 +205,7 @@ evolution.LevelEditor.prototype.render=function(){
 
                 this.targetSprite.body.rotation=this.originalRotation+newAngle-this.originalAngle;
                 this.targetSprite.rotation=this.targetSprite.body.rotation;
+                this.targetSprite.objectData.angle=this.targetSprite.angle; //easier to read angle instead of radians
             }
         }
         else if (this.isPanning){
