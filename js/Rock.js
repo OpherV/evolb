@@ -1,12 +1,15 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Rock=function(level,id,x,y,params){
-    this.id=id;
+evolution.Rock=function(level,inputParamaters){
+
+    var params=evolution.Utils.extend.call(evolution.Level.getDefaultParams(inputParamaters),inputParamaters);
+
     this.level=level;
     this.game=level.game;
+    this.id=params.id;
 
     var rockNumber=params.rockType?params.rockType:this.game.rnd.integerInRange(1,3);
 
-    Phaser.Sprite.call(this, this.game, x, y,'rock'+rockNumber);
+    Phaser.Sprite.call(this, this.game, params.x, params.y,'rock'+rockNumber);
 //    var scaleFactor=0.5+Math.random()*2;
 //    this.scale.x=scaleFactor;
 //    this.scale.y=scaleFactor;

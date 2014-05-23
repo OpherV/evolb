@@ -457,10 +457,11 @@ evolution.Level.prototype.showInstructionText=function(text){
 };
 
 evolution.Level.prototype.addObject=function(objectData){
-    var id=objectData.id?objectData.id:evolution.core.generateId();
-    var alpha=objectData.hasOwnProperty("alpha")?objectData.alpha:1;
+    objectData.params=objectData.params?objectData.params:{};
+    var alpha=objectData.params.hasOwnProperty("alpha")?objectData.params.alpha:1;
     var params=objectData.params?objectData.params:{};
-    var objectInstance=new evolution[objectData.constructorName](this,id,objectData.x,objectData.y,params);
+
+    var objectInstance=new evolution[objectData.constructorName](this,params);
     this.layers[objectData.layer].add(objectInstance);
     this.spriteArrays.all.push(objectInstance);
 
@@ -469,4 +470,14 @@ evolution.Level.prototype.addObject=function(objectData){
 
 evolution.Level.prototype.removeObject=function(object){
     object.destroy();
+};
+
+
+//static methods
+evolution.Level.getDefaultParams=function(params){
+    return{
+        x: 0,
+        y: 0,
+        id: params.id?params.id:evolution.core.generateId()
+    };
 };

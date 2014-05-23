@@ -1,9 +1,9 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Creature= function (level,id,x,y,dna) {
-
-    if (dna){
+evolution.Creature= function (level,inputParamaters) {
+    var params=evolution.Utils.extend.call(evolution.Level.getDefaultParams(inputParamaters),inputParamaters);
+    if (inputParamaters.dna){
         //use given DNA
-        this.dna=dna;
+        this.dna=inputParamaters.dna;
     }
     else{
         //create a new DNA
@@ -15,7 +15,7 @@ evolution.Creature= function (level,id,x,y,dna) {
     this.dna.character=this;
 
     //construct chracter
-    evolution.Character.call(this, level, id, x, y,'playerCreature');
+    evolution.Character.call(this, level, params.id, params.x, params.y,'playerCreature');
     this.type=evolution.Character.types.PLAYER;
     this.kind="creature";
 
@@ -80,7 +80,12 @@ evolution.Creature.prototype.spawn=function(father,mother){
     console.log(father.modifiedStats.mutationChance,mother.modifiedStats.mutationChance);
     var mutationChance=Math.max(father.modifiedStats.mutationChance,mother.modifiedStats.mutationChance);
     var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna,mutationChance);
-    var newCreature = new evolution.Creature(this.game,evolution.core.generateId(), this.x,this.y,spawnDna);
+    var params={
+        x: this.x,
+        y: this.y,
+        dna: spawnDna
+    };
+    var newCreature = new evolution.Creature(this.game,params);
     evolution.core.getCreatures().add(newCreature);
     newCreature.isFollowingPointer=this.isFollowingPointer;
     newCreature.init();
