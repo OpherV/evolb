@@ -21,7 +21,7 @@ evolution.Rock=function(level,objectData){
 
     this.body.setMaterial(evolution.Materials.getRockMaterial());
     this.body.static = true;
-    this.body.angle=this.objectData.angle?this.objectData.angle:this.game.rnd.angle();
+    this.body.angle=this.objectData.angle;
     this.angle=this.body.angle;
     this.body.fixedRotation = true;
 

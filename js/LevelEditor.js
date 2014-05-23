@@ -9,6 +9,8 @@ evolution.LevelEditor=function(level){
     this.selectedSprite=null;
     this.targetSprite=null;
 
+    this.autoSaveInterval=null
+
 
     this.game.input.onDown.add(function(pointer){
 
@@ -71,6 +73,13 @@ evolution.LevelEditor=function(level){
         if (this.selectedSprite && this.keyBackspace.isDown){
             var spriteToRemove=this.selectedSprite;
             this.selectedSprite=null;
+
+            for (var x =0; x < this.level.spriteArrays.levelObjects.length; x++)
+                if (this.level.spriteArrays.levelObjects[x] == spriteToRemove) {
+                    this.level.spriteArrays.levelObjects.splice(x,1);
+                    break;
+                }
+
             this.level.removeObject(spriteToRemove);
         }
     },this);
@@ -95,7 +104,11 @@ evolution.LevelEditor=function(level){
 evolution.LevelEditor.prototype.constructor = evolution.Level;
 
 evolution.LevelEditor.prototype.toggleLevelEdit=function(){
+    var that=this;
+
     if (this.isActive){
+        //deactivate
+
         this.levelEditText.alpha=0;
         document.body.querySelector("#editor").style.display="none";
         this.isActive=false;
@@ -103,6 +116,9 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
         if (this.selectedSprite){
             this.selectSprite(null);
         }
+
+        this.autoSaveLevel();
+        clearInterval(this.autoSaveInterval);
     }
     else{
         //initialize editing
@@ -110,10 +126,14 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
             this.initializeLevelEditor();
         }
 
+        //actiavte
         document.body.querySelector("#editor").style.display="block";
         this.levelEditText.alpha=1;
         this.isActive=true;
 
+        this.autoSaveInterval=setInterval(function(){
+            that.autoSaveLevel();
+        },10000)
     }
 };
 
@@ -173,7 +193,7 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         document.body.querySelector("#exportModal").style.display="none";
     },false);
 
-    document.body.querySelector("#editor .export.section button").addEventListener("click", function(){
+    document.body.querySelector("#editor .export.section button.export").addEventListener("click", function(){
         var exportModal=document.body.querySelector("#exportModal");
         var exportTextArea=exportModal.querySelector("textarea");
         exportModal.style.display="block";
@@ -181,6 +201,10 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         exportTextArea.select();
     },false);
 
+    //clear cache
+    document.body.querySelector("#editor .export.section button.clearCache").addEventListener("click", function(){
+        localStorage.removeItem("level-"+that.level.name);
+    },false);
 
 };
 
@@ -251,4 +275,10 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
     }
 
+};
+
+evolution.LevelEditor.prototype.autoSaveLevel=function(){
+    var levelObjects=this.level.exportObjects();
+    localStorage.setItem('level-'+this.level.name, JSON.stringify(levelObjects));
+    console.log("autosaved level");
 };

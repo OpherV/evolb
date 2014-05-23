@@ -34,7 +34,7 @@ evolution.Utils=(function(){
     };
 
     function _extend(obj) {
-        var clone=_clone(obj);
+        var clone=_clone(this);
         for(var i in obj){
             clone[i] = obj[i];
         }
