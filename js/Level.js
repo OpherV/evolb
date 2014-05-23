@@ -6,18 +6,16 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
     //flags
     this.isControlEnabled=true;
-    this.levelEdit=false;
 
     this.levelWidth=levelWidth;
     this.levelHeight=levelHeight;
     this.game=game;
 
+    this.levelEditor=new evolution.LevelEditor(this);
+
     game.world.setBounds(-this.labOffset, -this.labOffset, this.levelWidth+this.labOffset*2, this.levelHeight+this.labOffset*2);
 
-    this.levelEditParams={
-        editMode: null,
-        editSprite: null
-    };
+
     
     this.layers={
         behindAquarium: null,
@@ -169,7 +167,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
     game.input.onDown.add(function(pointer){
 
         //character control
-        if (this.isControlEnabled && !this.levelEdit){
+        if (this.isControlEnabled && !this.levelEditor.isActive){
             var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
             var bodies=game.physics.p2.hitTest(clickPoint,this.layers.creatures.children);
             if (bodies.length>0){
@@ -187,95 +185,13 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
         }
 
-        if (this.levelEdit){
-            var pointer=this.game.input.activePointer;
-            var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
-            var clickPoint= new Phaser.Point(pointer.position.x+game.camera.x,pointer.position.y+game.camera.y);
-
-            if (this.keySpace.isDown){
-                this.levelEditParams.editMode="pan";
-                this.levelEditParams.originalCameraPosition=new Phaser.Point(this.game.camera.x,this.game.camera.y);
-            }
-            else{
-                var bodies=game.physics.p2.hitTest(clickPoint,this.spriteArrays.all);
-                if (bodies.length>0){
-                    var sprite=bodies[0].parent.sprite;
-                    if (this.levelEditParams.editSprite){
-                        this.levelEditParams.editSprite.tint=0xFFFFFF;
-                    }
-                    this.levelEditParams.editSprite=sprite;
-                    this.levelEditParams.editSprite.tint=0x00FF00;
-
-                    if (this.keyR.isDown){
-                        var a=sprite.body;
-                        var b=worldPoint;
-                        this.levelEditParams.editMode="rotate";
-                        this.levelEditParams.originalAngle=Math.atan2(a.y - b.y, a.x - b.x);
-                        this.levelEditParams.originalRotation=sprite.body.rotation;
-                    }
-                    else if(this.keyW.isDown){
-                        this.levelEditParams.editMode="drag";
-                        pointer.spriteOffsetX=sprite.body.x-pointer.worldX;
-                        pointer.spriteOffsetY=sprite.body.y-pointer.worldY;
-                    }
-                }
-                else{
-                     //clicked empty space
-                    if (this.levelEditParams.editSprite){
-                        this.levelEditParams.editSprite.tint=0xFFFFFF;
-                        this.levelEditParams.editSprite=null;
-                    }
-                }
-            }
-
-        }
-
-
-
-
     },this);
 
     game.input.onUp.add(function(pointer){
-        if(this.isControlEnabled && !this.levelEdit){
+        if(this.isControlEnabled && !this.levelEditor.isActive){
             this.clearControlPointer();
         }
-
-        if (this.levelEdit){
-            this.levelEditParams.editMode=null;
-        }
-
     },this);
-
-    var that=this;
-
-    key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-    key1.onDown.add(this.toggleLevelEdit, this);
-
-    this.keyR = game.input.keyboard.addKey(Phaser.Keyboard.R);
-    this.keyBackspace = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
-    this.keyBackspace.onDown.add(function(){
-        if (that.levelEditParams.editSprite && that.keyBackspace.isDown){
-            var spriteToRemove=that.levelEditParams.editSprite;
-            that.levelEditParams.editSprite=null;
-            that.removeObject(spriteToRemove);
-        }
-    });
-
-    this.keyW = game.input.keyboard.addKey(Phaser.Keyboard.W);
-    this.keySpace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.keySpace.onDown.add(function(){
-        if (that.levelEdit){
-            document.getElementsByTagName("canvas")[0].classList.add("pan");
-        }
-    });
-
-    this.keySpace.onUp.add(function(){
-        if (that.levelEdit){
-            document.getElementsByTagName("canvas")[0].classList.remove("pan");
-        }
-    });
-
-
 
 };
 
@@ -291,7 +207,7 @@ evolution.Level.prototype.update=function(){
 
 evolution.Level.prototype.render=function(){
 
-    if (!this.levelEdit && this.layers.creatures.countLiving()>0){
+    if (!this.levelEditor.isActive && this.layers.creatures.countLiving()>0){
         this.focusOnCreatures(false);
     }
 
@@ -300,34 +216,11 @@ evolution.Level.prototype.render=function(){
         creature.render();
     });
 
-    if(this.isControlEnabled && !this.levelEdit){
+    if(this.isControlEnabled && !this.levelEditor.isActive){
         this.updatePointerController();
     }
-    if (this.levelEdit){
-        var pointer=this.game.input.activePointer;
-        var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
 
-        if (this.levelEditParams.editSprite){
-            var editSprite=this.levelEditParams.editSprite;
-            if (this.levelEditParams.editMode=="drag"){
-                editSprite.body.x=pointer.worldX+pointer.spriteOffsetX;
-                editSprite.body.y=pointer.worldY+pointer.spriteOffsetY;
-            }
-            else if (this.levelEditParams.editMode=="rotate"){
-                var a=editSprite;
-                var b=worldPoint;
-                var newAngle=Math.atan2(a.y - b.y, a.x - b.x);
-
-                editSprite.body.rotation=this.levelEditParams.originalRotation+newAngle-this.levelEditParams.originalAngle;
-                editSprite.rotation=editSprite.body.rotation;
-            }
-        }
-        else if (this.levelEditParams.editMode=="pan"){
-            var orgCameraPos=this.levelEditParams.originalCameraPosition;
-            this.game.camera.x=orgCameraPos.x+pointer.positionDown.x-pointer.position.x;
-            this.game.camera.y=orgCameraPos.y+pointer.positionDown.y-pointer.position.y;
-        }
-    }
+    this.levelEditor.render();
 
     this.bgParallex();
 };
@@ -563,28 +456,6 @@ evolution.Level.prototype.showInstructionText=function(text){
     return this.instructionText;
 };
 
-evolution.Level.prototype.toggleLevelEdit=function(){
-    if (this.levelEdit){
-        this.levelEditText.alpha=0;
-        document.body.querySelector("#editor").style.display="none";
-        this.levelEdit=false;
-    }
-    else{
-        //initialize editing
-        if (!this.levelEditText){
-            initializeLevelEditor.call(this)
-        }
-
-        document.body.querySelector("#editor").style.display="block";
-        this.levelEditText.alpha=1;
-        this.levelEdit=true;
-
-        this.layers.rocks.forEach(function(rock){
-
-        })
-    }
-};
-
 evolution.Level.prototype.addObject=function(objectData){
     var id=objectData.id?objectData.id:evolution.core.generateId();
     var alpha=objectData.hasOwnProperty("alpha")?objectData.alpha:1;
@@ -597,53 +468,5 @@ evolution.Level.prototype.addObject=function(objectData){
 };
 
 evolution.Level.prototype.removeObject=function(object){
-    object.kill();
+    object.destroy();
 };
-
-//TODO create a proper level editor class
-function initializeLevelEditor(){
-    this.levelEditText=this.game.add.text(0,0,"Level Edit",this.layers.gui);
-    this.levelEditText.fixedToCamera=true;
-    this.levelEditText.cameraOffset.x=50;
-    this.levelEditText.cameraOffset.y=50;
-    this.levelEditText.fill="#ffffff";
-
-    var gameObjects=[
-        {
-            constructorName: "Rock1",
-            layer: "rocks"
-        },
-        {
-            constructorName: "Rock2",
-            layer: "rocks"
-        },
-        {
-            constructorName: "Rock3",
-            layer: "rocks"
-        },
-        {
-            constructorName: "Food",
-            layer: "powerUps"
-        }
-    ];
-
-    var selectObj=document.body.querySelector("#editor select");
-    for (var x=0;x<gameObjects.length;x++){
-        var optionData=gameObjects[x];
-        var optionObj=document.createElement("option");
-        optionObj.text=optionData.constructorName;
-        optionObj.objData=optionData;
-        selectObj.add(optionObj);
-    }
-
-    var that=this;
-    document.body.querySelector("#editor button").addEventListener("click", function(){
-        var selectOptionObj=selectObj.options[selectObj.selectedIndex];
-        var objData=JSON.parse(JSON.stringify(selectOptionObj.objData));
-
-        objData.x=that.game.camera.x+that.game.width/2;
-        objData.y=that.game.camera.y+that.game.height/2;
-
-        that.addObject(objData);
-    }, false);
-}
