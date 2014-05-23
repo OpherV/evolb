@@ -35,7 +35,8 @@ evolution.Level=function(game,levelWidth,levelHeight){
     }
 
     this.spriteArrays={
-        all: []
+        all: [],
+        levelObjects: [] //all objects that make up the level in its initial state
     };
 
 
@@ -457,15 +458,14 @@ evolution.Level.prototype.showInstructionText=function(text){
 };
 
 evolution.Level.prototype.addObject=function(objectData){
-    objectData.params=objectData.params?objectData.params:{};
-    var alpha=objectData.params.hasOwnProperty("alpha")?objectData.params.alpha:1;
-    var params=objectData.params?objectData.params:{};
+    var alpha=objectData.hasOwnProperty("alpha")?objectData.alpha:1;
 
-    var objectInstance=new evolution[objectData.constructorName](this,params);
+    var objectInstance=new evolution[objectData.constructorName](this,objectData);
     this.layers[objectData.layer].add(objectInstance);
     this.spriteArrays.all.push(objectInstance);
 
     objectInstance.alpha=alpha;
+    return objectInstance;
 };
 
 evolution.Level.prototype.removeObject=function(object){

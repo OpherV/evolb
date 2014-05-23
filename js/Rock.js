@@ -1,15 +1,14 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Rock=function(level,inputParamaters){
+evolution.Rock=function(level,objectData){
 
-    var params=evolution.Utils.extend.call(evolution.Level.getDefaultParams(inputParamaters),inputParamaters);
-
+    this.objectDate=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
     this.level=level;
     this.game=level.game;
-    this.id=params.id;
+    this.id=this.objectDate.id;
 
-    var rockNumber=params.rockType?params.rockType:this.game.rnd.integerInRange(1,3);
+    var rockNumber=this.objectDate.rockType?this.objectDate.rockType:this.game.rnd.integerInRange(1,3);
 
-    Phaser.Sprite.call(this, this.game, params.x, params.y,'rock'+rockNumber);
+    Phaser.Sprite.call(this, this.game, this.objectDate.x, this.objectDate.y,'rock'+rockNumber);
 //    var scaleFactor=0.5+Math.random()*2;
 //    this.scale.x=scaleFactor;
 //    this.scale.y=scaleFactor;
@@ -22,7 +21,7 @@ evolution.Rock=function(level,inputParamaters){
 
     this.body.setMaterial(evolution.Materials.getRockMaterial());
     this.body.static = true;
-    this.body.angle=params.angle?params.angle:this.game.rnd.angle();
+    this.body.angle=this.objectDate.angle?this.objectDate.angle:this.game.rnd.angle();
     this.angle=this.body.angle;
     this.body.fixedRotation = true;
 

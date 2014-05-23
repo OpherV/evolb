@@ -105,130 +105,129 @@ var level=
         {
             constructorName: "Food",
             layer: "powerUps",
-            params:{
+            
                 id: "food1",
                 x: 5500,
                 y: 3400,
                 alpha: 0
-            }
+            
         },
         //rocks
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 5000,
                 y: 3500,
                 rockType: 3,
                 angle: 90
-            }
+
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 4700,
                 y: 3500,
                 rockType: 2,
                 angle: 45
-            }
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{ x: 4400,
+             x: 4400,
                      y: 3400,
                      rockType: 1,
                      angle: 19
-            }
+
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 4200,
                 y: 3100,
                 rockType: 1,
                 angle: 168
-            }
+
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 4100,
                 y: 2800,
                 rockType: 3,
                 angle: 220
-            }
+
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 4300,
                 y: 2500,
                 rockType: 2,
                 angle: 20
-            }
+
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 4500,
                 y: 2500,
                 rockType: 1,
                 angle: 300
-            }
+
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 4820,
                 y: 2500,
                 rockType: 3,
-                angle: 90 }
+                angle: 90
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 5150,
                 y: 2500,
                 rockType: 1,
                 angle: 90
-            }
+
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 5350,
                 y: 2700,
                 rockType: 3,
                 angle: 75
-            }
+
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 5550,
                 y: 2800,
                 rockType: 1,
-                angle: 20 }
+                angle: 20
         },
         {
             constructorName: "Rock",
             layer: "rocks",
-            params:{
+            
                 x: 5700,
                 y: 3050,
                 rockType: 2,
                 angle: 80
-            }
+
         }
 
     ]

@@ -6,7 +6,8 @@ evolution.LevelLoader=function(){
 
         for(var x=0;x<levelData.objects.length;x++){
             var objectData=levelData.objects[x];
-            level.addObject(objectData);
+            var objectInstance=level.addObject(objectData);
+            level.spriteArrays.levelObjects.push(objectInstance);
         }
 
         if (levelData.onLevelStart){
