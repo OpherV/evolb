@@ -479,6 +479,7 @@ evolution.Level.getDefaultParams=function(params){
         x: 0,
         y: 0,
         angle: 0,
+        exists: true,
         id: params.id?params.id:evolution.core.generateId()
     };
 };

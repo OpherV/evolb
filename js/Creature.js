@@ -20,6 +20,8 @@ evolution.Creature= function (level,objectData) {
     this.type=evolution.Character.types.PLAYER;
     this.kind="creature";
 
+    this.exists=this.objectData.exists;
+
     //circling dots
     this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
     this.healthbar.x = -this.healthbar.width/2;

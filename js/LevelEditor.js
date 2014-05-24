@@ -46,7 +46,11 @@ evolution.LevelEditor=function(level){
     },this);
 
     this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-    this.key1.onDown.add(this.toggleLevelEdit, this);
+    this.key1.onDown.add(function(){
+        //if (this.key1.shiftKey){
+            this.toggleLevelEdit();
+        //}
+    }, this);
 
     this.keyR = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
     this.keyR.onDown.add(function(){
@@ -81,6 +85,7 @@ evolution.LevelEditor=function(level){
                 }
 
             this.level.removeObject(spriteToRemove);
+            this.updateSpriteProperties();
         }
     },this);
 
@@ -117,6 +122,14 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
             this.selectSprite(null);
         }
 
+        for(var x=0;x<this.level.spriteArrays.levelObjects.length;x++){
+            var levelObject=this.level.spriteArrays.levelObjects[x];
+            if (levelObject.objectData.exists!="undefined" && !levelObject.objectData.exists){
+                levelObject.visible=false;
+                levelObject.tint=0xFFFFFF;
+            }
+        }
+
         this.autoSaveLevel();
         clearInterval(this.autoSaveInterval);
     }
@@ -130,6 +143,14 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
         document.body.querySelector("#editor").style.display="block";
         this.levelEditText.alpha=1;
         this.isActive=true;
+
+        for(var x=0;x<this.level.spriteArrays.levelObjects.length;x++){
+            var levelObject=this.level.spriteArrays.levelObjects[x];
+            if (levelObject.objectData.exists!="undefined" && !levelObject.objectData.exists){
+                levelObject.visible=true;
+                levelObject.tint=0x993300;
+            }
+        }
 
         this.autoSaveInterval=setInterval(function(){
             that.autoSaveLevel();
@@ -146,6 +167,10 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
     this.levelEditText.fill="#ffffff";
 
     var gameObjects=[
+        {
+            constructorName: "Rock",
+            layer: "rocks"
+        },
         {
             constructorName: "Rock1",
             layer: "rocks"
@@ -199,6 +224,14 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         exportModal.style.display="block";
         exportTextArea.value=JSON.stringify(that.level.exportObjects());
         exportTextArea.select();
+    },false);
+
+    document.body.querySelector("#editor .properties.section button.add").addEventListener("click", function(){
+        var propName=prompt("Enter new property name");
+        if (propName){
+            that.selectedSprite.objectData[propName]=0;
+            that.updateSpriteProperties();
+        }
     },false);
 
     //clear cache
@@ -284,15 +317,19 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 };
 
 evolution.LevelEditor.prototype.updateSpriteProperties=function(){
+    var that=this;
     var sprite=this.selectedSprite;
 
+    var propSectionObj = document.body.querySelector(".section.properties");
+
     //remove previous properties
-    var propContainerObj = document.body.querySelector(".section.properties");
+    var propContainerObj = document.body.querySelector(".section.properties .items");
     while (propContainerObj .firstChild) {
         propContainerObj.removeChild(propContainerObj .firstChild);
     }
 
     if (sprite){
+        propSectionObj.style.display="block";
         for (var prop in sprite.objectData){
             var propObj = document.createElement('div');
             var propNameObj =  document.createElement('div');
@@ -309,12 +346,31 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
             propObj.appendChild(propValueObj);
 
 
+
+            propValueObj.addEventListener("focus", function(){
+                that.keyBackspace.enabled=false;
+                that.key1.enabled=false;
+            }, false);
+
             propValueObj.addEventListener("blur", function(){
-                sprite.objectData[this.name]=this.value;
+                if (this.value.length>0){
+                    sprite.objectData[this.name]=this.value;
+                }
+                else{
+                    //delete property
+                    delete sprite.objectData[this.name];
+                     that.updateSpriteProperties();
+                }
+
+                that.keyBackspace.enabled=true;
+                that.key1.enabled=true;
             }, false);
 
             propContainerObj.appendChild(propObj);
         }
+    }
+    else{
+        propSectionObj.style.display="none";
     }
 };
 

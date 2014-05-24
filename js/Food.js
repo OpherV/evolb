@@ -24,6 +24,7 @@ evolution.Food= function (level,objectData) {
     this.scale.x=0.5;
     this.scale.y=0.5;
     this.angle=this.game.rnd.integerInRange(0,80)-40;
+    this.exists=this.objectData.exists;
 
     this.animations.add("wobble",[0,1,2,3,2,1]);
     this.animations.play("wobble",12,true);
