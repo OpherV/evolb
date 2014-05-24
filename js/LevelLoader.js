@@ -5,9 +5,12 @@ evolution.LevelLoader=function(){
         var level=new evolution.Level(game,levelData.levelWidth,levelData.levelHeight);
         level.name=levelData.name;
 
+        //avoid cache flag
+        var noLevelCache="noLevelCache" in evolution.Utils.getUrlVars();
+
         //TODO expand auto saving to all level data?
         var savedLevelData = JSON.parse(localStorage.getItem('level-'+level.name));
-        var levelObjects=savedLevelData?savedLevelData:levelData.objects;
+        var levelObjects=!noLevelCache&&savedLevelData?savedLevelData:levelData.objects;
 
         for(var x=0;x<levelObjects.length;x++){
             var objectData=levelObjects[x];
