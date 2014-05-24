@@ -44,6 +44,7 @@
                 position: absolute;
                 left: 50px;
                 top: 100px;
+                width: 210px;
 
             }
             #editor .section{
@@ -95,6 +96,16 @@
                 top: 10px;
                 right: 40px;
             }
+
+            .properties.section div.propertyContainer div{
+                display: inline-block;
+                width: 60%;
+            }
+
+            .properties.section div.propertyContainer input{
+                display: inline-block;
+                width: 40%;
+            }
         </style>
     </head>
     <body>
@@ -102,6 +113,8 @@
             <div class="addElement section">
                 <select></select>
                 <button>Add</button>
+            </div>
+            <div class="properties section">
             </div>
             <div class="export section">
                 <button class="export">Export</button>

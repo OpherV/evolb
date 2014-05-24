@@ -221,6 +221,7 @@ evolution.LevelEditor.prototype.render=function(){
                 this.targetSprite.body.y=pointer.worldY+pointer.spriteOffsetY;
                 this.targetSprite.objectData.x=this.targetSprite.body.x;
                 this.targetSprite.objectData.y=this.targetSprite.body.y;
+                this.updateSpriteProperties();
             }
             else if (this.editMode=="rotate"){
                 var a=this.targetSprite;
@@ -230,6 +231,7 @@ evolution.LevelEditor.prototype.render=function(){
                 this.targetSprite.body.rotation=this.originalRotation+newAngle-this.originalAngle;
                 this.targetSprite.rotation=this.targetSprite.body.rotation;
                 this.targetSprite.objectData.angle=this.targetSprite.angle; //easier to read angle instead of radians
+                this.updateSpriteProperties();
             }
         }
         else if (this.isPanning){
@@ -249,8 +251,12 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
         if (this.selectedSprite){
             this.selectedSprite.tint=0xFFFFFF;
         }
+
+
         this.selectedSprite=sprite;
         this.selectedSprite.tint=0x00FF00;
+
+        this.updateSpriteProperties();
 
         if (this.editMode=="drag"){
             pointer.spriteOffsetX=sprite.body.x-pointer.worldX;
@@ -275,6 +281,40 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
     }
 
+};
+
+evolution.LevelEditor.prototype.updateSpriteProperties=function(){
+    var sprite=this.selectedSprite;
+
+    //remove previous properties
+    var propContainerObj = document.body.querySelector(".section.properties");
+    while (propContainerObj .firstChild) {
+        propContainerObj.removeChild(propContainerObj .firstChild);
+    }
+
+
+    for (var prop in sprite.objectData){
+        var propObj = document.createElement('div');
+        var propNameObj =  document.createElement('div');
+        var propValueObj =  document.createElement('input');
+
+        propObj.className="propertyContainer";
+        propNameObj.className="property";
+        propNameObj.innerHTML=prop;
+        propValueObj.className="value";
+        propValueObj.name=prop;
+        propValueObj.value=sprite.objectData[prop];
+
+        propObj.appendChild(propNameObj);
+        propObj.appendChild(propValueObj);
+
+
+        propValueObj.addEventListener("blur", function(){
+            sprite.objectData[this.name]=this.value;
+        }, false);
+
+        propContainerObj.appendChild(propObj);
+    }
 };
 
 evolution.LevelEditor.prototype.autoSaveLevel=function(){
