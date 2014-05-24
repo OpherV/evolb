@@ -13,7 +13,7 @@ evolution.gui.CreatureHealthbar= function (game,character) {
     this.redraw=function(){
         var hp=this.character.health;
         var totalHp=this.character.modifiedStats.maxHealth;
-        var frameNumber=Math.round(hp/totalHp*31);
+        var frameNumber=Math.round(hp/totalHp*30);
 
         this.animations.play(frameNumber.toString());
     };
