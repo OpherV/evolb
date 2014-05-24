@@ -31,7 +31,7 @@ evolution.Utils=(function(){
         }
 
         throw new Error("Unable to copy obj! Its type isn't supported.");
-    };
+    }
 
     function _extend(obj) {
         var clone=_clone(this);
@@ -41,8 +41,13 @@ evolution.Utils=(function(){
         return clone;
     }
 
+    function _isUndefined(value){
+        return typeof(value)=="undefined";
+    }
+
     return{
         extend: _extend,
-        clone: _clone
+        clone: _clone,
+        isUndefined: _isUndefined
     }
 })();

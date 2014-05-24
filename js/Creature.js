@@ -10,8 +10,19 @@ evolution.Creature= function (level,objectData) {
         //create a new DNA
         this.dna=new evolution.Dna();
         this.dna.randomizeBaseTraits();
-    }
 
+        //set dna from level object
+        for(var property in this.objectData){
+
+            if (property.indexOf("baseTrait_")>-1){
+                var traitValues=property.split("_");
+                var traitName=traitValues[1];
+                var traitValue=parseFloat(this.objectData[property]);
+                //set value
+                this.dna.baseTraits[traitName].value=traitValue;
+            }
+        }
+    }
     //attach creature to dna
     this.dna.character=this;
 
@@ -67,10 +78,12 @@ evolution.Creature= function (level,objectData) {
 
     //methods
 
-
-
-
     this.init();
+
+    //these override init
+    this.hasHunger=evolution.Utils.isUndefined(this.objectData.hasHunger)?true:this.objectData.hasHunger;
+    this.canBreed=evolution.Utils.isUndefined(this.objectData.canBreed)?true:this.objectData.canBreed;
+    this.canBob=evolution.Utils.isUndefined(this.objectData.canBob)?true:this.objectData.canBob;
 };
 
 evolution.Creature.prototype = Object.create(evolution.Character.prototype);
@@ -149,6 +162,10 @@ evolution.Creature.prototype.blink=function(){
     if (this.state==evolution.Character.states.IDLE || this.state==evolution.Character.states.DRIFTING){
         this.face.animations.play("blink",8);
     }
+};
+
+evolution.Creature.prototype.markSelected=function(color){
+    this.bodySprite.tint=color;
 };
 
 evolution.Creature.prototype.flashTint=function(color,duration){

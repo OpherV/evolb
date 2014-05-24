@@ -122,11 +122,12 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
             this.selectSprite(null);
         }
 
+        //deselect all
         for(var x=0;x<this.level.spriteArrays.levelObjects.length;x++){
             var levelObject=this.level.spriteArrays.levelObjects[x];
             if (levelObject.objectData.exists!="undefined" && !levelObject.objectData.exists){
                 levelObject.visible=false;
-                levelObject.tint=0xFFFFFF;
+                this.markSelected(levelObject,0xFFFFFF);
             }
         }
 
@@ -148,7 +149,7 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
             var levelObject=this.level.spriteArrays.levelObjects[x];
             if (levelObject.objectData.exists!="undefined" && !levelObject.objectData.exists){
                 levelObject.visible=true;
-                levelObject.tint=0x993300;
+                this.markSelected(levelObject,0x993300);
             }
         }
 
@@ -186,6 +187,10 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         {
             constructorName: "Food",
             layer: "powerUps"
+        },
+        {
+            constructorName: "Creature",
+            layer: "creatures"
         }
     ];
 
@@ -275,6 +280,16 @@ evolution.LevelEditor.prototype.render=function(){
     }
 };
 
+//a sprite might have its own function to mark being selected
+evolution.LevelEditor.prototype.markSelected=function(sprite,color){
+    if (sprite.markSelected){
+        sprite.markSelected(color)
+    }
+    else{
+        sprite.tint=color;
+    }
+};
+
 evolution.LevelEditor.prototype.selectSprite=function(sprite){
     if (sprite){
         var pointer=this.game.input.activePointer;
@@ -282,12 +297,12 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
         //cancel previous sprite selection
         if (this.selectedSprite){
-            this.selectedSprite.tint=0xFFFFFF;
+            this.markSelected(this.selectedSprite,0xFFFFFF);
         }
 
 
         this.selectedSprite=sprite;
-        this.selectedSprite.tint=0x00FF00;
+        this.markSelected(this.selectedSprite,0x00FF00);
 
         if (this.editMode=="drag"){
             pointer.spriteOffsetX=sprite.body.x-pointer.worldX;
@@ -306,7 +321,7 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
         //clicked empty space
         if (this.selectedSprite){
-            this.selectedSprite.tint=0xFFFFFF;
+            this.markSelected(this.selectedSprite,0xFFFFFF);
             this.selectedSprite=null;
         }
 
@@ -354,7 +369,16 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
 
             propValueObj.addEventListener("blur", function(){
                 if (this.value.length>0){
-                    sprite.objectData[this.name]=this.value;
+                    //special case for booleans
+                    if (this.value.toLowerCase()==='true'){
+                        sprite.objectData[this.name]=true;
+                    }
+                    else if (this.value.toLowerCase()==='false'){
+                        sprite.objectData[this.name]=false;
+                    }
+                    else{
+                        sprite.objectData[this.name]=this.value;
+                    }
                 }
                 else{
                     //delete property

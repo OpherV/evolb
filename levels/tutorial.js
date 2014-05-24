@@ -6,25 +6,12 @@ var level=
     onLevelStart: function(){
         //focus camera
 
-        var firstCreatureDna=new evolution.Dna();
-        firstCreatureDna.baseTraits.sizeSpeed.value=0.5;
-        var firstCreature=new evolution.Creature(this,{
-            id: "1st",
-            x: 4600,
-            y: 3000,
-            dna: firstCreatureDna
-        });
-        firstCreature.hasHunger=false;
-        firstCreature.canBreed=false;
-        firstCreature.canBob=false;
-        this.layers.creatures.add(firstCreature);
-
+        var firstCreature=this.getObjectById("1st");
 
         this.isControlEnabled=false;
         this.focusOnCreatures(true);
 
         this.addTextGroup(["This is your first creature.\nIsn't it handsome?",
-                           "He's kind of boring though, right?",
                            "Why don't you use your mouse to move him around a bit..."],
         function(){
             this.showInstructionText("Move your creature to the circle on the right");
@@ -82,10 +69,13 @@ var level=
         };
 
         function fetchFoodPart(){
+            food1Obj.exists=true;
             this.game.add.tween(food1Obj).to({ alpha: 1}, 600, Phaser.Easing.Cubic.Out).start();
+            this.focusTarget=food1Obj;
 
             this.addTextGroup(["Oh look, there's something to munch down there!"],function(){
                 this.showInstructionText("Move your creature to the food below to eat it");
+                this.focusTarget=null;
                 this.isControlEnabled=true;
                 food1Obj.body.onBeginContact.add(touchedFoodHandler, this);
             });
@@ -106,11 +96,10 @@ var level=
         {
             constructorName: "Food",
             layer: "powerUps",
-
-                id: "food1",
-                x: 5500,
-                y: 3400,
-                alpha: 0
+            id: "food1",
+            x: 5500,
+            y: 3400,
+            exists: false
 
         },
         //rocks

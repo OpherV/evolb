@@ -392,7 +392,6 @@ evolution.Character.prototype.update = function() {
 
     }
 
-
     if (this.canBob && this.state==evolution.Character.states.DRIFTING && this.body.velocity.x<=this.modifiedStats.idleVelocityRange && this.body.velocity.y<=this.modifiedStats.idleVelocityRange){
         this.state=evolution.Character.states.IDLE;
         bob.call(this)

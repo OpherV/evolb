@@ -13,6 +13,8 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
     this.levelEditor=new evolution.LevelEditor(this);
 
+    this.focusTarget=null;
+
     game.world.setBounds(-this.labOffset, -this.labOffset, this.levelWidth+this.labOffset*2, this.levelHeight+this.labOffset*2);
 
 
@@ -209,7 +211,12 @@ evolution.Level.prototype.update=function(){
 evolution.Level.prototype.render=function(){
 
     if (!this.levelEditor.isActive && this.layers.creatures.countLiving()>0){
-        this.focusOnCreatures(false);
+        if (this.focusTarget){
+            this.animateFocusToTarget(this.focusTarget);
+        }
+        else{
+            this.focusOnCreatures(false);
+        }
     }
 
     //TODO: add this to charactersin generael
@@ -323,14 +330,35 @@ evolution.Level.prototype.focusOnCreatures=function(isInstant){
 
 };
 
+evolution.Level.prototype.animateFocusToTarget=function(target){
+    var movementVector=new Phaser.Point(target.x-(this.game.camera.x+this.game.width/2),
+        target.y-(this.game.camera.y+this.game.height/2));
+    if (movementVector.getMagnitude()<1){
+        this.game.camera.focusOnXY(target.x,target.y);
+        if (this.target.animateCallback){
+            this.target.animateCallback();
+        }
+    }
+    else{
+        movementVector.multiply(0.05,0.05);
+        this.game.camera.x+=movementVector.x;
+        this.game.camera.y+=movementVector.y;
+    }
+
+};
+
 evolution.Level.prototype.findCenterOfMass=function(group){
     var totalX=0;
     var totalY=0;
+    var itemCount=0;
     group.forEachAlive(function(item){
-        totalX+=item.body.x;
-        totalY+=item.body.y;
+        if (item.exists){
+            totalX+=item.body.x;
+            totalY+=item.body.y;
+            itemCount++;
+        }
     });
-    return {x: totalX/group.countLiving(), y: totalY/group.countLiving()}
+    return {x: totalX/itemCount, y: totalY/itemCount}
 };
 
 evolution.Level.prototype.clearControlPointer=function(){
