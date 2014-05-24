@@ -81,9 +81,10 @@ evolution.Creature= function (level,objectData) {
     this.init();
 
     //these override init
-    this.hasHunger=evolution.Utils.isUndefined(this.objectData.hasHunger)?true:this.objectData.hasHunger;
-    this.canBreed=evolution.Utils.isUndefined(this.objectData.canBreed)?true:this.objectData.canBreed;
-    this.canBob=evolution.Utils.isUndefined(this.objectData.canBob)?true:this.objectData.canBob;
+    this.hasHunger=evolution.Utils.isUndefined(this.objectData.hasHunger)?this.hasHunger:this.objectData.hasHunger;
+    this.canBreed=evolution.Utils.isUndefined(this.objectData.canBreed)?this.canBreed:this.objectData.canBreed;
+    this.canBob=evolution.Utils.isUndefined(this.objectData.canBob)?this.canBob:this.objectData.canBob;
+    this.canBeControlled=evolution.Utils.isUndefined(this.objectData.canBeControlled)?this.canBeControlled:this.objectData.canBeControlled;
 };
 
 evolution.Creature.prototype = Object.create(evolution.Character.prototype);

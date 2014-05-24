@@ -125,10 +125,13 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
         //deselect all
         for(var x=0;x<this.level.spriteArrays.levelObjects.length;x++){
             var levelObject=this.level.spriteArrays.levelObjects[x];
-            if (levelObject.objectData.exists!="undefined" && !levelObject.objectData.exists){
+            if (levelObject.objectData.exists!="undefined"
+                && !levelObject.objectData.exists
+                && !levelObject.exists //if originally it didn't exist and yet now it does
+                ){
                 levelObject.visible=false;
-                this.markSelected(levelObject,0xFFFFFF);
             }
+            this.markSelected(levelObject,0xFFFFFF);
         }
 
         this.autoSaveLevel();
@@ -147,7 +150,10 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
 
         for(var x=0;x<this.level.spriteArrays.levelObjects.length;x++){
             var levelObject=this.level.spriteArrays.levelObjects[x];
-            if (levelObject.objectData.exists!="undefined" && !levelObject.objectData.exists){
+            if (levelObject.objectData.exists!="undefined"
+                && !levelObject.objectData.exists
+                && !levelObject.exists
+                ){
                 levelObject.visible=true;
                 this.markSelected(levelObject,0x993300);
             }

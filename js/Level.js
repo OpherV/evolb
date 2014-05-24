@@ -352,7 +352,7 @@ evolution.Level.prototype.findCenterOfMass=function(group){
     var totalY=0;
     var itemCount=0;
     group.forEachAlive(function(item){
-        if (item.exists){
+        if (item.exists && item.canBeControlled){
             totalX+=item.body.x;
             totalY+=item.body.y;
             itemCount++;
@@ -389,37 +389,45 @@ evolution.Level.prototype.updatePointerController=function(){
 
 };
 
-evolution.Level.prototype.addTextGroup=function(textArray,callback){
-    this.clearControlPointer();
+evolution.Level.prototype.addTextGroup=function(textArray){
+    var that=this;
+    var returnFunc=function(){
+        var promise = new Promise(function(resolve, reject){
+            that.clearControlPointer();
 
-    var textQueue=textArray.slice(0); //clone the text array
-    var currentText=null;
-    var currentTextObj=null;
-
-    showNextMessage.call(this);
-    this.game.input.onDown.add(showNextMessage,this);
-
-    function showNextMessage(){
-        if (currentTextObj){
-            var oldTextObj=currentTextObj;
-            var fadeOutTween=this.game.add.tween(oldTextObj).to({ alpha: 0}, 600, Phaser.Easing.Cubic.In);
-            fadeOutTween.onComplete.addOnce(function(){
-                this.layers.gui.remove(oldTextObj);
-            },this);
-            fadeOutTween.start();
-        }
-        if (textQueue.length>0){
-            currentText=textQueue.shift();
-            currentTextObj=this.addTextBubble(this.game.width/2-150,150,currentText);
-
-        }
-        else{
-            this.game.input.onDown.remove(showNextMessage,this);
-            if (callback){callback.call(this);}
-        }
-    }
+            var textQueue=textArray.slice(0); //clone the text array
+            var currentText=null;
+            var currentTextObj=null;
 
 
+            showNextMessage.call(that);
+            that.game.input.onDown.add(showNextMessage,that);
+
+            function showNextMessage(){
+                if (currentTextObj){
+                    var oldTextObj=currentTextObj;
+                    var fadeOutTween=that.game.add.tween(oldTextObj).to({ alpha: 0}, 600, Phaser.Easing.Cubic.In);
+                    fadeOutTween.onComplete.addOnce(function(){
+                        that.layers.gui.remove(oldTextObj);
+                    },that);
+                    fadeOutTween.start();
+                }
+                if (textQueue.length>0){
+                    currentText=textQueue.shift();
+                    currentTextObj=that.addTextBubble(that.game.width/2-150,150,currentText);
+
+                }
+                else{
+                    that.game.input.onDown.remove(showNextMessage,that);
+                    resolve();
+                }
+            }
+
+        });
+
+        return promise;
+    };
+    return returnFunc;
 };
 
 evolution.Level.prototype.addTextBubble=function(x,y,text){
@@ -519,4 +527,15 @@ evolution.Level.prototype.exportObjects=function(){
         exportArray.push(levelObjects[x].objectData);
     }
     return exportArray;
+};
+
+evolution.Level.Step=function(stepFunction){
+    var returnFunc=function(){
+        var stepPromise = new Promise(function(resolve,reject){
+            stepFunction(resolve,reject);
+        });
+        return stepPromise;
+    };
+
+    return returnFunc;
 };
