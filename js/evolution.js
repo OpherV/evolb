@@ -1,10 +1,6 @@
 evolution=(window.evolution?window.evolution:{});
 evolution.core=(function(){
 
-
-    var LEVEL_WIDTH=8000;
-    var LEVEL_HEIGHT=0.5*LEVEL_WIDTH;
-
     var levels={};
     var currentLevel=null;
 
