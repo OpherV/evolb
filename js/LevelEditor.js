@@ -256,8 +256,6 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
         this.selectedSprite=sprite;
         this.selectedSprite.tint=0x00FF00;
 
-        this.updateSpriteProperties();
-
         if (this.editMode=="drag"){
             pointer.spriteOffsetX=sprite.body.x-pointer.worldX;
             pointer.spriteOffsetY=sprite.body.y-pointer.worldY;
@@ -281,6 +279,8 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
     }
 
+    this.updateSpriteProperties();
+
 };
 
 evolution.LevelEditor.prototype.updateSpriteProperties=function(){
@@ -292,28 +292,29 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
         propContainerObj.removeChild(propContainerObj .firstChild);
     }
 
+    if (sprite){
+        for (var prop in sprite.objectData){
+            var propObj = document.createElement('div');
+            var propNameObj =  document.createElement('div');
+            var propValueObj =  document.createElement('input');
 
-    for (var prop in sprite.objectData){
-        var propObj = document.createElement('div');
-        var propNameObj =  document.createElement('div');
-        var propValueObj =  document.createElement('input');
+            propObj.className="propertyContainer";
+            propNameObj.className="property";
+            propNameObj.innerHTML=prop;
+            propValueObj.className="value";
+            propValueObj.name=prop;
+            propValueObj.value=sprite.objectData[prop];
 
-        propObj.className="propertyContainer";
-        propNameObj.className="property";
-        propNameObj.innerHTML=prop;
-        propValueObj.className="value";
-        propValueObj.name=prop;
-        propValueObj.value=sprite.objectData[prop];
-
-        propObj.appendChild(propNameObj);
-        propObj.appendChild(propValueObj);
+            propObj.appendChild(propNameObj);
+            propObj.appendChild(propValueObj);
 
 
-        propValueObj.addEventListener("blur", function(){
-            sprite.objectData[this.name]=this.value;
-        }, false);
+            propValueObj.addEventListener("blur", function(){
+                sprite.objectData[this.name]=this.value;
+            }, false);
 
-        propContainerObj.appendChild(propObj);
+            propContainerObj.appendChild(propObj);
+        }
     }
 };
 
