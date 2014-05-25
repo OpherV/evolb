@@ -105,7 +105,9 @@ evolution.Level=function(game,levelWidth,levelHeight){
     this.aquariumMask.endFill();
 
     this.aquariumMask.alpha=1;
-    this.layers.aquariumEffect.mask=this.aquariumMask;
+    //TODO: renable this once this gets fixed:
+    //https://github.com/GoodBoyDigital/pixi.js/commit/48ed41cd026427df308e9909ae8b7fa0833c1ff4
+    //this.layers.aquariumEffect.mask=this.aquariumMask;
     this.layers.foreground.mask=this.aquariumMask;
 
 
