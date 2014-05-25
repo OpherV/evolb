@@ -59,6 +59,7 @@ evolution.Character= function (level,id,x,y,spriteKey) {
     this.body.onBeginContact.add(beginContactHandler, this);
     this.body.onEndContact.add(endContactHandler, this);
     this.events.onKilled.add(function() {this.postKill()},this);
+    this.proximityChecks=[];
 
     function beginContactHandler(body, shapeA, shapeB, equation) {
         //add to inContactWith
@@ -420,6 +421,14 @@ evolution.Character.prototype.update = function() {
         }
     }
 
+    //proximity events
+    for (var x=0;x<this.proximityChecks.length;x++){
+        var proximityCheck=this.proximityChecks[x];
+        if (Phaser.Point.distance(this,proximityCheck.target)<=proximityCheck.distance){
+            proximityCheck.dispatch();
+        }
+    }
+
 };
 
 
@@ -458,4 +467,23 @@ evolution.Character.prototype.getClosestCreature=function(maximalDistance){
     });
 
     return closestCreature;
+};
+
+evolution.Character.prototype.addProximityCheck=function(target,distance){
+    var proximityCheck=new Phaser.Signal();
+    proximityCheck.target=target;
+    proximityCheck.distance=distance;
+    this.proximityChecks.push(proximityCheck);
+    return proximityCheck;
+};
+
+
+evolution.Character.prototype.removeProximityCheck=function(proximityCheckToRemove){
+    for(var x=0;x<this.proximityChecks.length;x++){
+        var proximityCheck=this.proximityChecks[x];
+        if (proximityCheck==proximityCheckToRemove){
+            this.proximityChecks.splice(x,1);
+            break;
+        }
+    }
 };
