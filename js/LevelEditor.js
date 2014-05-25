@@ -72,6 +72,13 @@ evolution.LevelEditor=function(level){
         }
     },this);
 
+    this.keyA = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+    this.keyA.onDown.add(function(){
+        if (this.isActive && this.keyA.ctrlKey) {
+            this.addObject();
+        }
+    },this);
+
     this.keyBackspace = this.game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
     this.keyBackspace.onDown.add(function(){
         if (this.selectedSprite && this.keyBackspace.isDown){
@@ -211,19 +218,7 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         selectObj.add(optionObj);
     }
 
-    document.body.querySelector("#editor .section.addElement button").addEventListener("click", function(){
-        var selectOptionObj=selectObj.options[selectObj.selectedIndex];
-        var objData=JSON.parse(JSON.stringify(selectOptionObj.objData));
-
-        objData.x=that.game.camera.x+that.game.width/2;
-        objData.y=that.game.camera.y+that.game.height/2;
-
-
-
-        var objectInstance=that.level.addObject(objData);
-        that.level.spriteArrays.levelObjects.push(objectInstance);
-    }, false);
-
+    document.body.querySelector("#editor .section.addElement button").addEventListener("click", this.addObject , false);
 
     document.body.querySelector("#exportModal button.close").addEventListener("click", function(){
         document.body.querySelector("#exportModal").style.display="none";
@@ -337,6 +332,18 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
 };
 
+evolution.LevelEditor.prototype.addObject=function(){
+    var selectObj=document.body.querySelector("#editor select");
+    var selectOptionObj=selectObj.options[selectObj.selectedIndex];
+    var objData=JSON.parse(JSON.stringify(selectOptionObj.objData));
+
+    objData.x=this.game.camera.x+this.game.width/2;
+    objData.y=this.game.camera.y+this.game.height/2;
+
+    var objectInstance=this.level.addObject(objData);
+    this.level.spriteArrays.levelObjects.push(objectInstance);
+};
+
 evolution.LevelEditor.prototype.updateSpriteProperties=function(){
     var that=this;
     var sprite=this.selectedSprite;
@@ -379,6 +386,9 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
                 that.game.input.keyboard.removeKeyCapture(that.keyW.keyCode);
                 that.keyW.enabled=false;
 
+                that.game.input.keyboard.removeKeyCapture(that.keyA.keyCode);
+                that.keyA.enabled=false;
+
                 that.game.input.keyboard.removeKeyCapture(that.key1.keyCode);
                 that.key1.enabled=false;
 
@@ -409,8 +419,11 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
                 that.keyR.enabled=true;
                 that.game.input.keyboard.addKeyCapture(that.keyW.keyCode);
                 that.keyW.enabled=true;
+                that.game.input.keyboard.addKeyCapture(that.keyA.keyCode);
+                that.keyA.enabled=true;
                 that.game.input.keyboard.addKeyCapture(that.key1.keyCode);
                 that.key1.enabled=true;
+
             }, false);
 
             propContainerObj.appendChild(propObj);
