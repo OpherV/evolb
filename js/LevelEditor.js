@@ -369,8 +369,19 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
 
 
             propValueObj.addEventListener("focus", function(){
+
+                that.game.input.keyboard.removeKeyCapture(that.keyBackspace.keyCode);
                 that.keyBackspace.enabled=false;
+
+                that.game.input.keyboard.removeKeyCapture(that.keyR.keyCode);
+                that.keyR.enabled=false;
+
+                that.game.input.keyboard.removeKeyCapture(that.keyW.keyCode);
+                that.keyW.enabled=false;
+
+                that.game.input.keyboard.removeKeyCapture(that.key1.keyCode);
                 that.key1.enabled=false;
+
             }, false);
 
             propValueObj.addEventListener("blur", function(){
@@ -392,7 +403,13 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
                      that.updateSpriteProperties();
                 }
 
+                that.game.input.keyboard.addKeyCapture(that.keyBackspace.keyCode);
                 that.keyBackspace.enabled=true;
+                that.game.input.keyboard.addKeyCapture(that.keyR.keyCode);
+                that.keyR.enabled=true;
+                that.game.input.keyboard.addKeyCapture(that.keyW.keyCode);
+                that.keyW.enabled=true;
+                that.game.input.keyboard.addKeyCapture(that.key1.keyCode);
                 that.key1.enabled=true;
             }, false);
 
