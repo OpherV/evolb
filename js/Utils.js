@@ -66,11 +66,18 @@ evolution.Utils=(function(){
         return query_string;
     }
 
+    function _generateGuid() {
+        var S4 = function() {
+            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    }
 
     return{
         extend: _extend,
         clone: _clone,
         isUndefined: _isUndefined,
-        getUrlVars: _getUrlVars
+        getUrlVars: _getUrlVars,
+        generateGuid: _generateGuid,
     }
 })();
