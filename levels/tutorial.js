@@ -9,22 +9,11 @@ var level=
         var firstCreature=this.getObjectById("1st");
         var secondCreature=this.getObjectById("2nd");
         var food1Obj=this.getObjectById("food1");
+        var target1=this.getObjectById("target1");
+        var target2=this.getObjectById("target2");
 
         this.isControlEnabled=false;
         this.focusOnCreatures(true);
-
-        //target circle
-        var targetCircle=that.game.add.sprite(5100,3100);
-        var targetCircleGraphics=new Phaser.Graphics(that.game,0,0);
-        that.game.physics.p2.enable(targetCircle,false);
-        targetCircle.body.setCircle(50);
-        targetCircle.body.data.shapes[0].sensor=true;
-        targetCircle.addChild(targetCircleGraphics);
-        targetCircleGraphics.beginFill(0xf0e5bc, 0.4);
-        targetCircleGraphics.drawCircle(0,0,50);
-        targetCircle.alpha=0;
-
-
 
         var touchedTargetHandler;
         var touchedFoodHandler;
@@ -36,26 +25,26 @@ var level=
         .then(evolution.Level.Step(function(resolve,reject){
                 that.showInstructionText("Move your creature to the circle on the right");
                 that.isControlEnabled=true;
-                that.game.add.tween(targetCircle).to({ alpha: 1}, 600, Phaser.Easing.Cubic.Out).start();
+                that.game.add.tween(target1).to({ alpha: 1}, 600, Phaser.Easing.Cubic.Out).start();
 
                 touchedTargetHandler=function(body, shapeA, shapeB, equation) {
                     if(body.sprite.id=="1st"){
                         resolve();
                     }
                 };
-                targetCircle.body.onBeginContact.add(touchedTargetHandler, that);
+                target1.body.onBeginContact.add(touchedTargetHandler, that);
 
             }))
 
         .then(evolution.Level.Step(function(resolve,reject){
-                var fadeOutTween=that.game.add.tween(targetCircle).to({ alpha: 0}, 600, Phaser.Easing.Cubic.Out);
+                var fadeOutTween=that.game.add.tween(target1).to({ alpha: 0}, 600, Phaser.Easing.Cubic.Out);
                 fadeOutTween.onComplete.addOnce(function(){
-                    that.layers.gui.remove(targetCircle);
+                    that.layers.gui.remove(target1);
                 },that);
                 fadeOutTween.start();
-                targetCircle.body.onBeginContact.remove(touchedTargetHandler, that);
+                target1.body.onBeginContact.remove(touchedTargetHandler, that);
 
-                that.isControlEnabled=false;
+                that.disableControl();
                 firstCreature.body.setZeroVelocity();
                 that.hideInstructionText();
                 resolve();
@@ -93,17 +82,17 @@ var level=
             food1Obj.body.onBeginContact.add(touchedFoodHandler, this);
         }))
 
-       .then(evolution.Level.Step(function(resolve,reject){
+        .then(evolution.Level.Step(function(resolve,reject){
             food1Obj.body.onBeginContact.remove(touchedFoodHandler, this);
-            that.isControlEnabled=false;
-            that.hideInstructionText();
+            that.disableControl();
             firstCreature.body.setZeroVelocity();
+            that.hideInstructionText();
             resolve();
         }))
 
-       .then(this.addTextGroup(["Yum!\nThat hit the the spot"]))
+        .then(this.addTextGroup(["Yum!\nThat hit the the spot"]))
 
-       .then(evolution.Level.Step(function(resolve,reject){
+        .then(evolution.Level.Step(function(resolve,reject){
             that.isControlEnabled=true;
             secondCreature.exists=true;
             var proximityCheck=firstCreature.addProximityCheck(secondCreature,300);
@@ -111,27 +100,45 @@ var level=
                 firstCreature.removeProximityCheck(proximityCheck);
                 resolve();
             },that);
-       }))
+        }))
 
-       .then(evolution.Level.Step(function(resolve,reject){
-            that.isControlEnabled=false;
+        .then(evolution.Level.Step(function(resolve,reject){
+            that.disableControl();
             firstCreature.body.setZeroVelocity();
             resolve();
         }))
 
-       .then(this.addTextGroup(["Hey, here's another creature!",
+        .then(this.addTextGroup(["Hey, here's another creature! He's kinda like you, only smaller and faster",
                                 "Looks like he wants to join you",
                                 "To move more than one creature, hold the left mouse button",
                                 "The longer you hold your mouse button, the more creatures will respond"
                                 ]))
 
-       .then(evolution.Level.Step(function(resolve,reject){
+        .then(evolution.Level.Step(function(resolve,reject){
             that.isControlEnabled=true;
             secondCreature.canBeControlled=true;
             secondCreature.hasHunger=true;
             secondCreature.canBob=true;
+
+            var proximityCheck=secondCreature.addProximityCheck(target2,400);
+            proximityCheck.addOnce(function(){
+                secondCreature.removeProximityCheck(proximityCheck);
+                that.disableControl();
+                resolve();
+            },that);
+        }))
+
+        .then(this.addTextGroup(["When creatures are full and happy they get in the mood to breed",
+            "The offspring of two creatures gets a combination of their traits"
+        ]))
+
+        .then(evolution.Level.Step(function(resolve,reject){
+            that.isControlEnabled=true;
+            firstCreature.canBreed=true;
+            secondCreature.canBreed=true;
             resolve();
-       }))
+
+        }))
 
        ;
     },

@@ -94,7 +94,6 @@ evolution.Creature.prototype.constructor = evolution.Creature;
 // ***************
 
 evolution.Creature.prototype.spawn=function(father,mother){
-    console.log(father.modifiedStats.mutationChance,mother.modifiedStats.mutationChance);
     var mutationChance=Math.max(father.modifiedStats.mutationChance,mother.modifiedStats.mutationChance);
     var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna,mutationChance);
     var params={
@@ -102,8 +101,8 @@ evolution.Creature.prototype.spawn=function(father,mother){
         y: this.y,
         dna: spawnDna
     };
-    var newCreature = new evolution.Creature(this.game,params);
-    evolution.core.getCreatures().add(newCreature);
+    var newCreature = new evolution.Creature(this.level,params);
+    this.level.layers.creatures.add(newCreature);
     newCreature.isFollowingPointer=this.isFollowingPointer;
     newCreature.init();
 

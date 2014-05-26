@@ -129,15 +129,6 @@ evolution.core=(function(){
         //console.log(placeAttemptCounter);
     }
 
-
-
-    _generateId.counter=0;
-    function _generateId(){
-        var newId="sprite_"+_generateId.counter;
-        _generateId.counter++;
-        return newId;
-    }
-
     function _rgbToHex(r, g, b) {
         return "0x" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     }
@@ -162,7 +153,6 @@ evolution.core=(function(){
 
     return{
         game: game,
-        generateId: _generateId,
         rgbToHex:_rgbToHex,
         getPointArray: _getPointArray,
         version: "0.1"

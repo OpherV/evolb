@@ -135,7 +135,9 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
             if (levelObject.objectData.exists!="undefined"
                 && !levelObject.objectData.exists
                 && !levelObject.exists //if originally it didn't exist and yet now it does
+                || levelObject.objectData.alpha==0
                 ){
+                levelObject.alpha=levelObject.originalAlpha;
                 levelObject.visible=false;
             }
             this.markSelected(levelObject,0xFFFFFF);
@@ -157,10 +159,13 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
 
         for(var x=0;x<this.level.spriteArrays.levelObjects.length;x++){
             var levelObject=this.level.spriteArrays.levelObjects[x];
-            if (levelObject.objectData.exists!="undefined"
+            if ((levelObject.objectData.exists!="undefined"
                 && !levelObject.objectData.exists
-                && !levelObject.exists
+                && !levelObject.exists)
+                || levelObject.objectData.alpha==0
                 ){
+                levelObject.originalAlpha=levelObject.alpha;
+                levelObject.alpha=1;
                 levelObject.visible=true;
                 this.markSelected(levelObject,0x993300);
             }
@@ -204,6 +209,10 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         {
             constructorName: "Creature",
             layer: "creatures"
+        },
+        {
+            constructorName: "Target",
+            layer: "gui"
         }
     ];
 
@@ -218,7 +227,10 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         selectObj.add(optionObj);
     }
 
-    document.body.querySelector("#editor .section.addElement button").addEventListener("click", this.addObject , false);
+    document.body.querySelector("#editor .section.addElement button").addEventListener("click",
+        function(){
+            that.addObject();
+        }, false);
 
     document.body.querySelector("#exportModal button.close").addEventListener("click", function(){
         document.body.querySelector("#exportModal").style.display="none";

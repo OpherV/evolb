@@ -189,6 +189,10 @@ evolution.Level=function(game,levelWidth,levelHeight){
             }
 
         }
+        else{
+            //deal with cases where a message pop up comes up while mouse is still down
+            this.clearControlPointer();
+        }
 
     },this);
 
@@ -363,6 +367,15 @@ evolution.Level.prototype.findCenterOfMass=function(group){
     return {x: totalX/itemCount, y: totalY/itemCount}
 };
 
+
+evolution.Level.prototype.disableControl=function(){
+    this.isControlEnabled=false;
+    this.clearControlPointer();
+    this.layers.creatures.forEachAlive(function(creature){
+        creature.body.setZeroVelocity();
+    });
+};
+
 evolution.Level.prototype.clearControlPointer=function(){
     this.pointerController.clear();
     this.layers.creatures.forEachAlive(function(creature){
@@ -518,7 +531,7 @@ evolution.Level.getDefaultParams=function(params){
         y: 0,
         angle: 0,
         exists: true,
-        id: params.id?params.id:evolution.core.generateId()
+        id: params.id?params.id:evolution.Utils.generateGuid()
     };
 };
 
