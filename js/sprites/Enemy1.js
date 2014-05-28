@@ -1,20 +1,24 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Enemy1= function (level,id,x,y) {
+evolution.Enemy1= function (level,objectData) {
+    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+    this.id=this.objectData.id;
+    this.level=level;
+    this.game=level.game;
 
     //construct chracter
-    evolution.Character.call(this, level, id,  x, y, 'enemy1');
+    evolution.Character.call(this, level, objectData.id,  objectData.x, objectData.y, 'enemy1');
     this.type=evolution.Character.types.ENEMY;
     this.kind="enemy1";
 
-    this.scale.setTo(0.4);
+    this.scale.setTo(this.objectData.scale?this.objectData.scale:0.4);
 
     this.animations.add('eat',[1,2,3,4,5,6,5,4,3,2]);
     this.animations.play('eat', 40, true);
 
     this.body.setCircle(this.width/2);
 
-    this.stats.moveSpeed=10;
-    this.stats.maxSpeed=85;
+    this.stats.moveSpeed=this.objectData.moveSpeed?this.objectData.moveSpeed:10;
+    this.stats.maxSpeed=this.objectData.maxSpeed?this.objectData.maxSpeed:85;
     this.stats.attackSpeed=350; //attack speed in millisecs
 
     this.init();

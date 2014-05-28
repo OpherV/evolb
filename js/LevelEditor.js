@@ -213,6 +213,10 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
         {
             constructorName: "Target",
             layer: "gui"
+        },
+        {
+            constructorName: "Enemy1",
+            layer: "enemies"
         }
     ];
 

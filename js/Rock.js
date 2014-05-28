@@ -7,7 +7,7 @@ evolution.Rock=function(level,objectData){
     this.id=this.objectData.id;
 
     var rockNumber=this.objectData.rockType?this.objectData.rockType:this.game.rnd.integerInRange(1,3);
-
+    this.objectData.rockType=rockNumber;
     Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y,'rock'+rockNumber);
 //    var scaleFactor=0.5+Math.random()*2;
 //    this.scale.x=scaleFactor;
