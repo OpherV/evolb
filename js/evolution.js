@@ -28,7 +28,7 @@ evolution.core=(function(){
         game.load.image('rock2', 'assets/sprites/rock2.png');
         game.load.image('rock3', 'assets/sprites/rock3.png');
 
-
+        game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 
