@@ -381,8 +381,15 @@ evolution.Character.prototype.update = function() {
 
     if (this.isFollowingPointer && this.canBeControlled){
         var maxPlayerControlRange=1000;
-        var moveRatio=Math.max(0.15,pointer.controlRatio); //minimum should be higher than 0
+        var moveRatio;
 
+        //in case of one creature, always move it
+        if (this.level.getCreatures().length==1){
+            moveRatio=1;
+        }
+        else{
+            moveRatio=Math.max(0.15,pointer.controlRatio); //minimum should be higher than 0
+        }
         //creatures farther from the pointer are less effected
         //var effectiveDistance=Math.min(maxPlayerControlRange,Phaser.Point.distance(this,pointer));
         //var moveSpeedRatio= -Math.pow(effectiveDistance/evolution.core.PLAYER_CONTROL_RANGE,7)+1;

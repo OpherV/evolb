@@ -519,6 +519,17 @@ evolution.Level.prototype.addObject=function(objectData){
     return objectInstance;
 };
 
+//TODO refactor and keep a list
+evolution.Level.prototype.getCreatures=function(){
+    var aliveCreatures=[];
+    this.layers.creatures.forEachAlive(function(item){
+        if (item.exists){
+            aliveCreatures.push(item);
+        }
+    },this);
+    return aliveCreatures;
+};
+
 evolution.Level.prototype.removeObject=function(object){
     object.destroy();
 };
