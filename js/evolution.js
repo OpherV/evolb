@@ -27,6 +27,7 @@ evolution.core=(function(){
         game.load.image('rock1', 'assets/sprites/rock1.png');
         game.load.image('rock2', 'assets/sprites/rock2.png');
         game.load.image('rock3', 'assets/sprites/rock3.png');
+        game.load.image('pattern_ice', 'assets/patterns/pattern_ice.png');
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
@@ -40,6 +41,7 @@ evolution.core=(function(){
         game.load.atlasJSONHash('traits', 'assets/sprites/traits_sprites.png', 'assets/spriteAtlas/traits.json' );
         game.load.atlasJSONHash('food', 'assets/sprites/plankton_sprites.png', 'assets/spriteAtlas/plankton.json' );
         game.load.atlasJSONHash('plankton_eyes', 'assets/sprites/plankton_eyes.png', 'assets/spriteAtlas/plankton_eyes.json' );
+        game.load.atlasJSONHash('book', 'assets/sprites/book.png', 'assets/spriteAtlas/book.json' );
 
         _preloadLevel('tutorial', 'levels/tutorial.js');
 

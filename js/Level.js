@@ -28,6 +28,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
         creatures: null,
         powerUps: null,
         rocks: null,
+        areas: null,
         gui: null,
         level: null
     };
@@ -130,6 +131,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
     this.layers.level.add(this.layers.enemies);
     this.layers.level.add(this.layers.rocks);
     this.layers.level.add(this.layers.powerUps);
+    this.layers.level.add(this.layers.areas);
     this.layers.level.add(this.layers.foreground);
     this.layers.level.add(this.layers.gui);
 
@@ -412,28 +414,18 @@ evolution.Level.prototype.addTextGroup=function(textArray){
 
             var textQueue=textArray.slice(0); //clone the text array
             var currentText=null;
-            var currentTextObj=null;
-
 
             showNextMessage.call(that);
             that.game.input.onDown.add(showNextMessage,that);
 
             function showNextMessage(){
-                if (currentTextObj){
-                    var oldTextObj=currentTextObj;
-                    var fadeOutTween=that.game.add.tween(oldTextObj).to({ alpha: 0}, 600, Phaser.Easing.Cubic.In);
-                    fadeOutTween.onComplete.addOnce(function(){
-                        that.layers.gui.remove(oldTextObj);
-                    },that);
-                    fadeOutTween.start();
-                }
                 if (textQueue.length>0){
                     currentText=textQueue.shift();
-                    currentTextObj=that.addTextBubble(that.game.width/2-150,150,currentText);
-
+                    that.addTextBubble(100,this.game.height-400,currentText);
                 }
                 else{
                     that.game.input.onDown.remove(showNextMessage,that);
+                    that.removeTextBubble();
                     resolve();
                 }
             }
@@ -445,38 +437,77 @@ evolution.Level.prototype.addTextGroup=function(textArray){
     return returnFunc;
 };
 
+evolution.Level.prototype.removeTextBubble=function(){
+    var that=this;
+    this.bubbleObj.play("close",24,false);
+    this.bubbleObj.textObject.alpha=0;
+    this.bubbleObj.continueText.alpha=0;
+    //todo stop removing and readding this
+    this.game.add.tween(this.bubbleObj).to({ alpha: 0}, 600, Phaser.Easing.Cubic.In).start();
+}
+
+evolution.Level.prototype.changeTextBubble=function(text){
+    var that=this;
+
+};
+
 evolution.Level.prototype.addTextBubble=function(x,y,text){
-    var bubbleObject=this.game.add.graphics(0,0,this.layers.gui);
-    bubbleObject.fixedToCamera=true;
-    bubbleObject.cameraOffset.x=x;
-    bubbleObject.cameraOffset.y=y;
-    bubbleObject.alpha=0;
+    var that=this;
+    if (typeof(this.bubbleObj)=="undefined"){
+        this.bubbleObj=new Phaser.Sprite(this.game,0,0,'book');
+        this.bubbleObj.animations.add("close",[0,1,2,3,4,5,6,7,8,10]);
+        this.bubbleObj.animations.add("open",[10,9,8,7,6,5,4,3,2,1,0]);
 
-    var bubbleWidth=300;
-    var bubbleHeight=150;
-    var padding=10;
+        this.bubbleObj.fixedToCamera=true;
 
-    bubbleObject.beginFill(0x1a6fb9, 0.8);
-    bubbleObject.drawRect(0,0,bubbleWidth,bubbleHeight);
+        this.layers.gui.addChild(this.bubbleObj);
 
-    var textObject=new Phaser.Text(this.game,padding,padding,text);
-    bubbleObject.addChild(textObject);
-    textObject.font = 'Quicksand';
-    textObject.fontSize = 18;
-    textObject.fill = '#ffffff';
-    textObject.wordWrap= true;
-    textObject.wordWrapWidth = bubbleWidth-padding*2;
-
-    var continueText=new Phaser.Text(this.game,150,bubbleHeight-25,"( click to continue )");
-    bubbleObject.addChild(continueText);
-    continueText.font = 'Quicksand';
-    continueText.fontSize = 14;
-    continueText.fill = '#99a7b3';
+        this.bubbleObj.alpha=0;
+        this.bubbleObj.cameraOffset.y=y-100;
+        this.bubbleObj.cameraOffset.x=x-53;
 
 
-    this.game.add.tween(bubbleObject).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In).start();
+        var bubbleWidth=440;
+        var bubbleHeight=290;
+        var padding=10;
 
-    return bubbleObject;
+        this.bubbleObj.textObject=new Phaser.Text(this.game,padding+53,padding+100,text);
+        this.bubbleObj.addChild(this.bubbleObj.textObject);
+        this.bubbleObj.textObject.font = 'Quicksand';
+        this.bubbleObj.textObject.fontSize = 18;
+        this.bubbleObj.textObject.fill = '#662d91';
+        this.bubbleObj.textObject.wordWrap= true;
+        this.bubbleObj.textObject.wordWrapWidth = bubbleWidth-padding*2;
+        this.bubbleObj.textObject.alpha=0;
+
+        this.bubbleObj.continueText=new Phaser.Text(this.game,220,350,"( click to continue )");
+        this.bubbleObj.addChild(this.bubbleObj.continueText);
+        this.bubbleObj.continueText.font = 'Quicksand';
+        this.bubbleObj.continueText.fontSize = 14;
+        this.bubbleObj.continueText.fill = '#99a7b3';
+        this.bubbleObj.continueText.alpha=0;
+
+    }
+
+    if(this.bubbleObj.alpha==0){
+        var fadeInTween=that.game.add.tween(this.bubbleObj).to({ alpha: 1}, 1000, Phaser.Easing.Cubic.In);
+        fadeInTween.onComplete.addOnce(function(){
+            this.bubbleObj.animations.play("open",40,false);
+            that.bubbleObj.textObject.text=text;
+            this.game.add.tween(this.bubbleObj.textObject).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In,true,700);
+            this.game.add.tween(this.bubbleObj.continueText).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In,true,1200);
+        },that);
+        fadeInTween.start();
+    }
+    else{
+        var fadeOutTween=this.game.add.tween(this.bubbleObj.textObject).to({ alpha: 0}, 600, Phaser.Easing.Cubic.In,true);
+        fadeOutTween.onComplete.addOnce(function(){
+            that.bubbleObj.textObject.text=text;
+            that.game.add.tween(that.bubbleObj.textObject).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In,true);
+        })
+    }
+
+    return this.bubbleObj;
 };
 
 evolution.Level.prototype.hideInstructionText=function(){

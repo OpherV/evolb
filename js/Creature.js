@@ -33,19 +33,18 @@ evolution.Creature= function (level,objectData) {
 
     this.exists=this.objectData.exists;
 
-    //circling dots
-    this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
-    this.healthbar.x = -this.healthbar.width/2;
-    this.healthbar.y = -this.healthbar.height/2;
-    this.addChild(this.healthbar);
-    this.healthbar.redraw();
-
     //yellow body
     this.bodySprite=new Phaser.Sprite(this.game,0,0,'blob');
     this.bodySprite.x=-this.bodySprite.width/2;
     this.bodySprite.y=-this.bodySprite.height/2;
     this.bodySprite.sprite=this; //important for hitCycle
     this.addChild(this.bodySprite);
+
+    //health bar
+    this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
+    this.healthbar.x = -this.healthbar.width/2;
+    this.healthbar.y = -this.healthbar.height/2;
+    this.addChild(this.healthbar);
 
     this.bodySprite.animations.add("yellow",[0]);
     this.bodySprite.animations.add("pink",[1]);
@@ -150,6 +149,7 @@ evolution.Creature.prototype.doHungerEvent=function(){
 evolution.Creature.prototype.init = function(){
     evolution.Character.prototype.init.call(this);
     this.dna.activate();
+    this.healthbar.redraw();
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);
 };
 
