@@ -5,20 +5,22 @@ evolution.Area= function (level,objectData) {
     this.id=this.objectData.id;
     this.level=level;
     this.game=level.game;
+    this.kind="area";
 
-    this.pointArray=[[0,0],[500,0],[300,300]];
+    this.pointArray=[[0,0],[300,-40],[400,-100],[500,0],[370,300],[100,450],[-100,200]];
 
 
     Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y);
-    this.game.physics.p2.enable(this,true);
+    this.game.physics.p2.enable(this,false);
     this.body.clearShapes();
+    this.body.addRectangle(500,500,150,150);
 //    this.body.addPolygon({},this.pointArray);
-//    this.body.data.shapes[0].sensor=true;
+    this.body.data.shapes[0].sensor=true;
 
 
     this.maskLayer = new Phaser.Graphics(this.game,0,0);
     this.graphics = new Phaser.Graphics(this.game,0,0);
-    this.tile1=new Phaser.TileSprite(this.game,0,0,500,500,'pattern_ice');
+    this.tile1=new Phaser.TileSprite(this.game,-500,-500,1000,1000,'pattern_ice');
     this.addChild(this.graphics);
     this.addChild(this.tile1);
     this.addChild(this.maskLayer);
@@ -37,7 +39,13 @@ evolution.Area= function (level,objectData) {
     this.maskLayer.endFill();
     this.graphics.endFill();
 
-    //this.mask=this.maskLayer;
+    this.mask=this.maskLayer;
+
+
+    var blurX = this.game.add.filter('BlurX');
+    var blurY = this.game.add.filter('BlurY');
+
+    this.graphics = [blurX, blurY];
 
 };
 

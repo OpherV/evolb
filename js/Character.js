@@ -28,7 +28,7 @@ evolution.Character= function (level,id,x,y,spriteKey) {
     this.canBob = true;
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
-    this.hungerTimeInterval=Phaser.Timer.SECOND;
+    this.hungerTimeInterval=Phaser.Timer.SECOND*2;
 
     this.inContactWith={}; //Bodies this is touching
 
@@ -123,7 +123,7 @@ evolution.Character.prototype.init=function(){
     this.level.layers.gui.add(this.gui);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
-    this.timeEvents.hitTest=this.game.time.events.loop(this.modifiedStats.attackSpeed, this.hitCycle, this);
+    //this.timeEvents.hitTest=this.game.time.events.loop(this.modifiedStats.attackSpeed, this.hitCycle, this);
 };
 
 evolution.Character.prototype.flashTint=function(color,duration){

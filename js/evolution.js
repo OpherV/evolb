@@ -30,9 +30,12 @@ evolution.core=(function(){
         game.load.image('pattern_ice', 'assets/patterns/pattern_ice.png');
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
+        game.load.script('filterX', 'js/filters/BlurX.js');
+        game.load.script('filterY', 'js/filters/BlurY.js');
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 
+        game.load.atlasJSONHash('area_ice', 'assets/sprites/area_ice.png', 'assets/spriteAtlas/area_ice.json');
         game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/enemy1.json');
         game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
         game.load.atlasJSONHash('blob', 'assets/sprites/blob_sprites.png', 'assets/spriteAtlas/blob.json' );
@@ -41,7 +44,13 @@ evolution.core=(function(){
         game.load.atlasJSONHash('traits', 'assets/sprites/traits_sprites.png', 'assets/spriteAtlas/traits.json' );
         game.load.atlasJSONHash('food', 'assets/sprites/plankton_sprites.png', 'assets/spriteAtlas/plankton.json' );
         game.load.atlasJSONHash('plankton_eyes', 'assets/sprites/plankton_eyes.png', 'assets/spriteAtlas/plankton_eyes.json' );
+        game.load.atlasJSONHash('plankton_death', 'assets/sprites/plankton_death.png', 'assets/spriteAtlas/plankton_death.json' );
         game.load.atlasJSONHash('book', 'assets/sprites/book.png', 'assets/spriteAtlas/book.json' );
+
+
+        game.load.audio('ice-cracking', 'assets/sound/ice-cracking-01.mp3');
+
+
 
         _preloadLevel('tutorial', 'levels/tutorial.js');
 

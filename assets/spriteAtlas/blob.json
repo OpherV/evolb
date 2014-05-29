@@ -10,7 +10,15 @@
 },
 "blobs-36.png":
 {
-	"frame": {"x":178,"y":2,"w":174,"h":130},
+	"frame": {"x":2,"y":134,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"frozen_blob.png":
+{
+	"frame": {"x":2,"y":266,"w":174,"h":130},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
@@ -21,8 +29,8 @@
 	"version": "1.0",
 	"image": "blob_sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":354,"h":134},
+	"size": {"w":178,"h":398},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:be6f3064370961e7fbb7ff8d9112bf01:63e5d5918e1e232bd7981e4fd1a64fd8:b256302f0285c80096e9c7d9971f133d$"
+	"smartupdate": "$TexturePacker:SmartUpdate:9ac3619f3b6e0b0ea71ad9c0c4e74bb0:396d47b50b0a5ba5275e689d9fabf6b1:b256302f0285c80096e9c7d9971f133d$"
 }
 }

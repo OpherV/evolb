@@ -48,6 +48,7 @@ evolution.Creature= function (level,objectData) {
 
     this.bodySprite.animations.add("yellow",[0]);
     this.bodySprite.animations.add("pink",[1]);
+    this.bodySprite.animations.add("freezing",[2]);
     this.bodySprite.animations.play("yellow");
 
     this.face=new Phaser.Sprite(this.game,0,0,'creature_face');
@@ -115,7 +116,20 @@ evolution.Creature.prototype.spawn=function(father,mother){
 evolution.Creature.prototype.contactHandler={
     "food": function(body){
         this.heal(body.sprite.healAmount);
+        var foodDeath = new Phaser.Sprite(this.game,this.x,this.y-130,'plankton_death');
+        foodDeath.scale.setTo(0.7,0.7);
+        foodDeath.animations.add("die",[0,1,2,3,4,5,6,7,8]);
+        this.level.layers.powerUps.addChild(foodDeath);
+        foodDeath.play("die",24,false,true);
+
+
         body.sprite.destroy();
+    },
+    "area": function(body){
+        this.bodySprite.animations.play("freezing");
+        var icefx = this.game.add.audio('ice-cracking');
+        //icefx.play();
+        this.healthbar.tint=0x555555;
     },
     "mutation": function(body){
         this.modifiedStats.mutationChance=1;
