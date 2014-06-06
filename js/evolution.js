@@ -28,6 +28,7 @@ evolution.core=(function(){
         game.load.image('rock2', 'assets/sprites/rock2.png');
         game.load.image('rock3', 'assets/sprites/rock3.png');
         game.load.image('pattern_ice', 'assets/patterns/pattern_ice.png');
+        game.load.image('ice_bg', 'assets/sprites/ice_bg.png');
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('filterX', 'js/filters/BlurX.js');

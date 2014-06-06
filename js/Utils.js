@@ -73,7 +73,7 @@ evolution.Utils=(function(){
         return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
     }
 
-    function _pointInPolygon(point,vs){
+    function _isPointInPolygon(point,vs){
         var x = point[0], y = point[1];
 
         var inside = false;
@@ -89,12 +89,13 @@ evolution.Utils=(function(){
         return inside;
     }
 
+
     return{
         extend: _extend,
         clone: _clone,
         isUndefined: _isUndefined,
         getUrlVars: _getUrlVars,
         generateGuid: _generateGuid,
-        pointInPolygon: _pointInPolygon
+        isPointInPolygon: _isPointInPolygon
     }
 })();
