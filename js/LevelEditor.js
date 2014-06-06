@@ -9,11 +9,10 @@ evolution.LevelEditor=function(level){
     this.selectedSprite=null;
     this.targetSprite=null;
 
-    this.autoSaveInterval=null
-
+    this.autoSaveInterval=null;
 
     this.game.input.onDown.add(function(pointer){
-
+        console.log("leveleditor on down");
         if (this.isActive){
             var pointer=this.game.input.activePointer;
             var clickPoint= new Phaser.Point(pointer.position.x+this.game.camera.x,pointer.position.y+this.game.camera.y);
@@ -311,6 +310,16 @@ evolution.LevelEditor.prototype.markSelected=function(sprite,color){
     }
 };
 
+//a sprite might have its own function to deslect
+evolution.LevelEditor.prototype.deselect=function(sprite){
+    if (sprite.deselect){
+        sprite.deselect()
+    }
+    else{
+        sprite.tint=0XFFFFFF;
+    }
+};
+
 evolution.LevelEditor.prototype.selectSprite=function(sprite){
     if (sprite){
         var pointer=this.game.input.activePointer;
@@ -318,7 +327,7 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
         //cancel previous sprite selection
         if (this.selectedSprite){
-            this.markSelected(this.selectedSprite,0xFFFFFF);
+            this.deselect(this.selectedSprite);
         }
 
 
@@ -342,7 +351,7 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
         //clicked empty space
         if (this.selectedSprite){
-            this.markSelected(this.selectedSprite,0xFFFFFF);
+            this.deselect(this.selectedSprite);
             this.selectedSprite=null;
         }
 

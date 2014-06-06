@@ -17,7 +17,7 @@ evolution.Area= function (level,objectData) {
     var maxY= this.pointArray.reduce(function(max, obj) { return obj[1] > max ? obj[1] : max; }, 0);
 
     Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y);
-    this.game.physics.p2.enable(this,true,false);
+    this.game.physics.p2.enable(this,false,false);
     this.body.clearShapes();
 
 //    this.body.addPolygon({},this.pointArray);
@@ -53,15 +53,7 @@ evolution.Area= function (level,objectData) {
     this.addChild(this.clouds);
     this.addChild(this.graphics);
 
-    this.graphics.beginFill(0xFFFF00, 0.2);
-    this.graphics.lineStyle(0, 0Xffffff, 1);
-
-    for (x=0;x<this.pointArray.length;x++){
-        var point=this.pointArray[x];
-        this.graphics.lineTo(point[0],point[1]);
-
-    }
-    this.graphics.endFill();
+    this.redraw();
 
 };
 
@@ -79,20 +71,32 @@ evolution.Area.prototype.markSelected=function(color){
 
         for (var x=0;x<this.pointArray.length;x++){
             var point = new Phaser.Sprite(this.game,this.pointArray[x][0],this.pointArray[x][1]);
+            point.width=20;
+            point.height=20;
             var pointGraphics = new Phaser.Graphics(this.game);
-            pointGraphics.beginFill(0xFF0000, 0.2);
+            pointGraphics.beginFill(0xFF0000, 1);
             pointGraphics.drawCircle(0,0,20);
             pointGraphics.endFill();
 
             point.addChild(pointGraphics);
             this.ui.addChild(point);
 
-            point.inputEnabled = true;
-            point.input.enableDrag(false);
+            point.inputEnabled=true;
+            point.events.onInputDown.add(function(){
+                console.log("in area");
+            },this);
 
         }
     }
 
+};
+
+evolution.Area.prototype.deselect=function(){
+    this.graphics.tint=0xFFFFFF;
+    if (this.ui){
+        this.ui.destroy();
+        this.ui=null;
+    }
 };
 
 evolution.Area.prototype.update = function() {
@@ -100,6 +104,19 @@ evolution.Area.prototype.update = function() {
         var cloud=this.clouds.getChildAt(x);
         this.cloudWander(cloud);
     }
+};
+
+evolution.Area.prototype.redraw = function(){
+    this.graphics.clear();
+    this.graphics.beginFill(0xFFFF00, 0.2);
+    this.graphics.lineStyle(0, 0Xffffff, 1);
+
+    for (x=0;x<this.pointArray.length;x++){
+        var point=this.pointArray[x];
+        this.graphics.lineTo(point[0],point[1]);
+
+    }
+    this.graphics.endFill();
 };
 
 evolution.Area.prototype.cloudWander=function(cloud){
