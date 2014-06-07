@@ -80,6 +80,11 @@ evolution.Character= function (level,id,x,y,spriteKey) {
                 delete this.inContactWith[body.sprite.id]
             }
         }
+
+        if (!(body && body.sprite && body.sprite!=null)){ return; }
+        if (this.endContactHandler[body.sprite.kind]){
+            this.endContactHandler[body.sprite.kind].call(this,body);
+        }
     }
 
 
@@ -134,6 +139,9 @@ evolution.Character.prototype.flashTint=function(color,duration){
 
 //inheriting classes will override this to implement contact event handlers
 evolution.Character.prototype.contactHandler={};
+
+//inheriting classes will override this to implement end contact event handlers
+evolution.Character.prototype.endContactHandler={};
 
 //test against all touching bodies
 evolution.Character.prototype.hitCycle=function(){

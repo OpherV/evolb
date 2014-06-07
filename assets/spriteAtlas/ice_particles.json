@@ -1,0 +1,28 @@
+{"frames": {
+
+"ice1.png":
+{
+	"frame": {"x":2,"y":2,"w":24,"h":23},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":23},
+	"sourceSize": {"w":24,"h":23}
+},
+"ice2.png":
+{
+	"frame": {"x":28,"y":2,"w":11,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":11,"h":16},
+	"sourceSize": {"w":11,"h":16}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "ice_particles.png",
+	"format": "RGBA8888",
+	"size": {"w":41,"h":27},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:b899e6084a667b91b1bb056381b72e15:d7a66d6b10b1877f91a0bc226539f8da:d3973870eb62bc3ffa81a724fc662ab1$"
+}
+}

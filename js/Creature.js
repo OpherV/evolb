@@ -26,30 +26,47 @@ evolution.Creature= function (level,objectData) {
     //attach creature to dna
     this.dna.character=this;
 
+
     //construct chracter
-    evolution.Character.call(this, level, this.objectData.id, this.objectData.x, this.objectData.y,'playerCreature');
+    evolution.Character.call(this, level, this.objectData.id, this.objectData.x, this.objectData.y);
     this.type=evolution.Character.types.PLAYER;
     this.kind="creature";
 
     this.exists=this.objectData.exists;
 
-    //yellow body
-    this.bodySprite=new Phaser.Sprite(this.game,0,0,'blob');
-    this.bodySprite.x=-this.bodySprite.width/2;
-    this.bodySprite.y=-this.bodySprite.height/2;
-    this.bodySprite.sprite=this; //important for hitCycle
-    this.addChild(this.bodySprite);
+    //yellow body (2 sprites to transition between)
+    this.bodySprite1=new Phaser.Sprite(this.game,0,0,'blob');
+    this.bodySprite1.x=-this.bodySprite1.width/2;
+    this.bodySprite1.y=-this.bodySprite1.height/2;
+    this.bodySprite1.sprite=this; //important for hitCycle
+    this.bodySprite=this.bodySprite1;
+
+    this.bodySprite2=new Phaser.Sprite(this.game,0,0,'blob');
+    this.bodySprite2.x=-this.bodySprite2.width/2;
+    this.bodySprite2.y=-this.bodySprite2.height/2;
+    this.bodySprite2.sprite=this; //important for hitCycle
+
+    this.addChild(this.bodySprite1);
+    this.addChild(this.bodySprite2);
+    this.bodySprite2.alpha=0;
+
+    this.bodySprite1.animations.add("yellow",[0]);
+    this.bodySprite1.animations.add("pink",[1]);
+    this.bodySprite1.animations.add("freezing",[2]);
+    this.bodySprite1.animations.play("yellow");
+
+    this.bodySprite2.animations.add("yellow",[0]);
+    this.bodySprite2.animations.add("pink",[1]);
+    this.bodySprite2.animations.add("freezing",[2]);
+    this.bodySprite2.animations.play("yellow");
 
     //health bar
     this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
     this.healthbar.x = -this.healthbar.width/2;
-    this.healthbar.y = -this.healthbar.height/2;
+    this.healthbar.y = -this.healthbar.height/2+1;
+    this.healthbar.blendMode=PIXI.blendModes.MULTIPLY;
     this.addChild(this.healthbar);
 
-    this.bodySprite.animations.add("yellow",[0]);
-    this.bodySprite.animations.add("pink",[1]);
-    this.bodySprite.animations.add("freezing",[2]);
-    this.bodySprite.animations.play("yellow");
 
     this.face=new Phaser.Sprite(this.game,0,0,'creature_face');
     this.face.x=-this.face.width/2;
@@ -75,6 +92,16 @@ evolution.Creature= function (level,objectData) {
     //has to be after setCircle otherwise the material is lost
     this.body.setMaterial(evolution.Materials.getCreatureMaterial());
 
+
+    this.emitter = this.game.add.emitter(0, 0, 30);
+
+
+    this.emitter.makeParticles('ice_particles',[0,1]);
+    this.emitter.setScale(1, 1, 1, 1, 0, Phaser.Easing.Sinusoidal.InOut, true);
+    this.emitter.setAlpha(1, 0, 3000);
+    this.emitter.setXSpeed(-300,300);
+    this.emitter.setYSpeed(-300,300);
+    this.emitter.gravity = 0;
 
     //methods
 
@@ -126,10 +153,9 @@ evolution.Creature.prototype.contactHandler={
         body.sprite.destroy();
     },
     "area": function(body){
-        this.bodySprite.animations.play("freezing");
+        this.showBody("freezing");
         var icefx = this.game.add.audio('ice-cracking');
-        //icefx.play();
-        this.healthbar.tint=0x555555;
+        icefx.play();
     },
     "mutation": function(body){
         this.modifiedStats.mutationChance=1;
@@ -151,6 +177,17 @@ evolution.Creature.prototype.contactHandler={
         if (this.modifiedStats.damageOutput>0){
             body.sprite.damage(this.modifiedStats.damageOutput,true);
         }
+    }
+};
+
+evolution.Creature.prototype.endContactHandler={
+    "area": function(body){
+        this.showBody("yellow",400);
+        var icefx = this.game.add.audio('ice-breaking');
+        icefx.play();
+        this.emitter.x = this.x;
+        this.emitter.y = this.y;
+        this.emitter.start(true, 3000, null, 10);
     }
 };
 
@@ -186,4 +223,20 @@ evolution.Creature.prototype.flashTint=function(color,duration){
     if (!duration){ var duration=100;}
     this.healthbar.tint=color;
     this.game.time.events.add(duration,function(){ this.healthbar.tint=0XFFFFFF},this);
+};
+
+
+evolution.Creature.prototype.showBody=function(bodyName,transitionSpeed){
+    var oldBody=this.bodySprite;
+    var newBody=this.bodySprite==this.bodySprite1?this.bodySprite2:this.bodySprite1;
+    this.bodySprite=newBody;
+
+    newBody.animations.play(bodyName);
+    var fadeIn=this.game.add.tween(newBody).to({ alpha: 1}, transitionSpeed?transitionSpeed:1000, Phaser.Easing.Linear.Out).start();
+    fadeIn.onComplete.addOnce(function(){
+        oldBody.alpha=0;
+        this.addChildAt(oldBody, 1);
+
+    },this);
+
 };
