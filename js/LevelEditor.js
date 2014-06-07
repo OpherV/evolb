@@ -7,12 +7,14 @@ evolution.LevelEditor=function(level){
     this.editMode=null;
     this.isPanning=false;
     this.selectedSprite=null;
+    this.selectedUi=null; //selected ui control node of a sprite
     this.targetSprite=null;
 
     this.autoSaveInterval=null;
 
+    this.currentUISprites=[];
+
     this.game.input.onDown.add(function(pointer){
-        console.log("leveleditor on down");
         if (this.isActive){
             var pointer=this.game.input.activePointer;
             var clickPoint= new Phaser.Point(pointer.position.x+this.game.camera.x,pointer.position.y+this.game.camera.y);
@@ -22,11 +24,18 @@ evolution.LevelEditor=function(level){
                 this.originalCameraPosition=new Phaser.Point(this.game.camera.x,this.game.camera.y);
             }
             else{
-                var bodies=this.game.physics.p2.hitTest(clickPoint,this.level.spriteArrays.all);
+                var bodies=this.game.physics.p2.hitTest(clickPoint,this.level.spriteArrays.all.concat(this.currentUISprites));
                 if (bodies.length>0){
                     var sprite=bodies[0].parent.sprite;
-                    this.selectSprite(sprite);
-                    this.targetSprite=sprite;
+
+                    //select a ui element
+                    if (sprite.parentElement){
+                        this.selectUIElement(sprite);
+                    }
+                    else{
+                        this.selectSprite(sprite);
+                        this.targetSprite=sprite;
+                    }
                 }
                 else{
                     this.selectSprite(null);
@@ -38,8 +47,14 @@ evolution.LevelEditor=function(level){
     },this);
 
     this.game.input.onUp.add(function(pointer){
+
         if (this.isActive){
             this.targetSprite=null;
+
+            //completed dragging ui element, redraw parent element
+            if (this.editMode=="drag" && this.selectedUi){
+                this.selectedUi.parentElement.redraw();
+            }
         }
         this.isPanning=false;
     },this);
@@ -65,9 +80,9 @@ evolution.LevelEditor=function(level){
     this.keyW.onDown.add(function(){
         if (this.isActive) {
             this.editMode="drag";
-            if (this.selectedSprite){
-                this.selectSprite(this.selectedSprite);
-            }
+//            if (this.selectedSprite){
+//                this.selectSprite(this.selectedSprite);
+//            }
         }
     },this);
 
@@ -142,6 +157,13 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
             this.markSelected(levelObject,0xFFFFFF);
         }
 
+        //mark areas
+        if (levelObject.clouds){
+            levelObject.graphics.alpha=0;
+        }
+
+        this.destroyElementUI();
+
         this.autoSaveLevel();
         clearInterval(this.autoSaveInterval);
     }
@@ -158,6 +180,7 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
 
         for(var x=0;x<this.level.spriteArrays.levelObjects.length;x++){
             var levelObject=this.level.spriteArrays.levelObjects[x];
+            //mark objects that don't exist
             if ((levelObject.objectData.exists!="undefined"
                 && !levelObject.objectData.exists
                 && !levelObject.exists)
@@ -167,6 +190,11 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
                 levelObject.alpha=1;
                 levelObject.visible=true;
                 this.markSelected(levelObject,0x993300);
+            }
+
+            //mark areas
+            if (levelObject.clouds){
+                levelObject.graphics.alpha=1;
             }
         }
 
@@ -275,11 +303,29 @@ evolution.LevelEditor.prototype.render=function(){
 
         if (this.targetSprite){
             if (this.editMode=="drag"){
-                this.targetSprite.body.x=pointer.worldX+pointer.spriteOffsetX;
-                this.targetSprite.body.y=pointer.worldY+pointer.spriteOffsetY;
+                var offsetMovedX=pointer.worldX-this.targetSprite.body.x+pointer.spriteOffsetX;
+                var offsetMovedY=pointer.worldY-this.targetSprite.body.y+pointer.spriteOffsetY;
+
+                this.targetSprite.body.x+=offsetMovedX;
+                this.targetSprite.body.y+=offsetMovedY;
                 this.targetSprite.objectData.x=this.targetSprite.body.x;
                 this.targetSprite.objectData.y=this.targetSprite.body.y;
                 this.updateSpriteProperties();
+
+                //don't apply when dragging ui elements
+                if (!this.targetSprite.parentElement){
+                    for (var x=0;x<this.currentUISprites.length;x++){
+
+                        this.currentUISprites[x].body.x+=offsetMovedX;
+                        this.currentUISprites[x].body.y+=offsetMovedY;
+                    }
+                }
+
+                //dragging ui control point
+                if (this.targetSprite.parentElement){
+                    var parentElement=this.targetSprite.parentElement;
+                    parentElement.pointArray[this.targetSprite.objectData.index]=[this.targetSprite.objectData.x-this.targetSprite.parentElement.x,this.targetSprite.objectData.y-this.targetSprite.parentElement.y]
+                }
             }
             else if (this.editMode=="rotate"){
                 var a=this.targetSprite;
@@ -302,11 +348,52 @@ evolution.LevelEditor.prototype.render=function(){
 
 //a sprite might have its own function to mark being selected
 evolution.LevelEditor.prototype.markSelected=function(sprite,color){
+    this.destroyElementUI();
+
     if (sprite.markSelected){
         sprite.markSelected(color)
     }
     else{
         sprite.tint=color;
+    }
+
+    if(sprite.pointArray){
+            var controlPointRadius=10;
+
+            for (var x=0;x<sprite.pointArray.length;x++){
+                var point = new Phaser.Sprite(this.game,sprite.x+sprite.pointArray[x][0],sprite.y+sprite.pointArray[x][1]);
+
+                point.parentElement=sprite;
+
+                this.game.physics.p2.enable(point,false);
+                point.body.setCircle(controlPointRadius);
+                point.body.data.shapes[0].sensor=true;
+
+                point.pointGraphics = new Phaser.Graphics(this.game);
+                point.pointGraphics.beginFill(0xFF0000, 0.5);
+                point.pointGraphics.drawCircle(0,0,controlPointRadius);
+                point.pointGraphics.endFill();
+
+                point.addChild(point.pointGraphics);
+
+
+                point.objectData={index: x,
+                                  x: sprite.pointArray[x][0],
+                                  y: sprite.pointArray[x][1]
+                };
+
+                point.markSelected=(function(color){
+                    this.pointGraphics.tint=color;
+                }).bind(point);
+
+                point.deselect=(function(){
+                    this.pointGraphics.tint=0xFFFFFF;
+                }).bind(point);
+
+                this.level.layers.gui.addChild(point);
+                this.currentUISprites.push(point);
+
+            }
     }
 };
 
@@ -318,6 +405,37 @@ evolution.LevelEditor.prototype.deselect=function(sprite){
     else{
         sprite.tint=0XFFFFFF;
     }
+
+    this.destroyElementUI();
+
+};
+
+evolution.LevelEditor.prototype.destroyElementUI=function(){
+    //remove active ui elements for the selected sprite
+    for (var x=0;x<this.currentUISprites.length;x++){
+        this.currentUISprites[x].destroy();
+    }
+    this.currentUISprites=[];
+};
+
+evolution.LevelEditor.prototype.selectUIElement=function(sprite){
+    var pointer=this.game.input.activePointer;
+    var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
+
+    if (this.selectedUi){
+        this.selectedUi.deselect();
+    }
+
+    this.selectedUi=sprite;
+    this.targetSprite=sprite;
+    this.selectedUi.markSelected(0x00FF00);
+
+    if (this.editMode=="drag"){
+        pointer.spriteOffsetX=sprite.body.x-pointer.worldX;
+        pointer.spriteOffsetY=sprite.body.y-pointer.worldY;
+    }
+
+
 };
 
 evolution.LevelEditor.prototype.selectSprite=function(sprite){
@@ -325,11 +443,10 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
         var pointer=this.game.input.activePointer;
         var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
 
-        //cancel previous sprite selection
+        //clicked on sprite - cancel previous sprite selection
         if (this.selectedSprite){
             this.deselect(this.selectedSprite);
         }
-
 
         this.selectedSprite=sprite;
         this.markSelected(this.selectedSprite,0x00FF00);
@@ -352,6 +469,11 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
         //clicked empty space
         if (this.selectedSprite){
             this.deselect(this.selectedSprite);
+            if (this.selectedUi){
+                this.deselect(this.selectedUi.parentElement);
+                this.selectedUi=null;
+            }
+
             this.selectedSprite=null;
         }
 
@@ -456,6 +578,13 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
             }, false);
 
             propContainerObj.appendChild(propObj);
+        }
+
+        if(sprite.parentElement){
+            sprite.parentElement.updateObjectData();
+        }
+        else if (sprite.updateObjectData){
+            sprite.updateObjectData();
         }
     }
     else{

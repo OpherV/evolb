@@ -8,27 +8,112 @@ evolution.Area= function (level,objectData) {
     this.kind="area";
 
     this.cloudSpeed=0.1;
+    var defaultPointArray=[ [0,0], [100,-50], [200,0], [250,100], [200,200], [100,250], [0,200], [-50,100]  ];
+    this.pointArray=this.objectData.pointArray?JSON.parse(this.objectData.pointArray):defaultPointArray;
 
-    this.pointArray=[[0,0],[300,-40],[400,-100],[500,0],[370,300],[100,450],[-100,200]];
+    Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y);
+    this.game.physics.p2.enable(this,false,false);
+
+    this.clouds  = new Phaser.Sprite(this.game,0,0);
+    this.clouds.alpha=0.8;
+    this.clouds.blendMode=PIXI.blendModes.ADD;
+
+    //this.clouds.blendMode=PIXI.blendModes.ADD;
+    this.graphics = new Phaser.Graphics(this.game,0,0);
+    this.graphics.alpha = 0;
+    this.clouds.alpha=1;
+    this.addChild(this.clouds);
+    this.addChild(this.graphics);
+
+    this.redraw();
+
+};
+
+evolution.Area.prototype = Object.create(Phaser.Sprite.prototype);
+evolution.Area.prototype.constructor = evolution.Area;
+
+
+evolution.Area.prototype.markSelected=function(color){
+    this.graphics.alpha=1;
+    this.graphics.tint=color;
+};
+
+evolution.Area.prototype.deselect=function(){
+    this.graphics.tint=0xFFFFFF;
+};
+
+evolution.Area.prototype.update = function() {
+    for (var x=0;x<this.clouds.children.length;x++){
+        var cloud=this.clouds.getChildAt(x);
+        this.cloudWander(cloud);
+    }
+};
+
+evolution.Area.prototype.addAreaPolygon=function(){
+    var cm = [0,0];
+    var vertices=[];
+
+
+    for (var s = 0; s < this.pointArray.length; s++)
+    {
+        vertices.push([ this.body.world.pxmi(this.pointArray[s][0]), this.body.world.pxmi(this.pointArray[s][1]) ]);
+    }
+
+    var c = new p2.Convex(vertices);
+
+    // Move all vertices so its center of mass is in the local center of the convex
+    for (var j = 0; j !== c.vertices.length; j++)
+    {
+        var v = c.vertices[j];
+        p2.vec2.sub(v, v, c.centerOfMass);
+    }
+
+    p2.vec2.scale(cm, c.centerOfMass, 1);
+
+    c.updateTriangles();
+    c.updateCenterOfMass();
+    c.updateBoundingRadius();
+
+    this.body.data.addShape(c, cm);
+
+
+    this.body.data.aabbNeedsUpdate = true;
+    this.body.shapeChanged();
+};
+
+evolution.Area.prototype.redraw = function(){
+
+    //draw collision object
+    this.body.clearShapes();
+    this.addAreaPolygon();
+    this.body.data.shapes[0].sensor=true;
+
+
+    //draw polygon graphics
+    this.graphics.clear();
+    this.graphics.beginFill(0xAAAAAA, 0.5);
+    this.graphics.lineStyle(0, 0Xffffff, 1);
+
+    for (x=0;x<this.pointArray.length;x++){
+        var point=this.pointArray[x];
+        this.graphics.lineTo(point[0],point[1]);
+
+    }
+    this.graphics.endFill();
+
+    //draw clouds
+
+    for (var x=0;x<this.clouds.children.length;x++){
+        this.clouds.children[x].destroy();
+    }
 
     var minX= this.pointArray.reduce(function(min, obj) { return obj[0] < min ? obj[0] : min; }, Infinity);
     var minY= this.pointArray.reduce(function(min, obj) { return obj[1] < min ? obj[1] : min; }, Infinity);
     var maxX= this.pointArray.reduce(function(max, obj) { return obj[0] > max ? obj[0] : max; }, 0);
     var maxY= this.pointArray.reduce(function(max, obj) { return obj[1] > max ? obj[1] : max; }, 0);
 
-    Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y);
-    this.game.physics.p2.enable(this,false,false);
-    this.body.clearShapes();
 
-//    this.body.addPolygon({},this.pointArray);
-    this.body.addRectangle(500,500,150,150);
-    this.body.data.shapes[0].sensor=true;
-
-    this.clouds  = new Phaser.Sprite(this.game,0,0);
-    this.clouds.alpha=0.8;
-    this.clouds.blendMode=PIXI.blendModes.ADD;
-    //var placement
-    for (var x=0;x<1;x++){
+    for (var x=0;x<60;x++){
         var cloud = new Phaser.Sprite(this.game,-5000,-5000,'ice_bg');
         cloud.anchor.setTo(0.5);
         cloud.scale.setTo(0.8,0.8);
@@ -44,79 +129,6 @@ evolution.Area= function (level,objectData) {
         cloud.blendMode=PIXI.blendModes.ADD;
         this.clouds.addChild(cloud);
     }
-
-
-    //this.clouds.blendMode=PIXI.blendModes.ADD;
-    this.graphics = new Phaser.Graphics(this.game,0,0);
-    this.graphics.alpha = 1;
-    this.clouds.alpha=0;
-    this.addChild(this.clouds);
-    this.addChild(this.graphics);
-
-    this.redraw();
-
-};
-
-evolution.Area.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Area.prototype.constructor = evolution.Area;
-
-
-evolution.Area.prototype.markSelected=function(color){
-    this.graphics.alpha=1;
-    this.graphics.tint=color;
-
-    if (!this.ui){
-        this.ui = new Phaser.Sprite(this.game,this.x,this.y);
-        this.level.layers.gui.addChild(this.ui);
-
-        for (var x=0;x<this.pointArray.length;x++){
-            var point = new Phaser.Sprite(this.game,this.pointArray[x][0],this.pointArray[x][1]);
-            point.width=20;
-            point.height=20;
-            var pointGraphics = new Phaser.Graphics(this.game);
-            pointGraphics.beginFill(0xFF0000, 1);
-            pointGraphics.drawCircle(0,0,20);
-            pointGraphics.endFill();
-
-            point.addChild(pointGraphics);
-            this.ui.addChild(point);
-
-            point.inputEnabled=true;
-            point.events.onInputDown.add(function(){
-                console.log("in area");
-            },this);
-
-        }
-    }
-
-};
-
-evolution.Area.prototype.deselect=function(){
-    this.graphics.tint=0xFFFFFF;
-    if (this.ui){
-        this.ui.destroy();
-        this.ui=null;
-    }
-};
-
-evolution.Area.prototype.update = function() {
-    for (var x=0;x<this.clouds.children.length;x++){
-        var cloud=this.clouds.getChildAt(x);
-        this.cloudWander(cloud);
-    }
-};
-
-evolution.Area.prototype.redraw = function(){
-    this.graphics.clear();
-    this.graphics.beginFill(0xFFFF00, 0.2);
-    this.graphics.lineStyle(0, 0Xffffff, 1);
-
-    for (x=0;x<this.pointArray.length;x++){
-        var point=this.pointArray[x];
-        this.graphics.lineTo(point[0],point[1]);
-
-    }
-    this.graphics.endFill();
 };
 
 evolution.Area.prototype.cloudWander=function(cloud){
@@ -130,4 +142,8 @@ evolution.Area.prototype.cloudWander=function(cloud){
         cloud.velocity= (new Phaser.Point(Math.cos(randomDirection),Math.sin(randomDirection))).setMagnitude(this.cloudSpeed);
     }
 
+};
+
+evolution.Area.prototype.updateObjectData=function(){
+  this.objectData.pointArray=JSON.stringify(this.pointArray);
 };
