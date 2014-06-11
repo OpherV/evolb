@@ -26,7 +26,6 @@ evolution.Area= function (level,objectData) {
     this.addChild(this.graphics);
 
     this.redraw();
-
 };
 
 evolution.Area.prototype = Object.create(Phaser.Sprite.prototype);
@@ -43,9 +42,11 @@ evolution.Area.prototype.deselect=function(){
 };
 
 evolution.Area.prototype.update = function() {
-    for (var x=0;x<this.clouds.children.length;x++){
-        var cloud=this.clouds.getChildAt(x);
-        this.cloudWander(cloud);
+    if (this.inCamera){
+        for (var x=0;x<this.clouds.children.length;x++){
+            var cloud=this.clouds.getChildAt(x);
+            this.cloudWander(cloud);
+        }
     }
 };
 
