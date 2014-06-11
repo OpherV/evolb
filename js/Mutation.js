@@ -1,17 +1,28 @@
 evolution=(window.evolution?window.evolution:{});
-evolution.Mutation= function (game,id,x,y) {
-    this.id=id;
-    this.game=game;
+evolution.Mutation= function (level,objectData) {
+    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+    this.id=this.objectData.id;
+    this.level=level;
+    this.game=level.game;
 
-    Phaser.Sprite.call(this, game, x, y, 'mutation');
+    Phaser.Sprite.call(this,this.game, this.objectData.x, this.objectData.y);
     this.type=evolution.Character.types.POWERUP;
     this.kind="mutation";
 
-    this.animations.add('mutation');
-    this.animations.play('mutation', 8, true);
-    this.scale.setTo(0.6);
 
-    game.physics.p2.enable(this,false);
+    var graphics=new Phaser.Sprite(this.game, 0,0, 'mutation');
+    this.addChild(graphics);
+
+    this.selectMarkerObj=graphics;
+
+    graphics.anchor.setTo(0.5);
+    graphics.scale.setTo(0.6);
+    graphics.angle=-60;
+    graphics.y=10;
+    this.game.add.tween(graphics).to( { angle: 15 }, 1500, Phaser.Easing.Sinusoidal.InOut, true, 0, Number.MAX_VALUE, true);
+    this.game.add.tween(graphics).to( { y: 0 }, 900, Phaser.Easing.Sinusoidal.InOut, true, 0, Number.MAX_VALUE, true);
+
+    this.game.physics.p2.enable(this,false,false);
     this.body.setCircle(this.width);
     this.body.data.shapes[0].sensor=true;
 
