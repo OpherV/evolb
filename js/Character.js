@@ -198,7 +198,7 @@ evolution.Character.prototype.setWantsToBreed=function(){
     this.state=evolution.Character.states.WANTS_TO_BREED;
     //TODO breaks encapsulation
     this.face.animations.play("horny");
-    this.bodySprite.animations.play("pink");
+    this.showBody("pink");
 
     //remove the hunger loop timer
     if (this.timeEvents.hunger){
@@ -291,9 +291,9 @@ evolution.Character.prototype.startBreedingWith=function(target){
 
     //TODO breaks encapsulation
     this.face.animations.play("sex");
-    this.bodySprite.animations.play("pink");
+    this.showBody("pink");
     this.currentBreedingWith.face.animations.play("sex");
-    this.currentBreedingWith.animations.play("pink");
+    this.currentBreedingWith.showBody("pink");
 
     this.game.time.events.add(2000,function(){
         //make sure both parents are alive
@@ -310,7 +310,7 @@ evolution.Character.prototype.stopBreeding=function(){
         this.currentBreedingWith.tint=0XFFFFFF;
         //TODO breaks encapsulation
         this.currentBreedingWith.face.animations.play("normal");
-        this.currentBreedingWith.bodySprite.animations.play("yellow");
+        this.currentBreedingWith.showBody("yellow");
         this.currentBreedingWith.state=evolution.Character.states.DRIFTING;
         this.currentBreedingWith.currentBreedingWith=null;
         this.currentBreedingWith=null;
@@ -322,7 +322,7 @@ evolution.Character.prototype.stopBreeding=function(){
     this.tint=0XFFFFFF;
     //TODO breaks encapsulation
     this.face.animations.play("normal");
-    this.bodySprite.animations.play("yellow");
+    this.showBody("yellow");
 };
 
 
@@ -425,9 +425,7 @@ evolution.Character.prototype.update = function() {
         this.moveToTarget(this.currentTarget,this.modifiedStats.moveSpeed);
     }
     else if(this.state==evolution.Character.states.BREEDING){
-        this.tint=0X455FF5;
-        //todo: breaks encapsulation
-        this.bodySprite.animations.play("pink");
+
     }
 
     if (this.dna){
