@@ -234,6 +234,10 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
             layer: "powerUps"
         },
         {
+            constructorName: "Mutation",
+            layer: "powerUps"
+        },
+        {
             constructorName: "Creature",
             layer: "creatures"
         },
@@ -354,7 +358,12 @@ evolution.LevelEditor.prototype.markSelected=function(sprite,color){
         sprite.markSelected(color)
     }
     else{
-        sprite.tint=color;
+        if (sprite.selectMarkerObj){
+            sprite.selectMarkerObj.tint=color;
+        }
+        else{
+            sprite.tint=color;
+        }
     }
 
     if(sprite.pointArray){
@@ -403,7 +412,12 @@ evolution.LevelEditor.prototype.deselect=function(sprite){
         sprite.deselect()
     }
     else{
-        sprite.tint=0XFFFFFF;
+        if (sprite.selectMarkerObj){
+            sprite.selectMarkerObj.tint=0XFFFFFF;
+        }
+        else{
+            sprite.tint=0xFFFFFF;
+        }
     }
 
     this.destroyElementUI();
