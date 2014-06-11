@@ -30,6 +30,8 @@ evolution.core=(function(){
         game.load.image('rock3', 'assets/sprites/rock3.png');
         game.load.image('pattern_ice', 'assets/patterns/pattern_ice.png');
         game.load.image('ice_bg', 'assets/sprites/ice_bg.png');
+        game.load.image('heat_bg', 'assets/sprites/heat_bg.png');
+        game.load.image('poison_bg', 'assets/sprites/poison_bg.png');
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('filterX', 'js/filters/BlurX.js');
@@ -37,12 +39,12 @@ evolution.core=(function(){
         game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 
-        game.load.atlasJSONHash('area_ice', 'assets/sprites/area_ice.png', 'assets/spriteAtlas/area_ice.json');
         game.load.atlasJSONHash('ice_particles', 'assets/sprites/ice_particles.png', 'assets/spriteAtlas/ice_particles.json');
         game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/spriteAtlas/enemy1.json');
         game.load.atlasJSONHash('blob', 'assets/sprites/blob_sprites.png', 'assets/spriteAtlas/blob.json' );
         game.load.atlasJSONHash('creature_face', 'assets/sprites/creature_face_sprites.png', 'assets/spriteAtlas/creature_face.json' );
         game.load.atlasJSONHash('creature_healthbar', 'assets/sprites/creature_healthbar.png', 'assets/spriteAtlas/creature_healthbar.json' );
+        game.load.atlasJSONHash('blob_smoke', 'assets/sprites/blob_smoke.png', 'assets/spriteAtlas/blob_smoke.json' );
         game.load.atlasJSONHash('traits', 'assets/sprites/traits_sprites.png', 'assets/spriteAtlas/traits.json' );
         game.load.atlasJSONHash('food', 'assets/sprites/plankton_sprites.png', 'assets/spriteAtlas/plankton.json' );
         game.load.atlasJSONHash('plankton_eyes', 'assets/sprites/plankton_eyes.png', 'assets/spriteAtlas/plankton_eyes.json' );
@@ -54,6 +56,9 @@ evolution.core=(function(){
         game.load.audio('ice-breaking', 'assets/sound/ice_break.mp3');
         game.load.audio('enemy-spike', 'assets/sound/enemy_spike.mp3');
         game.load.audio('spike-stab', 'assets/sound/spike_stab.mp3');
+        game.load.audio('fire-woosh', 'assets/sound/fire_woosh.mp3');
+        game.load.audio('water-sizzle', 'assets/sound/water_sizzle.mp3');
+        game.load.audio('poison', 'assets/sound/poison.mp3');
 
 
 

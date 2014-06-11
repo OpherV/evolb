@@ -344,7 +344,7 @@ evolution.Character.prototype.physicalDamage= function(amount,showDamage) {
     //reduce defense stats from damage
     var inflictedDamage=Math.max(0,amount-this.modifiedStats.defense);
     if (inflictedDamage>0){
-        this.damage(inflictedDamage);
+        this.damage(inflictedDamage,showDamage);
         if (showDamage){
             //this.flashTint(0XFF5460);
         }

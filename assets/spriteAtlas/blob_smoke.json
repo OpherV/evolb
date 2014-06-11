@@ -1,0 +1,100 @@
+{"frames": {
+
+"smoke01.png":
+{
+	"frame": {"x":2,"y":2,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke02.png":
+{
+	"frame": {"x":2,"y":94,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke03.png":
+{
+	"frame": {"x":2,"y":186,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke04.png":
+{
+	"frame": {"x":2,"y":278,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke05.png":
+{
+	"frame": {"x":2,"y":370,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke06.png":
+{
+	"frame": {"x":2,"y":462,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke07.png":
+{
+	"frame": {"x":2,"y":554,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke08.png":
+{
+	"frame": {"x":2,"y":646,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke09.png":
+{
+	"frame": {"x":2,"y":738,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke10.png":
+{
+	"frame": {"x":2,"y":830,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+},
+"smoke11.png":
+{
+	"frame": {"x":2,"y":922,"w":50,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":90},
+	"sourceSize": {"w":50,"h":90}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "blob_smoke.png",
+	"format": "RGBA8888",
+	"size": {"w":54,"h":1014},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:198baa0182e27595ee2ebf7cddd2641a:ae98e6bf0bffab7e0d5d9a39fbe8a15b:c52d16105a723ed48888ccde7619df2b$"
+}
+}

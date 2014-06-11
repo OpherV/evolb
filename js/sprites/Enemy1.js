@@ -36,10 +36,12 @@ evolution.Enemy1.prototype.constructor = evolution.Enemy1;
 // *******************
 evolution.Enemy1.prototype.attackCycle=function(){
     evolution.Character.prototype.attackCycle.call(this);
-    this.animations.play("attack",18,false);
-    if (this.inCamera){
-        var spikefx= this.game.add.audio('enemy-spike');
-        spikefx.play('',0,0.5);
+
+    if (this.currentTarget && this.currentTarget.health>0){
+        this.animations.play("attack",18,false);
+        if (this.inCamera){
+            this.game.sound.play("enemy-spike");
+        }
     }
 
 };
@@ -48,8 +50,7 @@ evolution.Enemy1.prototype.attackHandler={
     "creature": function(body){
         body.sprite.stopBreeding();
         body.sprite.physicalDamage(this.modifiedStats.damageOutput,true);
-        var stabfx= this.game.add.audio('spike-stab');
-        stabfx.play('',0,0.5);
+        this.game.sound.play("spike-stab",0.5);
     }
 };
 

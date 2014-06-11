@@ -250,7 +250,15 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
             layer: "enemies"
         },
         {
-            constructorName: "Area",
+            constructorName: "IceArea",
+            layer: "areas"
+        },
+        {
+            constructorName: "HeatArea",
+            layer: "areas"
+        },
+        {
+            constructorName: "PoisonArea",
             layer: "areas"
         }
     ];

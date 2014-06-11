@@ -53,11 +53,15 @@ evolution.Creature= function (level,objectData) {
     this.bodySprite1.animations.add("yellow",[0]);
     this.bodySprite1.animations.add("pink",[1]);
     this.bodySprite1.animations.add("freezing",[2]);
+    this.bodySprite1.animations.add("hot",[3]);
+    this.bodySprite1.animations.add("poisoned",[4]);
     this.bodySprite1.animations.play("yellow");
 
     this.bodySprite2.animations.add("yellow",[0]);
     this.bodySprite2.animations.add("pink",[1]);
     this.bodySprite2.animations.add("freezing",[2]);
+    this.bodySprite2.animations.add("hot",[3]);
+    this.bodySprite2.animations.add("poisoned",[4]);
     this.bodySprite2.animations.play("yellow");
 
     //health bar
@@ -74,10 +78,10 @@ evolution.Creature= function (level,objectData) {
     this.addChild(this.face);
 
     this.face.animations.add("normal",[0]);
+    this.face.animations.add("blink",[1]);
     this.face.animations.add("horny",[2]);
     this.face.animations.add("sex",[3]);
     this.face.animations.add("pain",[4]);
-    this.face.animations.add("blink",[1,0]);
     this.face.animations.play("normal");
 
 
@@ -142,6 +146,30 @@ evolution.Creature.prototype.spawn=function(father,mother){
 // *******************
 
 evolution.Creature.prototype.contactHandler={
+    "IceArea": function(body){
+        this.showBody("freezing");
+        this.game.sound.play("ice-cracking");
+    },
+    "HeatArea": function(body){
+        this.showBody("hot",400);
+        this.face.animations.play("pain");
+        this.game.sound.play("fire-woosh");
+
+        if (!this.blobSmoke){
+            this.blobSmoke=new Phaser.Sprite(this.game,10,-90,'blob_smoke');
+            this.addChild(this.blobSmoke);
+            this.blobSmoke.animations.add("smoke",[0,1,2,3,4,5,6,7,8,9,10]);
+            this.blobSmoke.animations.play("smoke",16,true);
+            //this.blobSmoke.alpha=0;
+        }
+
+        this.game.add.tween(this.blobSmoke).to({ alpha: 1}, 500, Phaser.Easing.Linear.Out).start();
+    },
+    "PoisonArea": function(body){
+        this.face.animations.play("pain");
+        this.showBody("poisoned");
+        this.game.sound.play("poison");
+    },
     "food": function(body){
         this.heal(body.sprite.healAmount);
         var foodDeath = new Phaser.Sprite(this.game,this.x,this.y-130,'plankton_death');
@@ -152,11 +180,6 @@ evolution.Creature.prototype.contactHandler={
 
 
         body.sprite.destroy();
-    },
-    "area": function(body){
-        this.showBody("freezing");
-        var icefx = this.game.add.audio('ice-cracking');
-        icefx.play();
     },
     "mutation": function(body){
         this.modifiedStats.mutationChance=1;
@@ -182,13 +205,22 @@ evolution.Creature.prototype.contactHandler={
 };
 
 evolution.Creature.prototype.endContactHandler={
-    "area": function(body){
+    "IceArea": function(body){
         this.showBody("yellow",400);
-        var icefx = this.game.add.audio('ice-breaking');
-        icefx.play();
+        this.game.sound.play("ice-breaking");
         this.emitter.x = this.x;
         this.emitter.y = this.y;
         this.emitter.start(true, 3000, null, 10);
+    },
+    "HeatArea": function(body){
+        this.showBody("yellow");
+        this.face.animations.play("normal");
+        this.game.sound.play("water-sizzle");
+        this.game.add.tween(this.blobSmoke).to({ alpha: 0}, 500, Phaser.Easing.Linear.Out).start();
+    },
+    "PoisonArea": function(body){
+        this.showBody("yellow");
+        this.face.animations.play("normal");
     }
 };
 
@@ -211,8 +243,11 @@ evolution.Creature.prototype.postKill = function(){
 };
 
 evolution.Creature.prototype.blink=function(){
-    if (this.state==evolution.Character.states.IDLE || this.state==evolution.Character.states.DRIFTING){
-        this.face.animations.play("blink",8);
+    if (this.face.animations.currentAnim.name!="blink" && this.state==evolution.Character.states.IDLE || this.state==evolution.Character.states.DRIFTING){
+        var oldFaceFrame=this.face.animations.frame;
+        this.face.animations.play("blink",8).onComplete.addOnce(function(){
+            this.face.animations.frame=oldFaceFrame;
+        },this);
     }
 };
 
@@ -233,7 +268,6 @@ evolution.Creature.prototype.damage=function(amount,showDamage){
 
     if (showDamage){
         this.face.animations.play("pain",2).onComplete.addOnce(function(){
-            console.log(oldFaceFrame);
             this.face.animations.frame=oldFaceFrame;
         },this);
     }

@@ -7,7 +7,12 @@ evolution.Area= function (level,objectData) {
     this.game=level.game;
     this.kind="area";
 
+
+
     this.cloudSpeed=0.1;
+    this.cloudKey='ice_bg';
+    this.cloudNumber=60;
+
     var defaultPointArray=[ [0,0], [100,-50], [200,0], [250,100], [200,200], [100,250], [0,200], [-50,100]  ];
     this.pointArray=this.objectData.pointArray?JSON.parse(this.objectData.pointArray):defaultPointArray;
 
@@ -24,8 +29,6 @@ evolution.Area= function (level,objectData) {
     this.clouds.alpha=1;
     this.addChild(this.clouds);
     this.addChild(this.graphics);
-
-    this.redraw();
 };
 
 evolution.Area.prototype = Object.create(Phaser.Sprite.prototype);
@@ -114,8 +117,8 @@ evolution.Area.prototype.redraw = function(){
     var maxY= this.pointArray.reduce(function(max, obj) { return obj[1] > max ? obj[1] : max; }, 0);
 
 
-    for (var x=0;x<60;x++){
-        var cloud = new Phaser.Sprite(this.game,-5000,-5000,'ice_bg');
+    for (var x=0;x<this.cloudNumber;x++){
+        var cloud = new Phaser.Sprite(this.game,-5000,-5000,this.cloudKey);
         cloud.anchor.setTo(0.5);
         cloud.scale.setTo(0.8,0.8);
         //make sure cloud is placed in polygon area
