@@ -1,6 +1,6 @@
 {"frames": {
 
-"blink.png":
+"1. normal.png":
 {
 	"frame": {"x":2,"y":2,"w":174,"h":129},
 	"rotated": false,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
 	"sourceSize": {"w":174,"h":129}
 },
-"blobs-32.png":
+"2. blink.png":
 {
 	"frame": {"x":178,"y":2,"w":174,"h":129},
 	"rotated": false,
@@ -16,7 +16,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
 	"sourceSize": {"w":174,"h":129}
 },
-"horny_no_yellow.png":
+"3. horny_no_yellow.png":
 {
 	"frame": {"x":354,"y":2,"w":174,"h":129},
 	"rotated": false,
@@ -24,21 +24,29 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
 	"sourceSize": {"w":174,"h":129}
 },
-"sex_no_yellow.png":
+"4. sex_no_yellow.png":
 {
 	"frame": {"x":530,"y":2,"w":174,"h":129},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":129},
 	"sourceSize": {"w":174,"h":129}
+},
+"5. pain.png":
+{
+	"frame": {"x":706,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker ",
 	"version": "1.0",
 	"image": "creature_face_sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":706,"h":133},
+	"size": {"w":882,"h":134},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:3ae3fea9bf5eaed39338ab867f3eaebc:6573d17f0932fccda17897b00c28aeda:327db42061f9b4a7bcbc4020f81e5f26$"
+	"smartupdate": "$TexturePacker:SmartUpdate:dc8e2845e98e8b384f8a1b42d4095f7b:6a78a9979e94d0a06a245faa55a8867f:327db42061f9b4a7bcbc4020f81e5f26$"
 }
 }

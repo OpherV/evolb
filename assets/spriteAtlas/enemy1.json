@@ -1,0 +1,36 @@
+{"frames": {
+
+"badguys1.png":
+{
+	"frame": {"x":2,"y":2,"w":115,"h":105},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":115,"h":105},
+	"sourceSize": {"w":115,"h":105}
+},
+"badguys2.png":
+{
+	"frame": {"x":119,"y":2,"w":115,"h":105},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":115,"h":105},
+	"sourceSize": {"w":115,"h":105}
+},
+"badguys3.png":
+{
+	"frame": {"x":236,"y":2,"w":115,"h":105},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":115,"h":105},
+	"sourceSize": {"w":115,"h":105}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "enemy1_sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":353,"h":109},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:9aed71ce6a4a17c8fd5b345c32dba2c2:07d00635e5ca1f410733f6798a63438a:5514f3ccf5f860ead8803d355cf98d17$"
+}
+}

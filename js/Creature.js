@@ -73,10 +73,11 @@ evolution.Creature= function (level,objectData) {
     this.face.y=-this.face.height/2;
     this.addChild(this.face);
 
-    this.face.animations.add("normal",[1]);
+    this.face.animations.add("normal",[0]);
     this.face.animations.add("horny",[2]);
     this.face.animations.add("sex",[3]);
-    this.face.animations.add("blink",[0,1]);
+    this.face.animations.add("pain",[4]);
+    this.face.animations.add("blink",[1,0]);
     this.face.animations.play("normal");
 
 
@@ -193,7 +194,7 @@ evolution.Creature.prototype.endContactHandler={
 
 evolution.Creature.prototype.doHungerEvent=function(){
     if (this.hasHunger){
-    this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"));
+        this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"),false);
     }
 };
 
@@ -225,6 +226,18 @@ evolution.Creature.prototype.flashTint=function(color,duration){
     this.game.time.events.add(duration,function(){ this.healthbar.tint=0XFFFFFF},this);
 };
 
+
+evolution.Creature.prototype.damage=function(amount,showDamage){
+    var oldFaceFrame=this.face.animations.frame;
+    evolution.Character.prototype.damage.call(this,amount,showDamage);
+
+    if (showDamage){
+        this.face.animations.play("pain",2).onComplete.addOnce(function(){
+            console.log(oldFaceFrame);
+            this.face.animations.frame=oldFaceFrame;
+        },this);
+    }
+};
 
 evolution.Creature.prototype.showBody=function(bodyName,transitionSpeed){
     var oldBody=this.bodySprite;

@@ -128,7 +128,10 @@ evolution.Character.prototype.init=function(){
     this.level.layers.gui.add(this.gui);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
-    //this.timeEvents.hitTest=this.game.time.events.loop(this.modifiedStats.attackSpeed, this.hitCycle, this);
+    //only initialize for characters that can attack
+    if (this.modifiedStats.damageOutput>0){
+        this.timeEvents.attack=this.game.time.events.loop(this.modifiedStats.attackSpeed, this.attackCycle, this);
+    }
 };
 
 evolution.Character.prototype.flashTint=function(color,duration){
@@ -143,15 +146,18 @@ evolution.Character.prototype.contactHandler={};
 //inheriting classes will override this to implement end contact event handlers
 evolution.Character.prototype.endContactHandler={};
 
+//inheriting classes will override this to implement attack event handlers
+evolution.Character.prototype.attackHandler={};
+
 //test against all touching bodies
-evolution.Character.prototype.hitCycle=function(){
+evolution.Character.prototype.attackCycle=function(){
     var body;
     for (var id in this.inContactWith){
         body=this.inContactWith[id];
         //call the proper contact handler function
-        if (body.sprite && Object.getPrototypeOf(this).contactHandler[body.sprite.kind]){
-            Object.getPrototypeOf(this).contactHandler[body.sprite.kind].call(this,body);
-        }
+        if (body.sprite && Object.getPrototypeOf(this).attackHandler[body.sprite.kind]){
+            Object.getPrototypeOf(this).attackHandler[body.sprite.kind].call(this,body);
+       }
     }
 };
 
@@ -338,9 +344,9 @@ evolution.Character.prototype.physicalDamage= function(amount,showDamage) {
     //reduce defense stats from damage
     var inflictedDamage=Math.max(0,amount-this.modifiedStats.defense);
     if (inflictedDamage>0){
-        Phaser.Sprite.prototype.damage.call(this,inflictedDamage);
+        this.damage(inflictedDamage);
         if (showDamage){
-            this.flashTint(0XFF5460);
+            //this.flashTint(0XFF5460);
         }
         this.healthbar.redraw();
     }

@@ -38,7 +38,7 @@ evolution.core=(function(){
 
         game.load.atlasJSONHash('area_ice', 'assets/sprites/area_ice.png', 'assets/spriteAtlas/area_ice.json');
         game.load.atlasJSONHash('ice_particles', 'assets/sprites/ice_particles.png', 'assets/spriteAtlas/ice_particles.json');
-        game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/enemy1.json');
+        game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/spriteAtlas/enemy1.json');
         game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
         game.load.atlasJSONHash('blob', 'assets/sprites/blob_sprites.png', 'assets/spriteAtlas/blob.json' );
         game.load.atlasJSONHash('creature_face', 'assets/sprites/creature_face_sprites.png', 'assets/spriteAtlas/creature_face.json' );
@@ -52,6 +52,8 @@ evolution.core=(function(){
 
         game.load.audio('ice-cracking', 'assets/sound/ice-cracking-01.mp3');
         game.load.audio('ice-breaking', 'assets/sound/ice_break.mp3');
+        game.load.audio('enemy-spike', 'assets/sound/enemy_spike.mp3');
+        game.load.audio('spike-stab', 'assets/sound/spike_stab.mp3');
 
 
 
