@@ -4,7 +4,7 @@ evolution.IceArea= function (level,objectData) {
 
     this.kind="IceArea";
     this.cloudKey="ice_bg";
-
+    this.cloudDensity=40;
 
     this.redraw();
 };

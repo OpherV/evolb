@@ -11,7 +11,7 @@ evolution.Area= function (level,objectData) {
 
     this.cloudSpeed=0.1;
     this.cloudKey='ice_bg';
-    this.cloudNumber=60;
+    this.cloudDensity=40; // How many clouds per area of 1000
 
     var defaultPointArray=[ [0,0], [100,-50], [200,0], [250,100], [200,200], [100,250], [0,200], [-50,100]  ];
     this.pointArray=this.objectData.pointArray?JSON.parse(this.objectData.pointArray):defaultPointArray;
@@ -116,8 +116,9 @@ evolution.Area.prototype.redraw = function(){
     var maxX= this.pointArray.reduce(function(max, obj) { return obj[0] > max ? obj[0] : max; }, 0);
     var maxY= this.pointArray.reduce(function(max, obj) { return obj[1] > max ? obj[1] : max; }, 0);
 
+    var cloudNumber=Math.round(this.body.data.shapes[0].area/1000*this.cloudDensity);
 
-    for (var x=0;x<this.cloudNumber;x++){
+    for (var x=0;x<cloudNumber;x++){
         var cloud = new Phaser.Sprite(this.game,-5000,-5000,this.cloudKey);
         cloud.anchor.setTo(0.5);
         cloud.scale.setTo(0.8,0.8);
