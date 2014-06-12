@@ -32,6 +32,7 @@ evolution.core=(function(){
         game.load.image('ice_bg', 'assets/sprites/ice_bg.png');
         game.load.image('heat_bg', 'assets/sprites/heat_bg.png');
         game.load.image('poison_bg', 'assets/sprites/poison_bg.png');
+        game.load.image('bubble', 'assets/sprites/bubble.png');
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('filterX', 'js/filters/BlurX.js');
@@ -62,7 +63,7 @@ evolution.core=(function(){
 
 
 
-        _preloadLevel('tutorial', 'levels/tutorial.js');
+        _preloadLevel('tutorial', 'levels/empty.js');
 
 
 
