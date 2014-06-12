@@ -66,9 +66,9 @@ evolution.Creature= function (level,objectData) {
 
     //health bar
     this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
+    this.healthbar.blendMode = PIXI.blendModes.ADD;
     this.healthbar.x = -this.healthbar.width/2;
-    this.healthbar.y = -this.healthbar.height/2+1;
-    this.healthbar.blendMode=PIXI.blendModes.MULTIPLY;
+    this.healthbar.y = -this.healthbar.height/2-3;
     this.addChild(this.healthbar);
 
 
@@ -252,18 +252,14 @@ evolution.Creature.prototype.init = function(){
 
 evolution.Creature.prototype.postKill = function(){
     evolution.Character.prototype.postKill.call(this);
+    this.bubbleEmitter.destroy();
 };
 
 evolution.Creature.prototype.update = function(){
     evolution.Character.prototype.update.call(this);
 
-
-    var px = this.body.velocity.x*-1;
-    var py = this.body.velocity.y*-1;
-    if (Math.abs(px)>1 || Math.abs(py)>1){
-        this.bubbleEmitter.emitX=this.x;
-        this.bubbleEmitter.emitY=this.y;
-    }
+    this.bubbleEmitter.emitX=this.x;
+    this.bubbleEmitter.emitY=this.y;
 };
 
 evolution.Creature.prototype.blink=function(){
