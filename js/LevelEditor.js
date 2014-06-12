@@ -155,12 +155,13 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
                 levelObject.visible=false;
             }
             this.markSelected(levelObject,0xFFFFFF);
+
+            //mark areas
+            if (levelObject.clouds){
+                levelObject.graphics.alpha=0;
+            }
         }
 
-        //mark areas
-        if (levelObject.clouds){
-            levelObject.graphics.alpha=0;
-        }
 
         this.destroyElementUI();
 
