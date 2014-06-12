@@ -98,15 +98,27 @@ evolution.Creature= function (level,objectData) {
     this.body.setMaterial(evolution.Materials.getCreatureMaterial());
 
 
-    this.emitter = this.game.add.emitter(0, 0, 30);
+    //emitters
 
+    this.iceEmitter = this.game.add.emitter(0, 0, 30);
+    this.iceEmitter.makeParticles('ice_particles',[0,1]);
+    this.iceEmitter.setScale(1, 1, 1, 1, 0, Phaser.Easing.Sinusoidal.InOut, true);
+    this.iceEmitter.setAlpha(1, 0, 3000);
+    this.iceEmitter.setXSpeed(-300,300);
+    this.iceEmitter.setYSpeed(-300,300);
+    this.iceEmitter.gravity = 0;
 
-    this.emitter.makeParticles('ice_particles',[0,1]);
-    this.emitter.setScale(1, 1, 1, 1, 0, Phaser.Easing.Sinusoidal.InOut, true);
-    this.emitter.setAlpha(1, 0, 3000);
-    this.emitter.setXSpeed(-300,300);
-    this.emitter.setYSpeed(-300,300);
-    this.emitter.gravity = 0;
+    this.bubbleEmitter = this.game.add.emitter(0, 0, 200);
+    this.level.layers.areas.addChild(this.bubbleEmitter);
+    this.bubbleEmitter.makeParticles('bubble');
+    this.bubbleEmitter.setAlpha(1,0,5000);
+    this.bubbleEmitter.setRotation(0,0);
+    var bubbleScale= 0.1+this.dna.baseTraits.sizeSpeed.value*0.1;
+    this.bubbleEmitter.setScale(bubbleScale, bubbleScale+0.01,bubbleScale,bubbleScale+0.01,1000);
+    this.bubbleEmitter.setXSpeed(0,30);
+    this.bubbleEmitter.setYSpeed(0,30);
+    this.bubbleEmitter.gravity = 0;
+    this.bubbleEmitter.start(false, 5000, 100);
 
     //methods
 
@@ -208,9 +220,9 @@ evolution.Creature.prototype.endContactHandler={
     "IceArea": function(body){
         this.showBody("yellow",400);
         this.game.sound.play("ice-breaking");
-        this.emitter.x = this.x;
-        this.emitter.y = this.y;
-        this.emitter.start(true, 3000, null, 10);
+        this.iceEmitter.x = this.x;
+        this.iceEmitter.y = this.y;
+        this.iceEmitter.start(true, 3000, null, 10);
     },
     "HeatArea": function(body){
         this.showBody("yellow");
@@ -240,6 +252,18 @@ evolution.Creature.prototype.init = function(){
 
 evolution.Creature.prototype.postKill = function(){
     evolution.Character.prototype.postKill.call(this);
+};
+
+evolution.Creature.prototype.update = function(){
+    evolution.Character.prototype.update.call(this);
+
+
+    var px = this.body.velocity.x*-1;
+    var py = this.body.velocity.y*-1;
+    if (Math.abs(px)>1 || Math.abs(py)>1){
+        this.bubbleEmitter.emitX=this.x;
+        this.bubbleEmitter.emitY=this.y;
+    }
 };
 
 evolution.Creature.prototype.blink=function(){
