@@ -1,12 +1,12 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Mutation= function (level,objectData) {
-    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Mutation= function (level,objectData) {
+    this.objectData=Evolb.Utils.extend.call(Evolb.Level.getDefaultParams(objectData),objectData);
     this.id=this.objectData.id;
     this.level=level;
     this.game=level.game;
 
     Phaser.Sprite.call(this,this.game, this.objectData.x, this.objectData.y);
-    this.type=evolution.Character.types.POWERUP;
+    this.type=Evolb.Character.types.POWERUP;
     this.kind="mutation";
 
 
@@ -31,5 +31,5 @@ evolution.Mutation= function (level,objectData) {
 
 };
 
-evolution.Mutation.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Mutation.prototype.constructor = evolution.Mutation;
+Evolb.Mutation.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.Mutation.prototype.constructor = Evolb.Mutation;

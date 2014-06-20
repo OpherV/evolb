@@ -1,13 +1,13 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Enemy1= function (level,objectData) {
-    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Enemy1= function (level,objectData) {
+    this.objectData=Evolb.Utils.extend.call(Evolb.Level.getDefaultParams(objectData),objectData);
     this.id=this.objectData.id;
     this.level=level;
     this.game=level.game;
 
     //construct chracter
-    evolution.Character.call(this, level, objectData.id,  objectData.x, objectData.y, 'enemy1');
-    this.type=evolution.Character.types.ENEMY;
+    Evolb.Character.call(this, level, objectData.id,  objectData.x, objectData.y, 'enemy1');
+    this.type=Evolb.Character.types.ENEMY;
     this.kind="enemy1";
 
 
@@ -28,14 +28,14 @@ evolution.Enemy1= function (level,objectData) {
 
 };
 
-evolution.Enemy1.prototype = Object.create(evolution.Character.prototype);
-evolution.Enemy1.prototype.constructor = evolution.Enemy1;
+Evolb.Enemy1.prototype = Object.create(Evolb.Character.prototype);
+Evolb.Enemy1.prototype.constructor = Evolb.Enemy1;
 
 
 // override functions
 // *******************
-evolution.Enemy1.prototype.attackCycle=function(){
-    evolution.Character.prototype.attackCycle.call(this);
+Evolb.Enemy1.prototype.attackCycle=function(){
+    Evolb.Character.prototype.attackCycle.call(this);
 
     if (this.currentTarget && this.currentTarget.health>0){
         this.animations.play("attack",18,false);
@@ -46,7 +46,7 @@ evolution.Enemy1.prototype.attackCycle=function(){
 
 };
 
-evolution.Enemy1.prototype.attackHandler={
+Evolb.Enemy1.prototype.attackHandler={
     "creature": function(body){
         body.sprite.stopBreeding();
         body.sprite.physicalDamage(this.modifiedStats.damageOutput,true);
@@ -56,11 +56,11 @@ evolution.Enemy1.prototype.attackHandler={
 
 
 
-evolution.Enemy1.prototype.init = function(){
-    evolution.Character.prototype.init.call(this);
+Evolb.Enemy1.prototype.init = function(){
+    Evolb.Character.prototype.init.call(this);
     this.setHunting();
 
-    this.healthbar = new evolution.gui.Healthbar(this.game,this);
+    this.healthbar = new Evolb.gui.Healthbar(this.game,this);
     this.healthbar.x=-this.width/2;
     this.healthbar.y=-this.height/2-9;
     this.gui.addChild(this.healthbar);

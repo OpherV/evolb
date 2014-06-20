@@ -1,6 +1,6 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Creature= function (level,objectData) {
-    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Creature= function (level,objectData) {
+    this.objectData=Evolb.Utils.extend.call(Evolb.Level.getDefaultParams(objectData),objectData);
 
     if (this.objectData.dna){
         //use given DNA
@@ -8,7 +8,7 @@ evolution.Creature= function (level,objectData) {
     }
     else{
         //create a new DNA
-        this.dna=new evolution.Dna();
+        this.dna=new Evolb.Dna();
         this.dna.randomizeBaseTraits();
 
         //set dna from level object
@@ -28,8 +28,8 @@ evolution.Creature= function (level,objectData) {
 
 
     //construct chracter
-    evolution.Character.call(this, level, this.objectData.id, this.objectData.x, this.objectData.y);
-    this.type=evolution.Character.types.PLAYER;
+    Evolb.Character.call(this, level, this.objectData.id, this.objectData.x, this.objectData.y);
+    this.type=Evolb.Character.types.PLAYER;
     this.kind="creature";
 
     this.exists=this.objectData.exists;
@@ -65,7 +65,7 @@ evolution.Creature= function (level,objectData) {
     this.bodySprite2.animations.play("yellow");
 
     //health bar
-    this.healthbar = new evolution.gui.CreatureHealthbar(this.game,this);
+    this.healthbar = new Evolb.gui.CreatureHealthbar(this.game,this);
     this.healthbar.blendMode = PIXI.blendModes.ADD;
     this.healthbar.x = -this.healthbar.width/2;
     this.healthbar.y = -this.healthbar.height/2-3;
@@ -95,7 +95,7 @@ evolution.Creature= function (level,objectData) {
     this.stats.maxSpeed=this.stats.moveSpeed;
 
     //has to be after setCircle otherwise the material is lost
-    this.body.setMaterial(evolution.Materials.getCreatureMaterial());
+    this.body.setMaterial(Evolb.Materials.getCreatureMaterial());
 
 
     //emitters
@@ -125,27 +125,27 @@ evolution.Creature= function (level,objectData) {
     this.init();
 
     //these override init
-    this.hasHunger=evolution.Utils.isUndefined(this.objectData.hasHunger)?this.hasHunger:this.objectData.hasHunger;
-    this.canBreed=evolution.Utils.isUndefined(this.objectData.canBreed)?this.canBreed:this.objectData.canBreed;
-    this.canBob=evolution.Utils.isUndefined(this.objectData.canBob)?this.canBob:this.objectData.canBob;
-    this.canBeControlled=evolution.Utils.isUndefined(this.objectData.canBeControlled)?this.canBeControlled:this.objectData.canBeControlled;
+    this.hasHunger=Evolb.Utils.isUndefined(this.objectData.hasHunger)?this.hasHunger:this.objectData.hasHunger;
+    this.canBreed=Evolb.Utils.isUndefined(this.objectData.canBreed)?this.canBreed:this.objectData.canBreed;
+    this.canBob=Evolb.Utils.isUndefined(this.objectData.canBob)?this.canBob:this.objectData.canBob;
+    this.canBeControlled=Evolb.Utils.isUndefined(this.objectData.canBeControlled)?this.canBeControlled:this.objectData.canBeControlled;
 };
 
-evolution.Creature.prototype = Object.create(evolution.Character.prototype);
-evolution.Creature.prototype.constructor = evolution.Creature;
+Evolb.Creature.prototype = Object.create(Evolb.Character.prototype);
+Evolb.Creature.prototype.constructor = Evolb.Creature;
 
 // behaviours
 // ***************
 
-evolution.Creature.prototype.spawn=function(father,mother){
+Evolb.Creature.prototype.spawn=function(father,mother){
     var mutationChance=Math.max(father.modifiedStats.mutationChance,mother.modifiedStats.mutationChance);
-    var spawnDna = evolution.Dna.combine(this.dna,this.currentBreedingWith.dna,mutationChance);
+    var spawnDna = Evolb.Dna.combine(this.dna,this.currentBreedingWith.dna,mutationChance);
     var params={
         x: this.x,
         y: this.y,
         dna: spawnDna
     };
-    var newCreature = new evolution.Creature(this.level,params);
+    var newCreature = new Evolb.Creature(this.level,params);
     this.level.layers.creatures.add(newCreature);
     newCreature.isFollowingPointer=this.isFollowingPointer;
     newCreature.init();
@@ -157,7 +157,7 @@ evolution.Creature.prototype.spawn=function(father,mother){
 // override functions
 // *******************
 
-evolution.Creature.prototype.contactHandler={
+Evolb.Creature.prototype.contactHandler={
     "IceArea": function(body){
         this.showBody("freezing");
         this.game.sound.play("ice-cracking");
@@ -204,7 +204,7 @@ evolution.Creature.prototype.contactHandler={
                 var inflictedDamage=body.sprite.physicalDamage(40,true);
                 this.heal(inflictedDamage-1);
         }
-        else if (this.state==evolution.Character.states.WANTS_TO_BREED && body.sprite.state!=evolution.Character.states.BREEDING){
+        else if (this.state==Evolb.Character.states.WANTS_TO_BREED && body.sprite.state!=Evolb.Character.states.BREEDING){
             this.startBreedingWith(body.sprite);
         }
     },
@@ -216,7 +216,7 @@ evolution.Creature.prototype.contactHandler={
     }
 };
 
-evolution.Creature.prototype.endContactHandler={
+Evolb.Creature.prototype.endContactHandler={
     "IceArea": function(body){
         this.showBody("yellow",400);
         this.game.sound.play("ice-breaking");
@@ -236,34 +236,34 @@ evolution.Creature.prototype.endContactHandler={
     }
 };
 
-evolution.Creature.prototype.doHungerEvent=function(){
+Evolb.Creature.prototype.doHungerEvent=function(){
     if (this.hasHunger){
         this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"),false);
     }
 };
 
-evolution.Creature.prototype.init = function(){
-    evolution.Character.prototype.init.call(this);
+Evolb.Creature.prototype.init = function(){
+    Evolb.Character.prototype.init.call(this);
     this.dna.activate();
     this.healthbar.redraw();
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);
 };
 
 
-evolution.Creature.prototype.postKill = function(){
-    evolution.Character.prototype.postKill.call(this);
+Evolb.Creature.prototype.postKill = function(){
+    Evolb.Character.prototype.postKill.call(this);
     this.bubbleEmitter.destroy();
 };
 
-evolution.Creature.prototype.update = function(){
-    evolution.Character.prototype.update.call(this);
+Evolb.Creature.prototype.update = function(){
+    Evolb.Character.prototype.update.call(this);
 
     this.bubbleEmitter.emitX=this.x;
     this.bubbleEmitter.emitY=this.y;
 };
 
-evolution.Creature.prototype.blink=function(){
-    if (this.face.animations.currentAnim.name!="blink" && this.state==evolution.Character.states.IDLE || this.state==evolution.Character.states.DRIFTING){
+Evolb.Creature.prototype.blink=function(){
+    if (this.face.animations.currentAnim.name!="blink" && this.state==Evolb.Character.states.IDLE || this.state==Evolb.Character.states.DRIFTING){
         var oldFaceFrame=this.face.animations.frame;
         this.face.animations.play("blink",8).onComplete.addOnce(function(){
             this.face.animations.frame=oldFaceFrame;
@@ -271,20 +271,20 @@ evolution.Creature.prototype.blink=function(){
     }
 };
 
-evolution.Creature.prototype.markSelected=function(color){
+Evolb.Creature.prototype.markSelected=function(color){
     this.bodySprite.tint=color;
 };
 
-evolution.Creature.prototype.flashTint=function(color,duration){
+Evolb.Creature.prototype.flashTint=function(color,duration){
     if (!duration){ var duration=100;}
     this.healthbar.tint=color;
     this.game.time.events.add(duration,function(){ this.healthbar.tint=0XFFFFFF},this);
 };
 
 
-evolution.Creature.prototype.damage=function(amount,showDamage){
+Evolb.Creature.prototype.damage=function(amount,showDamage){
     var oldFaceFrame=this.face.animations.frame;
-    evolution.Character.prototype.damage.call(this,amount,showDamage);
+    Evolb.Character.prototype.damage.call(this,amount,showDamage);
 
     if (showDamage){
         this.face.animations.play("pain",2).onComplete.addOnce(function(){
@@ -293,7 +293,7 @@ evolution.Creature.prototype.damage=function(amount,showDamage){
     }
 };
 
-evolution.Creature.prototype.showBody=function(bodyName,transitionSpeed){
+Evolb.Creature.prototype.showBody=function(bodyName,transitionSpeed){
     var oldBody=this.bodySprite;
     var newBody=this.bodySprite==this.bodySprite1?this.bodySprite2:this.bodySprite1;
     this.bodySprite=newBody;

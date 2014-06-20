@@ -1,7 +1,7 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Traits=(evolution.Traits?evolution.Traits:{});
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Traits=(Evolb.Traits?Evolb.Traits:{});
 
-evolution.Traits.Armor={
+Evolb.Traits.Armor={
     name: "armor",
     lowName: "Unarmored",
     highName: "Armored",

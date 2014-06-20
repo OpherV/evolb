@@ -1,19 +1,19 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Dna=function(){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Dna=function(){
     this.willMutate=false;
     this.character=null;
 
     this.baseTraits={
-        sizeSpeed: new evolution.TraitInstance(evolution.TraitInstance.baseTraits.sizeSpeed),
-        mutationChance: new evolution.TraitInstance(evolution.TraitInstance.baseTraits.mutationChance)
+        sizeSpeed: new Evolb.TraitInstance(Evolb.TraitInstance.baseTraits.sizeSpeed),
+        mutationChance: new Evolb.TraitInstance(Evolb.TraitInstance.baseTraits.mutationChance)
     };
 
     this.traits={};
 };
 
-evolution.Dna.prototype.constructor=evolution.Dna;
+Evolb.Dna.prototype.constructor=Evolb.Dna;
 
-evolution.Dna.prototype.randomizeBaseTraits=function(){
+Evolb.Dna.prototype.randomizeBaseTraits=function(){
     for (var traitName in this.baseTraits){
         if (this.baseTraits[traitName].parentTrait.defaultValue){
             this.baseTraits[traitName].value=this.baseTraits[traitName].parentTrait.defaultValue;
@@ -27,7 +27,7 @@ evolution.Dna.prototype.randomizeBaseTraits=function(){
 
 
 //activates the set of traits on a character
-evolution.Dna.prototype.activate=function(){
+Evolb.Dna.prototype.activate=function(){
     for (traitName in this.baseTraits){
         activateTrait.call(this,this.baseTraits[traitName]);
     }
@@ -59,7 +59,7 @@ evolution.Dna.prototype.activate=function(){
 };
 
 //deactivates the set of traits on a character
-evolution.Dna.prototype.deactivate=function(){
+Evolb.Dna.prototype.deactivate=function(){
     for (traitName in this.traits){
         var trait=this.traits[traitName];
         trait.parentTrait.onRemoved(this.character);
@@ -75,11 +75,11 @@ evolution.Dna.prototype.deactivate=function(){
 
 
 //combines parent dna to form child dna
-evolution.Dna.combine=function(dna1,dna2,chanceOfMutation){
+Evolb.Dna.combine=function(dna1,dna2,chanceOfMutation){
     //var chanceOfMutation=0.5;
     var chanceRemoveTrait=0.15;
 
-    var newDna = new evolution.Dna();
+    var newDna = new Evolb.Dna();
     for(var traitName in dna1.baseTraits){
         var takeFromFirst=Math.random()<.5; //random boolean;
 
@@ -97,9 +97,9 @@ evolution.Dna.combine=function(dna1,dna2,chanceOfMutation){
 
     }
 
-    for (var x=0; x<evolution.TraitInstance.traitList.length;x++){
+    for (var x=0; x<Evolb.TraitInstance.traitList.length;x++){
         takeFromFirst=Math.random()<.5; //random boolean;
-        traitName=evolution.TraitInstance.traitList[x].name;
+        traitName=Evolb.TraitInstance.traitList[x].name;
         //father has trait
         if (takeFromFirst && dna1.traits[traitName]){
             newDna.traits[traitName]=dna1.traits[traitName].clone();
@@ -115,13 +115,13 @@ evolution.Dna.combine=function(dna1,dna2,chanceOfMutation){
     if (Math.random()<=chanceOfMutation){
         var removeTrait=Math.random()<=chanceRemoveTrait;
         if (removeTrait){
-            var traitIndex=evolution.core.game.rnd.integerInRange(0,newDna.traits.length-1);
+            var traitIndex=Evolb.core.game.rnd.integerInRange(0,newDna.traits.length-1);
             delete newDna.traits[traitIndex];
         }
         else{
             //add trait
-            var newTraitIndex=evolution.core.game.rnd.integerInRange(0,evolution.TraitInstance.traitList.length-1);
-            var newTrait=new evolution.TraitInstance(evolution.TraitInstance.traitList[newTraitIndex]);
+            var newTraitIndex=Evolb.core.game.rnd.integerInRange(0,Evolb.TraitInstance.traitList.length-1);
+            var newTrait=new Evolb.TraitInstance(Evolb.TraitInstance.traitList[newTraitIndex]);
             newTrait.randomize();
             newDna.traits[newTrait.parentTrait.name]=newTrait;
         }

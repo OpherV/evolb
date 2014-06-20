@@ -1,5 +1,5 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Level=function(game,levelWidth,levelHeight){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Level=function(game,levelWidth,levelHeight){
     var that=this;
     this.labOffset=200;
     this.cameraSpeed=5;
@@ -11,7 +11,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
     this.levelHeight=levelHeight;
     this.game=game;
 
-    this.levelEditor=new evolution.LevelEditor(this);
+    this.levelEditor=new Evolb.LevelEditor(this);
 
     this.focusTarget=null;
 
@@ -87,7 +87,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
                             "l"+(-levelWidth-50-50)+" 0"+
                             "a-50,50 0 0,0 0, 100"+
                             "l64 0";
-    var aquariumPointArray=evolution.core.getPointArray(aquariumPathString,1000);
+    var aquariumPointArray=Evolb.core.getPointArray(aquariumPathString,1000);
 
     this.aquarium.lineStyle(28, 0XFFFFFF, 1);
     this.aquarium_blue.beginFill(0X2f919e, 0.83);
@@ -159,7 +159,7 @@ evolution.Level=function(game,levelWidth,levelHeight){
     },this);
 
     //UI
-    var infoPanel=new evolution.gui.InfoPanel(game);
+    var infoPanel=new Evolb.gui.InfoPanel(game);
     this.layers.gui.add(infoPanel);
     infoPanel.init();
 
@@ -205,9 +205,9 @@ evolution.Level=function(game,levelWidth,levelHeight){
 
 };
 
-evolution.Level.prototype.constructor = evolution.Level;
+Evolb.Level.prototype.constructor = Evolb.Level;
 
-evolution.Level.prototype.update=function(){
+Evolb.Level.prototype.update=function(){
     this.displacementCount+=0.1;
     this.displacementFilter.offset.x = this.displacementCount * 10;
     this.displacementFilter.offset.y = this.displacementCount * 10 ;
@@ -215,7 +215,7 @@ evolution.Level.prototype.update=function(){
 };
 
 
-evolution.Level.prototype.render=function(){
+Evolb.Level.prototype.render=function(){
 
     if (!this.levelEditor.isActive && this.layers.creatures.countLiving()>0){
         if (this.focusTarget){
@@ -241,7 +241,7 @@ evolution.Level.prototype.render=function(){
 };
 
 
-evolution.Level.prototype.addAquariumWalls=function(){
+Evolb.Level.prototype.addAquariumWalls=function(){
     var debug=false;
 
     var leftWall=new Phaser.Sprite(this.game,0,0);
@@ -286,7 +286,7 @@ evolution.Level.prototype.addAquariumWalls=function(){
 
 
 //move bg for parallex effect
-evolution.Level.prototype.bgParallex=function(){
+Evolb.Level.prototype.bgParallex=function(){
     this.calculateParallex(this.aquariumMasked);
     this.calculateParallex(this.labBgMasked);
     this.calculateParallex(this.labBg);
@@ -295,7 +295,7 @@ evolution.Level.prototype.bgParallex=function(){
 
 
 
-evolution.Level.prototype.calculateParallex=function(bgSprite){
+Evolb.Level.prototype.calculateParallex=function(bgSprite){
     var bgMovementX=bgSprite.width-this.game.width;
     var bgMovementY=bgSprite.height-this.game.height;
     var boundsWidth=this.levelWidth+this.labOffset*2;
@@ -309,14 +309,14 @@ evolution.Level.prototype.calculateParallex=function(bgSprite){
 };
 
 
-evolution.Level.prototype.getObjectById=function(id){
+Evolb.Level.prototype.getObjectById=function(id){
     var foundSprite=this.spriteArrays.all.filter(function(sprite){
         return sprite.id==id;
     });
     return foundSprite.length>0?foundSprite[0]:null;
 };
 
-evolution.Level.prototype.focusOnCreatures=function(isInstant){
+Evolb.Level.prototype.focusOnCreatures=function(isInstant){
     var creatureGroupCenter=this.findCenterOfMass(this.layers.creatures);
 
     if (isInstant){
@@ -337,7 +337,7 @@ evolution.Level.prototype.focusOnCreatures=function(isInstant){
 
 };
 
-evolution.Level.prototype.animateFocusToTarget=function(target){
+Evolb.Level.prototype.animateFocusToTarget=function(target){
     var movementVector=new Phaser.Point(target.x-(this.game.camera.x+this.game.width/2),
         target.y-(this.game.camera.y+this.game.height/2));
     if (movementVector.getMagnitude()<1){
@@ -354,7 +354,7 @@ evolution.Level.prototype.animateFocusToTarget=function(target){
 
 };
 
-evolution.Level.prototype.findCenterOfMass=function(group){
+Evolb.Level.prototype.findCenterOfMass=function(group){
     var totalX=0;
     var totalY=0;
     var itemCount=0;
@@ -369,7 +369,7 @@ evolution.Level.prototype.findCenterOfMass=function(group){
 };
 
 
-evolution.Level.prototype.disableControl=function(){
+Evolb.Level.prototype.disableControl=function(){
     this.isControlEnabled=false;
     this.clearControlPointer();
     this.layers.creatures.forEachAlive(function(creature){
@@ -377,14 +377,14 @@ evolution.Level.prototype.disableControl=function(){
     });
 };
 
-evolution.Level.prototype.clearControlPointer=function(){
+Evolb.Level.prototype.clearControlPointer=function(){
     this.pointerController.clear();
     this.layers.creatures.forEachAlive(function(creature){
         creature.isFollowingPointer=false;
     });
 };
 
-evolution.Level.prototype.updatePointerController=function(){
+Evolb.Level.prototype.updatePointerController=function(){
     var pointer=this.game.input.activePointer;
     var minRadius=20;
     var maxRadius=90;
@@ -405,7 +405,7 @@ evolution.Level.prototype.updatePointerController=function(){
 
 };
 
-evolution.Level.prototype.addTextGroup=function(textArray,closeAfter){
+Evolb.Level.prototype.addTextGroup=function(textArray,closeAfter){
     var that=this;
     var returnFunc=function(){
         var promise = new Promise(function(resolve, reject){
@@ -436,7 +436,7 @@ evolution.Level.prototype.addTextGroup=function(textArray,closeAfter){
     return returnFunc;
 };
 
-evolution.Level.prototype.removeTextBubble=function(shouldClose){
+Evolb.Level.prototype.removeTextBubble=function(shouldClose){
     var that=this;
     if (shouldClose){
         this.bubbleObj.play("close",24,false);
@@ -448,12 +448,12 @@ evolution.Level.prototype.removeTextBubble=function(shouldClose){
     this.game.add.tween(this.bubbleObj).to({ alpha: 0}, 300, Phaser.Easing.Cubic.In).start();
 };
 
-evolution.Level.prototype.changeTextBubble=function(text){
+Evolb.Level.prototype.changeTextBubble=function(text){
     var that=this;
 
 };
 
-evolution.Level.prototype.addTextBubble=function(x,y,text){
+Evolb.Level.prototype.addTextBubble=function(x,y,text){
     var that=this;
     if (typeof(this.bubbleObj)=="undefined"){
         this.bubbleObj=new Phaser.Sprite(this.game,0,0,'book');
@@ -526,7 +526,7 @@ evolution.Level.prototype.addTextBubble=function(x,y,text){
 };
 
 
-evolution.Level.prototype.hideInstructionText=function(){
+Evolb.Level.prototype.hideInstructionText=function(){
     if (this.instructionText){
         var oldInstructionText=this.instructionText;
         var fadeInTween=this.game.add.tween(oldInstructionText).to({ alpha: 0}, 600, Phaser.Easing.Cubic.In);
@@ -537,7 +537,7 @@ evolution.Level.prototype.hideInstructionText=function(){
     }
 };
 
-evolution.Level.prototype.showInstructionText=function(text){
+Evolb.Level.prototype.showInstructionText=function(text){
     this.hideInstructionText();
 
     this.instructionText=this.game.add.text(0,0,text,null,this.layers.gui);
@@ -555,10 +555,10 @@ evolution.Level.prototype.showInstructionText=function(text){
     return this.instructionText;
 };
 
-evolution.Level.prototype.addObject=function(objectData){
+Evolb.Level.prototype.addObject=function(objectData){
     var alpha=objectData.hasOwnProperty("alpha")?objectData.alpha:1;
 
-    var objectInstance=new evolution[objectData.constructorName](this,objectData);
+    var objectInstance=new Evolb[objectData.constructorName](this,objectData);
     this.layers[objectData.layer].add(objectInstance);
     this.spriteArrays.all.push(objectInstance);
 
@@ -567,7 +567,7 @@ evolution.Level.prototype.addObject=function(objectData){
 };
 
 //TODO refactor and keep a list
-evolution.Level.prototype.getCreatures=function(){
+Evolb.Level.prototype.getCreatures=function(){
     var aliveCreatures=[];
     this.layers.creatures.forEachAlive(function(item){
         if (item.exists){
@@ -577,23 +577,23 @@ evolution.Level.prototype.getCreatures=function(){
     return aliveCreatures;
 };
 
-evolution.Level.prototype.removeObject=function(object){
+Evolb.Level.prototype.removeObject=function(object){
     object.destroy();
 };
 
 
 //static methods
-evolution.Level.getDefaultParams=function(params){
+Evolb.Level.getDefaultParams=function(params){
     return{
         x: 0,
         y: 0,
         angle: 0,
         exists: true,
-        id: params.id?params.id:evolution.Utils.generateGuid()
+        id: params.id?params.id:Evolb.Utils.generateGuid()
     };
 };
 
-evolution.Level.prototype.exportObjects=function(){
+Evolb.Level.prototype.exportObjects=function(){
     var levelObjects=this.spriteArrays.levelObjects;
     var exportArray=[];
     for (var x=0;x<levelObjects.length;x++){
@@ -602,7 +602,7 @@ evolution.Level.prototype.exportObjects=function(){
     return exportArray;
 };
 
-evolution.Level.Step=function(stepFunction){
+Evolb.Level.Step=function(stepFunction){
     var returnFunc=function(){
         var stepPromise = new Promise(function(resolve,reject){
             stepFunction(resolve,reject);

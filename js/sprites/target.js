@@ -1,7 +1,7 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Target= function (level,objectData) {
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Target= function (level,objectData) {
 
-    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+    this.objectData=Evolb.Utils.extend.call(Evolb.Level.getDefaultParams(objectData),objectData);
     this.id=this.objectData.id;
     this.level=level;
     this.game=level.game;
@@ -22,9 +22,9 @@ evolution.Target= function (level,objectData) {
 
 };
 
-evolution.Target.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Target.prototype.constructor = evolution.Target;
+Evolb.Target.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.Target.prototype.constructor = Evolb.Target;
 
-evolution.Target.prototype.markSelected=function(color){
+Evolb.Target.prototype.markSelected=function(color){
     this.targetCircleGraphics.tint=color;
 };

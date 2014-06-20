@@ -1,7 +1,7 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Area= function (level,objectData) {
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Area= function (level,objectData) {
 
-    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+    this.objectData=Evolb.Utils.extend.call(Evolb.Level.getDefaultParams(objectData),objectData);
     this.id=this.objectData.id;
     this.level=level;
     this.game=level.game;
@@ -31,20 +31,20 @@ evolution.Area= function (level,objectData) {
     this.addChild(this.graphics);
 };
 
-evolution.Area.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Area.prototype.constructor = evolution.Area;
+Evolb.Area.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.Area.prototype.constructor = Evolb.Area;
 
 
-evolution.Area.prototype.markSelected=function(color){
+Evolb.Area.prototype.markSelected=function(color){
     this.graphics.alpha=1;
     this.graphics.tint=color;
 };
 
-evolution.Area.prototype.deselect=function(){
+Evolb.Area.prototype.deselect=function(){
     this.graphics.tint=0xFFFFFF;
 };
 
-evolution.Area.prototype.update = function() {
+Evolb.Area.prototype.update = function() {
     if (this.inCamera){
         for (var x=0;x<this.clouds.children.length;x++){
             var cloud=this.clouds.getChildAt(x);
@@ -53,7 +53,7 @@ evolution.Area.prototype.update = function() {
     }
 };
 
-evolution.Area.prototype.addAreaPolygon=function(){
+Evolb.Area.prototype.addAreaPolygon=function(){
     var cm = [0,0];
     var vertices=[];
 
@@ -85,7 +85,7 @@ evolution.Area.prototype.addAreaPolygon=function(){
     this.body.shapeChanged();
 };
 
-evolution.Area.prototype.redraw = function(){
+Evolb.Area.prototype.redraw = function(){
 
     //draw collision object
     this.body.clearShapes();
@@ -123,7 +123,7 @@ evolution.Area.prototype.redraw = function(){
         cloud.anchor.setTo(0.5);
         cloud.scale.setTo(0.8,0.8);
         //make sure cloud is placed in polygon area
-        while (!evolution.Utils.isPointInPolygon([cloud.x,cloud.y],this.pointArray)){
+        while (!Evolb.Utils.isPointInPolygon([cloud.x,cloud.y],this.pointArray)){
             cloud.x=this.game.rnd.integerInRange(minX,maxX);
             cloud.y=this.game.rnd.integerInRange(minY,maxY);
         }
@@ -136,9 +136,9 @@ evolution.Area.prototype.redraw = function(){
     }
 };
 
-evolution.Area.prototype.cloudWander=function(cloud){
+Evolb.Area.prototype.cloudWander=function(cloud){
     var futurePoint=new Phaser.Point(cloud.x+cloud.velocity.x,cloud.y+cloud.velocity.y);
-    if (evolution.Utils.isPointInPolygon([futurePoint.x,futurePoint.y],this.pointArray)){
+    if (Evolb.Utils.isPointInPolygon([futurePoint.x,futurePoint.y],this.pointArray)){
         cloud.x=futurePoint.x;
         cloud.y=futurePoint.y;
     }
@@ -149,6 +149,6 @@ evolution.Area.prototype.cloudWander=function(cloud){
 
 };
 
-evolution.Area.prototype.updateObjectData=function(){
+Evolb.Area.prototype.updateObjectData=function(){
   this.objectData.pointArray=JSON.stringify(this.pointArray);
 };

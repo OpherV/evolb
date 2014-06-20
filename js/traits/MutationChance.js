@@ -1,7 +1,7 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Traits=(evolution.Traits?evolution.Traits:{});
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Traits=(Evolb.Traits?Evolb.Traits:{});
 
-evolution.Traits.Mutation={
+Evolb.Traits.Mutation={
     name: "mutationChance",
     lowName: "No mutation",
     highName: "Mutation",

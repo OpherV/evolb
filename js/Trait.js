@@ -1,17 +1,17 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.TraitInstance=function(parentTrait){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.TraitInstance=function(parentTrait){
     this.parentTrait=parentTrait;
     this.value=0.5;
     this.traitSprite=null; //sprite to represent the trait
 };
 
-evolution.TraitInstance.parameters={
+Evolb.TraitInstance.parameters={
     slightVariationPercentage: 0.15 //change of slight variation
 };
 
-evolution.TraitInstance.prototype.constructor=evolution.TraitInstance;
+Evolb.TraitInstance.prototype.constructor=Evolb.TraitInstance;
 
-evolution.TraitInstance.prototype.getValue=function(propertyName){
+Evolb.TraitInstance.prototype.getValue=function(propertyName){
     //some properties are reverse proportional
     var propValue = this.parentTrait[propertyName].reverse? 1-this.value: this.value;
 
@@ -22,29 +22,29 @@ evolution.TraitInstance.prototype.getValue=function(propertyName){
     return propValue*(this.parentTrait[propertyName].highLimit-this.parentTrait[propertyName].lowLimit)+this.parentTrait[propertyName].lowLimit;
 };
 
-evolution.TraitInstance.prototype.setValue=function(value){
+Evolb.TraitInstance.prototype.setValue=function(value){
     this.value=Math.max(0,Math.min(1,value)); //make sure to not go over 1 or below 0
 };
 
-evolution.TraitInstance.prototype.clone=function(){
-    var clonedTrait=new evolution.TraitInstance(this.parentTrait);
+Evolb.TraitInstance.prototype.clone=function(){
+    var clonedTrait=new Evolb.TraitInstance(this.parentTrait);
     clonedTrait.value=this.value;
     return clonedTrait;
 };
 
-evolution.TraitInstance.prototype.doSlightVariation=function(){
-    var totalVariationRange=Math.random()*evolution.TraitInstance.parameters.slightVariationPercentage*2;
+Evolb.TraitInstance.prototype.doSlightVariation=function(){
+    var totalVariationRange=Math.random()*Evolb.TraitInstance.parameters.slightVariationPercentage*2;
     var slightVariation=totalVariationRange-totalVariationRange/2; // variation can be positive or negative
     this.setValue(this.value+slightVariation);
 };
 
-evolution.TraitInstance.prototype.randomize=function(){
+Evolb.TraitInstance.prototype.randomize=function(){
     this.value=Math.random();
 };
 
-evolution.TraitInstance.EXPONENTIAL=function(x){return Math.pow(x,2)};
+Evolb.TraitInstance.EXPONENTIAL=function(x){return Math.pow(x,2)};
 
-evolution.TraitInstance.baseTraits={
+Evolb.TraitInstance.baseTraits={
     sizeSpeed: {
         lowName: "Small & Fast",
         highName: "Big & Slow",
@@ -61,15 +61,15 @@ evolution.TraitInstance.baseTraits={
             lowLimit: 0.75,
             highLimit: 1.5,
             reverse: true,
-            easingFunction: evolution.TraitInstance.EXPONENTIAL
+            easingFunction: Evolb.TraitInstance.EXPONENTIAL
         }
     },
-    mutationChance: evolution.Traits.Mutation
+    mutationChance: Evolb.Traits.Mutation
 };
 
 //this list contains all the the available traits
-evolution.TraitInstance.traitList=[
-    evolution.Traits.Cannibalism,
-    evolution.Traits.Armor,
-    evolution.Traits.Offense
+Evolb.TraitInstance.traitList=[
+    Evolb.Traits.Cannibalism,
+    Evolb.Traits.Armor,
+    Evolb.Traits.Offense
 ];

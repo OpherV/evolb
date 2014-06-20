@@ -1,7 +1,7 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Traits=(evolution.Traits?evolution.Traits:{});
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Traits=(Evolb.Traits?Evolb.Traits:{});
 
-evolution.Traits.Cannibalism={
+Evolb.Traits.Cannibalism={
     name: "cannibalism",
     lowName: "Civilized",
     highName: "Cannibal",

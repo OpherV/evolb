@@ -1,7 +1,7 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Food= function (level,objectData) {
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Food= function (level,objectData) {
 
-    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+    this.objectData=Evolb.Utils.extend.call(Evolb.Level.getDefaultParams(objectData),objectData);
     this.id=this.objectData.id;
     this.level=level;
     this.game=level.game;
@@ -9,7 +9,7 @@ evolution.Food= function (level,objectData) {
     this.healAmount=50;
 
     Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y, 'food');
-    this.type=evolution.Character.types.POWERUP;
+    this.type=Evolb.Character.types.POWERUP;
     this.kind="food";
 
     this.animations.add('bubble');
@@ -45,5 +45,5 @@ evolution.Food= function (level,objectData) {
 
 };
 
-evolution.Food.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Food.prototype.constructor = evolution.Food;
+Evolb.Food.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.Food.prototype.constructor = Evolb.Food;

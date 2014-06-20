@@ -1,7 +1,7 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Rock=function(level,objectData){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Rock=function(level,objectData){
 
-    this.objectData=evolution.Utils.extend.call(evolution.Level.getDefaultParams(objectData),objectData);
+    this.objectData=Evolb.Utils.extend.call(Evolb.Level.getDefaultParams(objectData),objectData);
     this.level=level;
     this.game=level.game;
     this.id=this.objectData.id;
@@ -19,7 +19,7 @@ evolution.Rock=function(level,objectData){
     this.body.clearShapes();
     this.body.loadPolygon('rocks', 'rock'+rockNumber);
 
-    this.body.setMaterial(evolution.Materials.getRockMaterial());
+    this.body.setMaterial(Evolb.Materials.getRockMaterial());
     this.body.static = true;
     this.body.angle=this.objectData.angle;
     this.angle=this.body.angle;
@@ -28,27 +28,27 @@ evolution.Rock=function(level,objectData){
 };
 
 
-evolution.Rock.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Rock.prototype.constructor = evolution.Rock;
+Evolb.Rock.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.Rock.prototype.constructor = Evolb.Rock;
 
 
-evolution.Rock1=function(level,objData){
+Evolb.Rock1=function(level,objData){
     objData.rockType=1;
-    return (new evolution.Rock(level,objData));
+    return (new Evolb.Rock(level,objData));
 };
-evolution.Rock1.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Rock1.prototype.constructor = evolution.Rock1;
+Evolb.Rock1.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.Rock1.prototype.constructor = Evolb.Rock1;
 
-evolution.Rock2=function(level,objData){
+Evolb.Rock2=function(level,objData){
     objData.rockType=2;
-    return (new evolution.Rock(level,objData));
+    return (new Evolb.Rock(level,objData));
 };
-evolution.Rock2.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Rock2.prototype.constructor = evolution.Rock2;
+Evolb.Rock2.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.Rock2.prototype.constructor = Evolb.Rock2;
 
-evolution.Rock3=function(level,objData){
+Evolb.Rock3=function(level,objData){
     objData.rockType=3;
-    return (new evolution.Rock(level,objData));
+    return (new Evolb.Rock(level,objData));
 };
-evolution.Rock3.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.Rock3.prototype.constructor = evolution.Rock3;
+Evolb.Rock3.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.Rock3.prototype.constructor = Evolb.Rock3;

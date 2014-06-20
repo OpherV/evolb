@@ -1,6 +1,6 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.PoisonArea= function (level,objectData) {
-    evolution.Area.call(this,level,objectData);
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.PoisonArea= function (level,objectData) {
+    Evolb.Area.call(this,level,objectData);
 
     this.kind="PoisonArea";
     this.cloudKey="poison_bg";
@@ -13,5 +13,5 @@ evolution.PoisonArea= function (level,objectData) {
 };
 
 
-evolution.PoisonArea.prototype = Object.create(evolution.Area.prototype);
-evolution.PoisonArea.prototype.constructor = evolution.PoisonArea;
+Evolb.PoisonArea.prototype = Object.create(Evolb.Area.prototype);
+Evolb.PoisonArea.prototype.constructor = Evolb.PoisonArea;

@@ -1,5 +1,5 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Utils=(function(){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Utils=(function(){
 
     function _clone(obj) {
         // Handle the 3 simple types, and null or undefined

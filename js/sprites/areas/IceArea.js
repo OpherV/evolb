@@ -1,6 +1,6 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.IceArea= function (level,objectData) {
-    evolution.Area.call(this,level,objectData);
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.IceArea= function (level,objectData) {
+    Evolb.Area.call(this,level,objectData);
 
     this.kind="IceArea";
     this.cloudKey="ice_bg";
@@ -10,5 +10,5 @@ evolution.IceArea= function (level,objectData) {
 };
 
 
-evolution.IceArea.prototype = Object.create(evolution.Area.prototype);
-evolution.IceArea.prototype.constructor = evolution.IceArea;
+Evolb.IceArea.prototype = Object.create(Evolb.Area.prototype);
+Evolb.IceArea.prototype.constructor = Evolb.IceArea;

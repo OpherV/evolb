@@ -1,6 +1,6 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.gui=(window.evolution.gui?window.evolution.gui:{});
-evolution.gui.CreatureHealthbar= function (game,character) {
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.gui=(window.Evolb.gui?window.Evolb.gui:{});
+Evolb.gui.CreatureHealthbar= function (game,character) {
     this.game=game;
     this.character=character;
     Phaser.Sprite.call(this, game, 0, 0, 'creature_healthbar');
@@ -22,5 +22,5 @@ evolution.gui.CreatureHealthbar= function (game,character) {
 
 };
 
-evolution.gui.CreatureHealthbar.prototype = Object.create(Phaser.Sprite.prototype);
-evolution.gui.CreatureHealthbar.prototype.constructor = evolution.gui.CreatureHealthbar;
+Evolb.gui.CreatureHealthbar.prototype = Object.create(Phaser.Sprite.prototype);
+Evolb.gui.CreatureHealthbar.prototype.constructor = Evolb.gui.CreatureHealthbar;

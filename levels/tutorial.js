@@ -26,7 +26,7 @@ var level=
         this.addTextGroup(["This is your first creature.\nIsn't it handsome?",
                            "Why don't you use your mouse to move him around a bit..."],false)()
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
                 that.showInstructionText("Move your creature to the circle on the right");
                 that.isControlEnabled=true;
                 that.game.add.tween(target1).to({ alpha: 1}, 600, Phaser.Easing.Cubic.Out).start();
@@ -40,7 +40,7 @@ var level=
 
             }))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
                 var fadeOutTween=that.game.add.tween(target1).to({ alpha: 0}, 600, Phaser.Easing.Cubic.Out);
                 fadeOutTween.onComplete.addOnce(function(){
                     that.layers.gui.remove(target1);
@@ -55,7 +55,7 @@ var level=
             }))
         .then(that.addTextGroup(["Woah! Look at you go!"]))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             firstCreature.hasHunger=true;
             resolve();
         }))
@@ -64,7 +64,7 @@ var level=
             "Hungry creatures lose their energy",
             "When a creature has no energy left it dies.\n\nDead creatures are no fun :("]))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             food1Obj.exists=true;
             that.game.add.tween(food1Obj).to({ alpha: 1}, 600, Phaser.Easing.Cubic.Out).start();
             that.focusTarget=food1Obj;
@@ -73,7 +73,7 @@ var level=
 
         .then(this.addTextGroup(["Oh look, there's something to munch down there!"]))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             touchedFoodHandler=function(body, shapeA, shapeB, equation) {
                 if(body.sprite.id=="1st"){
                     resolve();
@@ -86,7 +86,7 @@ var level=
             food1Obj.body.onBeginContact.add(touchedFoodHandler, this);
         }))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             food1Obj.body.onBeginContact.remove(touchedFoodHandler, this);
             that.disableControl();
             firstCreature.body.setZeroVelocity();
@@ -96,7 +96,7 @@ var level=
 
         .then(this.addTextGroup(["Yum!\nThat hit the the spot"],true))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             that.isControlEnabled=true;
             secondCreature.exists=true;
             var proximityCheck=firstCreature.addProximityCheck(secondCreature,300);
@@ -106,7 +106,7 @@ var level=
             },that);
         }))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             that.disableControl();
             firstCreature.body.setZeroVelocity();
             resolve();
@@ -118,7 +118,7 @@ var level=
                                 "The longer you hold your mouse button, the more creatures will respond"
                                 ]))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             that.isControlEnabled=true;
             secondCreature.canBeControlled=true;
             secondCreature.hasHunger=true;
@@ -136,7 +136,7 @@ var level=
             "The offspring of two creatures gets a combination of their traits"
         ]))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             that.isControlEnabled=true;
             firstCreature.canBreed=true;
             secondCreature.canBreed=true;
@@ -162,7 +162,7 @@ var level=
             "It's chasing your creatures! Quickly, escape down there!"
         ]))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             that.showInstructionText("Escape the GIANT EVIL THINGY!");
             that.isControlEnabled=true;
             enemy1.maxAggroDistance=1000;
@@ -183,7 +183,7 @@ var level=
             "The larger creatures might need less food, but they're just not fast enough to outrun that thing"
         ]))
 
-        .then(evolution.Level.Step(function(resolve,reject){
+        .then(Evolb.Level.Step(function(resolve,reject){
             that.isControlEnabled=true;
 
         }))

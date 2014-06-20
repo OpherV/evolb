@@ -1,5 +1,5 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.LevelEditor=function(level){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.LevelEditor=function(level){
     this.level=level;
     this.game=level.game;
     this.isActive=false;
@@ -127,9 +127,9 @@ evolution.LevelEditor=function(level){
 
 };
 
-evolution.LevelEditor.prototype.constructor = evolution.Level;
+Evolb.LevelEditor.prototype.constructor = Evolb.Level;
 
-evolution.LevelEditor.prototype.toggleLevelEdit=function(){
+Evolb.LevelEditor.prototype.toggleLevelEdit=function(){
     var that=this;
 
     if (this.isActive){
@@ -206,7 +206,7 @@ evolution.LevelEditor.prototype.toggleLevelEdit=function(){
 };
 
 
-evolution.LevelEditor.prototype.initializeLevelEditor=function(){
+Evolb.LevelEditor.prototype.initializeLevelEditor=function(){
     this.levelEditText=this.game.add.text(0,0,"Level Edit",this.level.layers.gui);
     this.levelEditText.fixedToCamera=true;
     this.levelEditText.cameraOffset.x=50;
@@ -309,7 +309,7 @@ evolution.LevelEditor.prototype.initializeLevelEditor=function(){
 
 
 
-evolution.LevelEditor.prototype.render=function(){
+Evolb.LevelEditor.prototype.render=function(){
     if (this.isActive){
         var pointer=this.game.input.activePointer;
         var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
@@ -360,7 +360,7 @@ evolution.LevelEditor.prototype.render=function(){
 };
 
 //a sprite might have its own function to mark being selected
-evolution.LevelEditor.prototype.markSelected=function(sprite,color){
+Evolb.LevelEditor.prototype.markSelected=function(sprite,color){
     this.destroyElementUI();
 
     if (sprite.markSelected){
@@ -416,7 +416,7 @@ evolution.LevelEditor.prototype.markSelected=function(sprite,color){
 };
 
 //a sprite might have its own function to deslect
-evolution.LevelEditor.prototype.deselect=function(sprite){
+Evolb.LevelEditor.prototype.deselect=function(sprite){
     if (sprite.deselect){
         sprite.deselect()
     }
@@ -433,7 +433,7 @@ evolution.LevelEditor.prototype.deselect=function(sprite){
 
 };
 
-evolution.LevelEditor.prototype.destroyElementUI=function(){
+Evolb.LevelEditor.prototype.destroyElementUI=function(){
     //remove active ui elements for the selected sprite
     for (var x=0;x<this.currentUISprites.length;x++){
         this.currentUISprites[x].destroy();
@@ -441,7 +441,7 @@ evolution.LevelEditor.prototype.destroyElementUI=function(){
     this.currentUISprites=[];
 };
 
-evolution.LevelEditor.prototype.selectUIElement=function(sprite){
+Evolb.LevelEditor.prototype.selectUIElement=function(sprite){
     var pointer=this.game.input.activePointer;
     var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
 
@@ -461,7 +461,7 @@ evolution.LevelEditor.prototype.selectUIElement=function(sprite){
 
 };
 
-evolution.LevelEditor.prototype.selectSprite=function(sprite){
+Evolb.LevelEditor.prototype.selectSprite=function(sprite){
     if (sprite){
         var pointer=this.game.input.activePointer;
         var worldPoint=new Phaser.Point(pointer.worldX,pointer.worldY);
@@ -506,7 +506,7 @@ evolution.LevelEditor.prototype.selectSprite=function(sprite){
 
 };
 
-evolution.LevelEditor.prototype.addObject=function(){
+Evolb.LevelEditor.prototype.addObject=function(){
     var selectObj=document.body.querySelector("#editor select");
     var selectOptionObj=selectObj.options[selectObj.selectedIndex];
     var objData=JSON.parse(JSON.stringify(selectOptionObj.objData));
@@ -518,7 +518,7 @@ evolution.LevelEditor.prototype.addObject=function(){
     this.level.spriteArrays.levelObjects.push(objectInstance);
 };
 
-evolution.LevelEditor.prototype.updateSpriteProperties=function(){
+Evolb.LevelEditor.prototype.updateSpriteProperties=function(){
     var that=this;
     var sprite=this.selectedSprite;
 
@@ -615,7 +615,7 @@ evolution.LevelEditor.prototype.updateSpriteProperties=function(){
     }
 };
 
-evolution.LevelEditor.prototype.autoSaveLevel=function(){
+Evolb.LevelEditor.prototype.autoSaveLevel=function(){
     var levelObjects=this.level.exportObjects();
     localStorage.setItem('level-'+this.level.name, JSON.stringify(levelObjects));
     console.log("autosaved level");

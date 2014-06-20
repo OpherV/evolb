@@ -1,6 +1,6 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.HeatArea= function (level,objectData) {
-    evolution.Area.call(this,level,objectData);
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.HeatArea= function (level,objectData) {
+    Evolb.Area.call(this,level,objectData);
 
     this.kind="HeatArea";
     this.cloudKey="heat_bg";
@@ -13,5 +13,5 @@ evolution.HeatArea= function (level,objectData) {
 };
 
 
-evolution.HeatArea.prototype = Object.create(evolution.Area.prototype);
-evolution.HeatArea.prototype.constructor = evolution.HeatArea;
+Evolb.HeatArea.prototype = Object.create(Evolb.Area.prototype);
+Evolb.HeatArea.prototype.constructor = Evolb.HeatArea;

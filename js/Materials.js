@@ -1,5 +1,5 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.Materials=(function(){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.Materials=(function(){
     var _rockMaterial;
     var _creatureMaterial;
     var _creatureContactMaterial;

@@ -1,12 +1,12 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.LevelLoader=function(){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.LevelLoader=function(){
 
     function _loadLevel(game,levelData){
-        var level=new evolution.Level(game,levelData.levelWidth,levelData.levelHeight);
+        var level=new Evolb.Level(game,levelData.levelWidth,levelData.levelHeight);
         level.name=levelData.name;
 
         //avoid cache flag
-        var noLevelCache="noLevelCache" in evolution.Utils.getUrlVars();
+        var noLevelCache="noLevelCache" in Evolb.Utils.getUrlVars();
 
         //TODO expand auto saving to all level data?
         var savedLevelData = JSON.parse(localStorage.getItem('level-'+level.name));

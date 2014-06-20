@@ -1,5 +1,5 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.core=(function(){
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.core=(function(){
 
     var levels={};
     var currentLevel=null;
@@ -80,13 +80,13 @@ evolution.core=(function(){
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.p2.enable([], false);
 
-        evolution.Materials.init(game);
+        Evolb.Materials.init(game);
 
         initialize();
     }
 
     function initialize(){
-        var tutorialLevel = evolution.LevelLoader.loadLevel(game,levels.tutorial);
+        var tutorialLevel = Evolb.LevelLoader.loadLevel(game,levels.tutorial);
         currentLevel=tutorialLevel;
     }
 

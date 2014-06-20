@@ -1,6 +1,6 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.gui=(window.evolution.gui?window.evolution.gui:{});
-evolution.gui.Healthbar= function (game,character) {
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.gui=(window.Evolb.gui?window.Evolb.gui:{});
+Evolb.gui.Healthbar= function (game,character) {
     this.game=game;
     this.character=character;
     this.barWidth=character.width;
@@ -11,18 +11,18 @@ evolution.gui.Healthbar= function (game,character) {
         var totalHp=this.character.modifiedStats.maxHealth;
 
         this.clear();
-        var bgColor= evolution.core.rgbToHex(255,0,0);
+        var bgColor= Evolb.core.rgbToHex(255,0,0);
         this.beginFill(bgColor);
         this.lineStyle(5, bgColor, 1);
         this.moveTo(0,-5);
         this.lineTo(this.barWidth, -5);
         this.endFill();
 
-        if (this.character.state==evolution.Character.states.WANTS_TO_BREED){
-            var colour = evolution.core.rgbToHex(0,0,255);
+        if (this.character.state==Evolb.Character.states.WANTS_TO_BREED){
+            var colour = Evolb.core.rgbToHex(0,0,255);
         }
         else{
-            var colour = evolution.core.rgbToHex(0,255,0);
+            var colour = Evolb.core.rgbToHex(0,255,0);
         }
 
         this.beginFill(colour);
@@ -36,5 +36,5 @@ evolution.gui.Healthbar= function (game,character) {
 
 };
 
-evolution.gui.Healthbar.prototype = Object.create(Phaser.Graphics.prototype);
-evolution.gui.Healthbar.prototype.constructor = evolution.gui.Healthbar;
+Evolb.gui.Healthbar.prototype = Object.create(Phaser.Graphics.prototype);
+Evolb.gui.Healthbar.prototype.constructor = Evolb.gui.Healthbar;

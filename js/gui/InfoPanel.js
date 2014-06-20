@@ -1,6 +1,6 @@
-evolution=(window.evolution?window.evolution:{});
-evolution.gui=(window.evolution.gui?window.evolution.gui:{});
-evolution.gui.InfoPanel= function (game) {
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.gui=(window.Evolb.gui?window.Evolb.gui:{});
+Evolb.gui.InfoPanel= function (game) {
 
     var windowWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var windowHeight= Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -31,7 +31,7 @@ evolution.gui.InfoPanel= function (game) {
 
     this.init=function(){
         this.clear();
-        var bgColor= evolution.core.rgbToHex(48,110,209);
+        var bgColor= Evolb.core.rgbToHex(48,110,209);
 
         this.beginFill(bgColor,0.8);
         this.lineStyle(0, bgColor);
@@ -140,5 +140,5 @@ evolution.gui.InfoPanel= function (game) {
 
 };
 
-evolution.gui.InfoPanel.prototype = Object.create(Phaser.Graphics.prototype);
-evolution.gui.InfoPanel.prototype.constructor = evolution.gui.InfoPanel;
+Evolb.gui.InfoPanel.prototype = Object.create(Phaser.Graphics.prototype);
+Evolb.gui.InfoPanel.prototype.constructor = Evolb.gui.InfoPanel;
