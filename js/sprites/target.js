@@ -15,6 +15,9 @@ Evolb.Target= function (level,objectData) {
     this.game.physics.p2.enable(this,false);
     this.body.setCircle(radius);
     this.body.data.shapes[0].sensor=true;
+    this.body.setCollisionGroup(this.level.collisionGroups.obstacles);
+    this.body.collides(this.level.collisionGroups.characters);
+
     this.addChild(this.targetCircleGraphics);
 
     this.targetCircleGraphics.beginFill(0xf0e5bc, 0.4);
