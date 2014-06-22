@@ -25,6 +25,8 @@ Evolb.Rock=function(level,objectData){
     this.angle=this.body.angle;
     this.body.fixedRotation = true;
 
+   this.body.setCollisionGroup(this.level.collisionGroups.obstacles);
+   this.body.collides(this.level.collisionGroups.characters);
 };
 
 

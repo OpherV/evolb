@@ -14,6 +14,8 @@ Evolb.LevelEditor=function(level){
 
     this.currentUISprites=[];
 
+    this.currentFocusSpriteIndex=0;
+
     this.game.input.onDown.add(function(pointer){
         if (this.isActive){
             var pointer=this.game.input.activePointer;
@@ -120,6 +122,13 @@ Evolb.LevelEditor=function(level){
     this.keySpace.onUp.add(function(){
         if (this.isActive){
             document.getElementsByTagName("canvas")[0].classList.remove("pan");
+        }
+    },this);
+
+    this.keyTab= this.game.input.keyboard.addKey(Phaser.Keyboard.TAB);
+    this.keyTab.onDown.add(function(){
+        if (this.isActive){
+            this.focusOnNextSprite();
         }
     },this);
 
@@ -619,4 +628,20 @@ Evolb.LevelEditor.prototype.autoSaveLevel=function(){
     var levelObjects=this.level.exportObjects();
     localStorage.setItem('level-'+this.level.name, JSON.stringify(levelObjects));
     console.log("autosaved level");
+};
+
+
+Evolb.LevelEditor.prototype.focusOnNextSprite=function(){
+    this.currentFocusSpriteIndex++;
+    if (this.currentFocusSpriteIndex==this.level.spriteArrays.all.length){
+        this.currentFocusSpriteIndex=0;
+    }
+    var sprite=this.level.spriteArrays.all[this.currentFocusSpriteIndex];
+    if (sprite.kind=="levelWall"){
+        return this.focusOnNextSprite();
+    }
+
+    this.selectSprite(sprite);
+    console.log(sprite);
+    this.game.camera.focusOnXY(sprite.x,sprite.y);
 };

@@ -26,6 +26,9 @@ Evolb.Mutation= function (level,objectData) {
     this.body.setCircle(this.width);
     this.body.data.shapes[0].sensor=true;
 
+    this.body.setCollisionGroup(this.level.collisionGroups.powerUps);
+    this.body.collides(this.level.collisionGroups.characters);
+
     this.body.fixedRotation = true;
 
 

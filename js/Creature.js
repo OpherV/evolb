@@ -66,7 +66,7 @@ Evolb.Creature= function (level,objectData) {
 
     //health bar
     this.healthbar = new Evolb.gui.CreatureHealthbar(this.game,this);
-    this.healthbar.blendMode = PIXI.blendModes.ADD;
+    //this.healthbar.blendMode = PIXI.blendModes.ADD;
     this.healthbar.x = -this.healthbar.width/2;
     this.healthbar.y = -this.healthbar.height/2-3;
     this.addChild(this.healthbar);
@@ -91,12 +91,23 @@ Evolb.Creature= function (level,objectData) {
     this.body.clearShapes();
     this.body.setCircle(this.bodySprite.height/2*this.scale.x);
 
-    this.stats.moveSpeed=this.dna.baseTraits.sizeSpeed.getValue("speed");
+
+
+    this.stats.moveSpeed=this.objectData.speed?this.objectData.speed:this.dna.baseTraits.sizeSpeed.getValue("speed");
+    this.stats.rotateSpeed=1-this.dna.baseTraits.sizeSpeed.value;
     this.stats.maxSpeed=this.stats.moveSpeed;
 
     //has to be after setCircle otherwise the material is lost
     this.body.setMaterial(Evolb.Materials.getCreatureMaterial());
 
+
+    this.body.setCollisionGroup(this.level.collisionGroups.characters);
+    this.body.collides([
+        this.level.collisionGroups.characters,
+        this.level.collisionGroups.obstacles,
+        this.level.collisionGroups.powerUps,
+        this.level.collisionGroups.areas
+    ]);
 
     //emitters
 
@@ -109,7 +120,7 @@ Evolb.Creature= function (level,objectData) {
     this.iceEmitter.gravity = 0;
 
     this.bubbleEmitter = this.game.add.emitter(0, 0, 200);
-    this.level.layers.areas.addChild(this.bubbleEmitter);
+    this.level.layers.inAquarium.addChild(this.bubbleEmitter);
     this.bubbleEmitter.makeParticles('bubble');
     this.bubbleEmitter.setAlpha(1,0,5000);
     this.bubbleEmitter.setRotation(0,0);
@@ -263,16 +274,24 @@ Evolb.Creature.prototype.update = function(){
 };
 
 Evolb.Creature.prototype.blink=function(){
-    if (this.face.animations.currentAnim.name!="blink" && this.state==Evolb.Character.states.IDLE || this.state==Evolb.Character.states.DRIFTING){
+
+    if ((this.state==Evolb.Character.states.IDLE || this.state==Evolb.Character.states.DRIFTING)){
         var oldFaceFrame=this.face.animations.frame;
-        this.face.animations.play("blink",8).onComplete.addOnce(function(){
+        var anim=this.face.animations.play("blink",8);
+        if (anim) anim.onComplete.addOnce(function(){
             this.face.animations.frame=oldFaceFrame;
         },this);
     }
 };
 
 Evolb.Creature.prototype.markSelected=function(color){
-    this.bodySprite.tint=color;
+    this.bodySprite1.tint=color;
+    this.bodySprite2.tint=color;
+};
+
+Evolb.Creature.prototype.deselect=function(color){
+    this.bodySprite1.tint=0xFFFFFF;
+    this.bodySprite2.tint=0xFFFFFF;
 };
 
 Evolb.Creature.prototype.flashTint=function(color,duration){

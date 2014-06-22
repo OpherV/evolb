@@ -18,9 +18,11 @@ Evolb.Enemy1= function (level,objectData) {
     this.animations.play('normal', 40, true);
 
     this.body.setCircle(this.width/2);
+    this.body.setCollisionGroup(this.level.collisionGroups.characters);
+    this.body.collides([this.level.collisionGroups.characters,this.level.collisionGroups.obstacles]);
 
     this.stats.moveSpeed=this.objectData.moveSpeed?this.objectData.moveSpeed:10;
-    this.stats.maxSpeed=this.objectData.maxSpeed?this.objectData.maxSpeed:85;
+    this.stats.maxSpeed=this.objectData.maxSpeed?this.objectData.maxSpeed:105;
     this.stats.attackSpeed=1000; //attack speed in millisecs
     this.stats.damageOutput=10;
 

@@ -45,7 +45,21 @@ Evolb.Area.prototype.deselect=function(){
 };
 
 Evolb.Area.prototype.update = function() {
-    if (this.inCamera){
+    //TODO naive implementation - think up a proper one
+//    var inCamera=false;
+////    var camera=this.game.camera;
+////    for(var x=0;x<this.pointArray.length;x++){
+////        var point=this.pointArray[x];
+////        if (this.x+point[0]>=camera.x-camera.width/2 &&
+////            this.x+point[0]<=camera.x+camera.width/2 &&
+////            this.y+point[1]<=camera.y-camera.height/2 &&
+////            this.y+point[1]>=camera.y+camera.height/2){
+////            inCamera=true;
+////            break;
+////        }
+////
+////    }
+    if (true){
         for (var x=0;x<this.clouds.children.length;x++){
             var cloud=this.clouds.getChildAt(x);
             this.cloudWander(cloud);
@@ -91,6 +105,9 @@ Evolb.Area.prototype.redraw = function(){
     this.body.clearShapes();
     this.addAreaPolygon();
     this.body.data.shapes[0].sensor=true;
+
+    this.body.setCollisionGroup(this.level.collisionGroups.areas);
+    this.body.collides(this.level.collisionGroups.characters);
 
 
     //draw polygon graphics

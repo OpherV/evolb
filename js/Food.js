@@ -19,6 +19,9 @@ Evolb.Food= function (level,objectData) {
     this.body.setCircle(this.width/4);
     this.body.data.shapes[0].sensor=true;
 
+    this.body.setCollisionGroup(this.level.collisionGroups.powerUps);
+    this.body.collides(this.level.collisionGroups.characters);
+
     this.body.fixedRotation = true;
     this.body.collideWorldBounds=true;
     this.scale.x=0.5;

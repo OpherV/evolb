@@ -33,8 +33,19 @@ Evolb.Level=function(game,levelWidth,levelHeight){
         level: null
     };
 
-    for (layerName in this.layers){
+    for (var layerName in this.layers){
         this.layers[layerName]=game.add.group();
+    }
+
+    this.collisionGroups={
+        obstacles: null,
+        powerUps: null,
+        characters: null,
+        areas: null
+    };
+
+    for (var collisionGroup in this.collisionGroups){
+        this.collisionGroups[collisionGroup]=game.physics.p2.createCollisionGroup();
     }
 
     this.spriteArrays={
@@ -60,13 +71,13 @@ Evolb.Level=function(game,levelWidth,levelHeight){
     this.layers.behindAquarium.add(this.labBg);
     this.labBg.alpha=1;
 
-    this.shine=game.add.sprite(3065, 2276, 'shine');
-    this.shine.fixedToCamera=true;
-    this.shine.width*=3;
-    this.shine.height*=3;
-    this.shine.cameraOffset.x=0;
-    this.shine.cameraOffset.y=0;
-    this.layers.foreground.add(this.shine);
+//    this.shine=game.add.sprite(3065, 2276, 'shine');
+//    this.shine.fixedToCamera=true;
+//    this.shine.width*=3;
+//    this.shine.height*=3;
+//    this.shine.cameraOffset.x=0;
+//    this.shine.cameraOffset.y=0;
+//    this.layers.foreground.add(this.shine);
 
 
 
@@ -133,6 +144,9 @@ Evolb.Level=function(game,levelWidth,levelHeight){
     this.layers.level.add(this.layers.powerUps);
     this.layers.level.add(this.layers.foreground);
     this.layers.level.add(this.layers.gui);
+
+    this.layers.areas.mask=this.aquariumMask;
+    this.layers.rocks.mask=this.aquariumMask;
 
     //EVENTS
     var blinkTimer=0;
@@ -250,6 +264,7 @@ Evolb.Level.prototype.addAquariumWalls=function(){
     leftWall.body.x = -this.labOffset/2;
     leftWall.body.y = -this.labOffset/2+this.levelHeight/2;
     leftWall.body.static = true;
+    leftWall.kind="levelWall";
     this.game.add.existing(leftWall);
 
 
@@ -259,6 +274,7 @@ Evolb.Level.prototype.addAquariumWalls=function(){
     rightWall.body.x = this.levelWidth+(this.labOffset)/2;
     rightWall.body.y = -this.labOffset/2+this.levelHeight/2;
     rightWall.body.static = true;
+    rightWall.kind="levelWall";
     this.game.add.existing(rightWall);
 
     var bottomWall=new Phaser.Sprite(this.game,0,0);
@@ -267,6 +283,7 @@ Evolb.Level.prototype.addAquariumWalls=function(){
     bottomWall.body.x = (this.labOffset+this.levelWidth)/2;
     bottomWall.body.y = this.levelHeight+this.labOffset/2;
     bottomWall.body.static = true;
+    bottomWall.kind="levelWall";
     this.game.add.existing(bottomWall);
 
     var topWall=new Phaser.Sprite(this.game,0,0);
@@ -275,6 +292,7 @@ Evolb.Level.prototype.addAquariumWalls=function(){
     topWall.body.x = (this.labOffset+this.levelWidth)/2;
     topWall.body.y = -this.labOffset/2;
     topWall.body.static = true;
+    topWall.kind="levelWall";
     this.game.add.existing(topWall);
 
     this.spriteArrays.all.push(leftWall);
@@ -290,7 +308,7 @@ Evolb.Level.prototype.bgParallex=function(){
     this.calculateParallex(this.aquariumMasked);
     this.calculateParallex(this.labBgMasked);
     this.calculateParallex(this.labBg);
-    this.calculateParallex(this.shine);
+    //this.calculateParallex(this.shine);
 };
 
 
@@ -600,6 +618,44 @@ Evolb.Level.prototype.exportObjects=function(){
         exportArray.push(levelObjects[x].objectData);
     }
     return exportArray;
+};
+
+
+Evolb.Level.prototype.placeWithoutCollision=function(sprite,spriteArrays,placeFunction){
+    var game=this.game;
+
+    if (!placeFunction){
+        placeFunction=function(sprite){
+            sprite.body.x=game.rnd.realInRange(0,this.levelWidth);
+            sprite.body.y=game.rnd.realInRange(0,this.levelHeight);
+        }
+    }
+
+    var isColliding=true;
+    var maxAttempts=10; //the number of attempts to place with not collision
+    var placeAttemptCounter=0;
+    while (isColliding && placeAttemptCounter<maxAttempts){
+        //no collision, end loop
+        isColliding=false;
+        placeFunction.call(this,sprite);
+        placeAttemptCounter++;
+        sprite.body.data.updateAABB();
+
+        for(var y=0;y<spriteArrays.length;y++){
+            var spriteArray=spriteArrays[y];
+            for(var x=0;x<spriteArray.length;x++){
+                var checkAgainstSprite=spriteArray[x];
+                if(sprite.body.data.aabb.overlaps(checkAgainstSprite.body.data.aabb)){
+                    //console.log(sprite.id,"colliding");
+                    isColliding=true;
+                    break;
+                }
+            }
+            //don't go over any more groups
+            if (isColliding){ break;}
+        }
+    }
+    //console.log(placeAttemptCounter);
 };
 
 Evolb.Level.Step=function(stepFunction){

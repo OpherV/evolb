@@ -6,7 +6,7 @@ Evolb.core=(function(){
 
     var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var height =  Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    var game=new Phaser.Game(width, height, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+    var game=new Phaser.Game(width, height, Phaser.WEBGL, '', { preload: preload, create: create, update: update, render: render });
 
     WebFontConfig = {
 
@@ -63,7 +63,7 @@ Evolb.core=(function(){
 
 
 
-        _preloadLevel('tutorial', 'levels/empty.js');
+        _preloadLevel('tutorial', 'levels/random.js');
 
 
 
@@ -113,42 +113,6 @@ Evolb.core=(function(){
         game.load.script(key,url,function(){
             this[key]=level;
         },levels)
-    }
-
-    function _placeWithoutCollision(sprite,spriteArrays,placeFunction){
-        if (!placeFunction){
-            placeFunction=function(sprite){
-                sprite.body.x=game.rnd.realInRange(LAB_OFFSET+LEVEL_WIDTH*0.0157,
-                                                    LAB_OFFSET+LEVEL_WIDTH-LEVEL_WIDTH*0.025);
-                sprite.body.y=game.rnd.realInRange(LAB_OFFSET,LAB_OFFSET+LEVEL_HEIGHT-LEVEL_HEIGHT*0.008);
-            }
-        }
-
-        var isColliding=true;
-        var maxAttempts=10; //the number of attempts to place with not collision
-        var placeAttemptCounter=0;
-        while (isColliding && placeAttemptCounter<maxAttempts){
-            //no collision, end loop
-            isColliding=false;
-            placeFunction(sprite);
-            placeAttemptCounter++;
-            sprite.body.data.updateAABB();
-
-            for(var y=0;y<spriteArrays.length;y++){
-                var spriteArray=spriteArrays[y];
-                for(var x=0;x<spriteArray.length;x++){
-                    var checkAgainstSprite=spriteArray[x];
-                    if(sprite.body.data.aabb.overlaps(checkAgainstSprite.body.data.aabb)){
-                        //console.log(sprite.id,"colliding");
-                        isColliding=true;
-                        break;
-                    }
-                }
-                //don't go over any more groups
-                if (isColliding){ break;}
-            }
-        }
-        //console.log(placeAttemptCounter);
     }
 
     function _rgbToHex(r, g, b) {

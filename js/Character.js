@@ -9,6 +9,7 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
         maxHealth: 100,
         floatSpeed: 10,
         moveSpeed: 50,
+        rotateSpeed: 1,
         maxSpeed: 50,
         idleVelocityRange: 0, //below this range creatures start bobbing
         attackSpeed: 500,
@@ -19,6 +20,8 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
 
     this.modifiedStats={}; //these are the stats after any modifiers
 
+    this.maxRotation=10;
+    this.minRotation=-10;
 
     //flags
 
@@ -240,7 +243,18 @@ Evolb.Character.prototype.moveInDirecton= function(movementVector) {
     finalVelocity.setMagnitude(Math.min(finalVelocity.getMagnitude(),this.modifiedStats.maxSpeed));
     this.body.velocity.x=finalVelocity.x;
     this.body.velocity.y=finalVelocity.y;
-}
+
+    var angleToDirection=Math.atan2(finalVelocity.x,-finalVelocity.y)*(180/Math.PI);
+    if (angleToDirection-this.angle<0 && Math.abs(angleToDirection-this.angle)>=this.modifiedStats.rotateSpeed){
+        this.angle=Phaser.Math.clamp(this.angle-this.modifiedStats.rotateSpeed,this.minRotation,this.maxRotation)
+    }
+    else if (angleToDirection-this.angle>0 && Math.abs(angleToDirection-this.angle)>=this.modifiedStats.rotateSpeed){
+        this.angle=Phaser.Math.clamp(this.angle+this.modifiedStats.rotateSpeed,this.minRotation,this.maxRotation)
+    }
+    else if(Math.abs(angleToDirection-this.angle)<this.rotateSpeed){
+        this.angle=angleToDirection;
+    }
+};
 
 //moves this creature in the direction of the target
 Evolb.Character.prototype.moveToTarget= function(target,speed) {
