@@ -1,0 +1,52 @@
+{"frames": {
+
+"blobs-34.png":
+{
+	"frame": {"x":2,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs-36.png":
+{
+	"frame": {"x":178,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"frozen_blob.png":
+{
+	"frame": {"x":354,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"hot_blob.png":
+{
+	"frame": {"x":530,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"poison_blob.png":
+{
+	"frame": {"x":706,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "blob_sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":882,"h":134},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:e4adb72597b1fad1d9c8b0a2bacfed27:f4cb8dbf1abe07becb347c53e2426a3b:b256302f0285c80096e9c7d9971f133d$"
+}
+}

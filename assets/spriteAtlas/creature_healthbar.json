@@ -1,0 +1,100 @@
+{"frames": {
+
+"blobs01.png":
+{
+	"frame": {"x":1762,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs02.png":
+{
+	"frame": {"x":1586,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs03.png":
+{
+	"frame": {"x":1410,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs04.png":
+{
+	"frame": {"x":1234,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs05.png":
+{
+	"frame": {"x":1058,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs06.png":
+{
+	"frame": {"x":882,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs07.png":
+{
+	"frame": {"x":706,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs08.png":
+{
+	"frame": {"x":530,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs09.png":
+{
+	"frame": {"x":354,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs10.png":
+{
+	"frame": {"x":178,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+},
+"blobs11.png":
+{
+	"frame": {"x":2,"y":2,"w":174,"h":130},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":130},
+	"sourceSize": {"w":174,"h":130}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "creature_healthbar.png",
+	"format": "RGBA8888",
+	"size": {"w":1938,"h":134},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:66954f3ca40226c974a5a7d6c13c30bc:9076ab5f6a97862cd18227edf957caa8:fb3d370f396c4b7136c2329d9d6382b0$"
+}
+}

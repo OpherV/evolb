@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <script type="text/javascript" src="js/phaser.js"></script>
+        <script type="text/javascript" src="js/convex_hull.js"></script>
+        <script type="text/javascript" src="js/Utils.js"></script>
+
+        <script type="text/javascript" src="js/Menu.js"></script>
+        <script type="text/javascript" src="js/LevelEditor.js"></script>
+        <script type="text/javascript" src="js/Level.js"></script>
+        <script type="text/javascript" src="js/LevelLoader.js"></script>
+
+        <script type="text/javascript" src="js/traits/MutationChance.js"></script>
+        <script type="text/javascript" src="js/traits/Cannibalism.js"></script>
+        <script type="text/javascript" src="js/traits/Armor.js"></script>
+        <script type="text/javascript" src="js/traits/Offense.js"></script>
+
+        <script type="text/javascript" src="js/Trait.js"></script>
+        <script type="text/javascript" src="js/Dna.js"></script>
+
+        <script type="text/javascript" src="js/gui/CreatureHealthbar.js"></script>
+        <script type="text/javascript" src="js/gui/Healthbar.js"></script>
+        <script type="text/javascript" src="js/gui/InfoPanel.js"></script>
+
+
+        <script type="text/javascript" src="js/Materials.js"></script>
+        <script type="text/javascript" src="js/Rock.js"></script>
+        <script type="text/javascript" src="js/Character.js"></script>
+        <script type="text/javascript" src="js/Creature.js"></script>
+        <script type="text/javascript" src="js/sprites/areas/Area.js"></script>
+        <script type="text/javascript" src="js/sprites/areas/IceArea.js"></script>
+        <script type="text/javascript" src="js/sprites/areas/HeatArea.js"></script>
+        <script type="text/javascript" src="js/sprites/areas/PoisonArea.js"></script>
+        <script type="text/javascript" src="js/sprites/Enemy1.js"></script>
+        <script type="text/javascript" src="js/Food.js"></script>
+        <script type="text/javascript" src="js/sprites/Target.js"></script>
+        <script type="text/javascript" src="js/Mutation.js"></script>
+        <script type="text/javascript" src="js/Evolb.js"></script>
+
+        <link href="stylesheets/levelEditor.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div id="editor">
+            <div class="addElement section">
+                <select></select>
+                <button>Add</button>
+            </div>
+            <div class="properties section">
+                <div class="items"></div>
+                <button class="add">+</button>
+            </div>
+            <div class="export section">
+                <button class="export">Export</button>
+                <button class="clearCache">Clear Cache</button>
+            </div>
+        </div>
+        <div id="exportModal">
+            <button class="close">X</button>
+            <textarea id="export"></textarea>
+        </div>
+    </body>
+</html>

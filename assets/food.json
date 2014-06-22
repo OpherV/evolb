@@ -1,0 +1,36 @@
+{"frames": {
+
+"food_anim1.png":
+{
+	"frame": {"x":2,"y":192,"w":96,"h":82},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":18,"w":96,"h":82},
+	"sourceSize": {"w":120,"h":120}
+},
+"food_anim2.png":
+{
+	"frame": {"x":2,"y":104,"w":98,"h":86},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":15,"w":98,"h":86},
+	"sourceSize": {"w":120,"h":120}
+},
+"food_anim3.png":
+{
+	"frame": {"x":2,"y":2,"w":98,"h":100},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":15,"w":98,"h":100},
+	"sourceSize": {"w":120,"h":120}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "food.png",
+	"format": "RGBA8888",
+	"size": {"w":102,"h":278},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d003cf9753b35edcc84d750039d3a18e:a091b847664fe0a33cda8af988a5f2e3:dc56c85744751b4d97b97a9b9d1306ba$"
+}
+}

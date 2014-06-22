@@ -1,0 +1,145 @@
+Evolb=(window.Evolb?window.Evolb:{});
+Evolb.core=(function(){
+
+    var currentLevel=null;
+
+    var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    var height =  Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    var game=new Phaser.Game(width, height, Phaser.WEBGL, '', { preload: preload, create: create, update: update, render: render });
+
+    WebFontConfig = {
+
+        active: function() { },
+
+        //  The Google Fonts we want to load (specify as many as you like in the array)
+        google: {
+            families: ['Quicksand']
+        }
+
+    };
+
+    function preload() {
+        game.load.image('shine', 'assets/sprites/shine_test.png');
+        game.load.image('background', 'assets/background.png');
+        game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
+        game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
+        game.load.image('mutation', 'assets/sprites/mutation.png');
+        game.load.image('rock1', 'assets/sprites/rock1.png');
+        game.load.image('rock2', 'assets/sprites/rock2.png');
+        game.load.image('rock3', 'assets/sprites/rock3.png');
+        game.load.image('pattern_ice', 'assets/patterns/pattern_ice.png');
+        game.load.image('ice_bg', 'assets/sprites/ice_bg.png');
+        game.load.image('heat_bg', 'assets/sprites/heat_bg.png');
+        game.load.image('poison_bg', 'assets/sprites/poison_bg.png');
+        game.load.image('bubble', 'assets/sprites/bubble.png');
+        game.load.image('menu_bg', 'assets/sprites/gui/menu.png');
+
+        game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
+        game.load.script('filterX', 'js/filters/BlurX.js');
+        game.load.script('filterY', 'js/filters/BlurY.js');
+        game.load.script('displacementFilter', 'js/filters/DisplacementFilter.js');
+        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+
+        game.load.atlasJSONHash('ice_particles', 'assets/sprites/ice_particles.png', 'assets/spriteAtlas/ice_particles.json');
+        game.load.atlasJSONHash('enemy1', 'assets/sprites/enemy1_sprites.png', 'assets/spriteAtlas/enemy1.json');
+        game.load.atlasJSONHash('blob', 'assets/sprites/blob_sprites.png', 'assets/spriteAtlas/blob.json' );
+        game.load.atlasJSONHash('creature_face', 'assets/sprites/creature_face_sprites.png', 'assets/spriteAtlas/creature_face.json' );
+        game.load.atlasJSONHash('creature_healthbar', 'assets/sprites/creature_healthbar.png', 'assets/spriteAtlas/creature_healthbar.json' );
+        game.load.atlasJSONHash('blob_smoke', 'assets/sprites/blob_smoke.png', 'assets/spriteAtlas/blob_smoke.json' );
+        game.load.atlasJSONHash('traits', 'assets/sprites/traits_sprites.png', 'assets/spriteAtlas/traits.json' );
+        game.load.atlasJSONHash('food', 'assets/sprites/plankton_sprites.png', 'assets/spriteAtlas/plankton.json' );
+        game.load.atlasJSONHash('plankton_eyes', 'assets/sprites/plankton_eyes.png', 'assets/spriteAtlas/plankton_eyes.json' );
+        game.load.atlasJSONHash('plankton_death', 'assets/sprites/plankton_death.png', 'assets/spriteAtlas/plankton_death.json' );
+        game.load.atlasJSONHash('book', 'assets/sprites/book.png', 'assets/spriteAtlas/book.json' );
+
+
+        game.load.audio('ice-cracking', 'assets/sound/ice-cracking-01.mp3');
+        game.load.audio('ice-breaking', 'assets/sound/ice_break.mp3');
+        game.load.audio('enemy-spike', 'assets/sound/enemy_spike.mp3');
+        game.load.audio('spike-stab', 'assets/sound/spike_stab.mp3');
+        game.load.audio('fire-woosh', 'assets/sound/fire_woosh.mp3');
+        game.load.audio('water-sizzle', 'assets/sound/water_sizzle.mp3');
+        game.load.audio('poison', 'assets/sound/poison.mp3');
+
+
+
+
+
+        //physics
+
+        //	Load our physics data exported from PhysicsEditor
+        game.load.physics('rocks', 'assets/physics/rocks.json');
+
+        Evolb.LevelLoader.init(game);
+    }
+
+    function create() {
+        //	Enable p2 physics
+        game.physics.startSystem(Phaser.Physics.P2JS);
+        game.physics.p2.enable([], false);
+
+        Evolb.Materials.init(game);
+
+        initialize();
+    }
+
+    function initialize(){
+
+        if  ("loadLevel" in Evolb.Utils.getUrlVars()){
+            var levelName=Evolb.Utils.getUrlVars().loadLevel;
+            Evolb.currentLevel = Evolb.LevelLoader.loadLevelByName(levelName);
+        }
+        else{
+            Evolb.Menu.load(game);
+        }
+
+
+    }
+
+    function update () {
+        if (Evolb.currentLevel){
+            Evolb.currentLevel.update();
+        }
+    }
+
+    function render(){
+        if (Evolb.currentLevel){
+            Evolb.currentLevel.render();
+        }
+    }
+
+
+
+    /// util functions
+    // ****************************
+
+
+    function _rgbToHex(r, g, b) {
+        return "0x" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function _getPointArray(pathString,steps){
+        var numberOfPoints=steps?steps:10;
+
+        var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+        var pathObj = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        pathObj.setAttribute("d",pathString); //Set path's data
+        var pointArray=[];
+        for(var x=0;x<=numberOfPoints;x++){
+            var locationPercent=x/numberOfPoints;
+            var pointOnPath=pathObj.getPointAtLength(locationPercent*pathObj.getTotalLength());
+            var newPoint={x: pointOnPath.x, y:pointOnPath.y};
+            pointArray.push(newPoint);
+        }
+        return pointArray;
+    }
+
+
+    return{
+        game: game,
+        rgbToHex:_rgbToHex,
+        getPointArray: _getPointArray,
+        version: "0.1"
+    }
+})();

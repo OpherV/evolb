@@ -1,0 +1,76 @@
+{"frames": {
+
+"plankton2_animation-02.png":
+{
+	"frame": {"x":2,"y":190,"w":64,"h":82},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":58,"w":64,"h":82},
+	"sourceSize": {"w":100,"h":160}
+},
+"plankton2_animation-03.png":
+{
+	"frame": {"x":2,"y":346,"w":64,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":48,"w":64,"h":80},
+	"sourceSize": {"w":100,"h":160}
+},
+"plankton2_animation-04.png":
+{
+	"frame": {"x":2,"y":274,"w":64,"h":70},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":43,"w":64,"h":70},
+	"sourceSize": {"w":100,"h":160}
+},
+"plankton2_animation-05.png":
+{
+	"frame": {"x":56,"y":2,"w":62,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":34,"w":62,"h":62},
+	"sourceSize": {"w":100,"h":160}
+},
+"plankton2_animation-06.png":
+{
+	"frame": {"x":2,"y":66,"w":62,"h":52},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":29,"w":62,"h":52},
+	"sourceSize": {"w":100,"h":160}
+},
+"plankton2_animation-07.png":
+{
+	"frame": {"x":2,"y":2,"w":52,"h":58},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":22,"w":52,"h":58},
+	"sourceSize": {"w":100,"h":160}
+},
+"plankton2_animation-08.png":
+{
+	"frame": {"x":2,"y":120,"w":62,"h":68},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":19,"y":16,"w":62,"h":68},
+	"sourceSize": {"w":100,"h":160}
+},
+"plankton2_animation-09.png":
+{
+	"frame": {"x":2,"y":428,"w":72,"h":78},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":4,"w":72,"h":78},
+	"sourceSize": {"w":100,"h":160}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "plankton_death.png",
+	"format": "RGBA8888",
+	"size": {"w":120,"h":508},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:986536444d2477fe27715f0d7fb58d7f:c06fd3503edffb240a725b89ec2f768d:9507526e7e75803c0e86ebeea6c808f3$"
+}
+}
