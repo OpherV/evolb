@@ -1,9 +1,8 @@
 Evolb
 =====
+**An open source HTML5 game that aims to tackle basic concepts in evolution**
 
 ![screenshot](http://i.imgur.com/f5boCMd.png?1)
-
-An open source HTML5 game that aims to tackle basic concepts in evolution 
 
 
 ## Play
