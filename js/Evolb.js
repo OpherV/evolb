@@ -87,7 +87,7 @@ Evolb.core=(function(){
 
         if  ("loadLevel" in Evolb.Utils.getUrlVars()){
             var levelName=Evolb.Utils.getUrlVars().loadLevel;
-            Evolb.currentLevel = Evolb.LevelLoader.loadLevelByName(game,levelName);
+            Evolb.currentLevel = Evolb.LevelLoader.loadLevelByName(levelName);
         }
         else{
             Evolb.Menu.load(game);
