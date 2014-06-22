@@ -9,8 +9,8 @@ var level=
         var NUM_OF_FOOD=120;
         var NUM_OF_MUTATIONS = 15;
         var NUM_OF_CREATURES=5;
-        var NUM_OF_ROCKS=200;
-        var NUM_OF_AREAS=0;
+        var NUM_OF_ROCKS=100;
+        var NUM_OF_AREAS=12;
 
         var spawnDistance=200;
 
@@ -74,6 +74,8 @@ var level=
             var newRock = new Evolb.Rock(this,params);
             this.layers.rocks.add(newRock);
             this.placeWithoutCollision(newRock,[this.spriteArrays.all,this.layers.areas.children]);
+            newRock.body.rotation=Math.random()*Math.PI;
+            newRock.rotation=newRock.body.rotation;
         }
 
 
