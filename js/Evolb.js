@@ -1,7 +1,6 @@
 Evolb=(window.Evolb?window.Evolb:{});
 Evolb.core=(function(){
 
-    var levels={};
     var currentLevel=null;
 
     var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -33,6 +32,7 @@ Evolb.core=(function(){
         game.load.image('heat_bg', 'assets/sprites/heat_bg.png');
         game.load.image('poison_bg', 'assets/sprites/poison_bg.png');
         game.load.image('bubble', 'assets/sprites/bubble.png');
+        game.load.image('menu_bg', 'assets/sprites/gui/menu.png');
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('filterX', 'js/filters/BlurX.js');
@@ -63,8 +63,6 @@ Evolb.core=(function(){
 
 
 
-        _preloadLevel('tutorial', 'levels/random.js');
-
 
 
         //physics
@@ -72,7 +70,7 @@ Evolb.core=(function(){
         //	Load our physics data exported from PhysicsEditor
         game.load.physics('rocks', 'assets/physics/rocks.json');
 
-
+        Evolb.LevelLoader.init(game);
     }
 
     function create() {
@@ -86,19 +84,27 @@ Evolb.core=(function(){
     }
 
     function initialize(){
-        var tutorialLevel = Evolb.LevelLoader.loadLevel(game,levels.tutorial);
-        currentLevel=tutorialLevel;
+
+        if  ("loadLevel" in Evolb.Utils.getUrlVars()){
+            var levelName=Evolb.Utils.getUrlVars().loadLevel;
+            Evolb.currentLevel = Evolb.LevelLoader.loadLevelByName(game,levelName);
+        }
+        else{
+            Evolb.Menu.load(game);
+        }
+
+
     }
 
     function update () {
-        if (currentLevel){
-            currentLevel.update();
+        if (Evolb.currentLevel){
+            Evolb.currentLevel.update();
         }
     }
 
     function render(){
-        if (currentLevel){
-            currentLevel.render();
+        if (Evolb.currentLevel){
+            Evolb.currentLevel.render();
         }
     }
 
@@ -107,13 +113,6 @@ Evolb.core=(function(){
     /// util functions
     // ****************************
 
-
-
-    function _preloadLevel(key,url){
-        game.load.script(key,url,function(){
-            this[key]=level;
-        },levels)
-    }
 
     function _rgbToHex(r, g, b) {
         return "0x" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);

@@ -1,6 +1,16 @@
 Evolb=(window.Evolb?window.Evolb:{});
 Evolb.LevelLoader=function(){
 
+    var _levels;
+    var _game;
+
+    function _init(game){
+        _game=game;
+        _levels={};
+        _preloadLevel('tutorial', 'levels/tutorial.js');
+        _preloadLevel('random', 'levels/random.js');
+    }
+
     function _loadLevel(game,levelData){
         var level=new Evolb.Level(game,levelData.levelWidth,levelData.levelHeight);
         level.name=levelData.name;
@@ -26,7 +36,19 @@ Evolb.LevelLoader=function(){
 
     }
 
+    function _loadLevelByName(levelName){
+        return _loadLevel(_game,_levels[levelName]);
+    }
+
+    function _preloadLevel(key,url){
+        _game.load.script(key,url,function(){
+            this[key]=level;
+        },_levels)
+    }
+
     return {
-        loadLevel: _loadLevel
+        init: _init,
+        loadLevel: _loadLevel,
+        loadLevelByName: _loadLevelByName
     }
 }();
