@@ -147,7 +147,7 @@ Evolb.Menu.prototype.addCreature=function(x,y){
 
     //random size
 
-    creature.scale.setTo(0.3+Math.random()*0.6);
+    creature.scale.setTo(0.23+Math.random()*0.45);
 
 
     blobBody.anchor.setTo(0.5);
@@ -181,7 +181,7 @@ Evolb.Menu.prototype.addEnemy=function(x,y){
 
     //random size
 
-    enemey.scale.setTo(0.8+Math.random());
+    enemey.scale.setTo(0.6+Math.random()*0.75);
 
 
     enemey.anchor.setTo(0.5);
