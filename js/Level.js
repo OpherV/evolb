@@ -222,14 +222,16 @@ Evolb.Level=function(game,levelWidth,levelHeight){
 Evolb.Level.prototype.constructor = Evolb.Level;
 
 Evolb.Level.prototype.update=function(){
-    this.displacementCount+=0.1;
-    this.displacementFilter.offset.x = this.displacementCount * 10;
-    this.displacementFilter.offset.y = this.displacementCount * 10 ;
+
 
 };
 
 
 Evolb.Level.prototype.render=function(){
+
+    this.displacementCount+=0.1;
+    this.displacementFilter.offset.x = this.displacementCount * 10;
+    this.displacementFilter.offset.y = this.displacementCount * 10 ;
 
     if (!this.levelEditor.isActive && this.layers.creatures.countLiving()>0){
         if (this.focusTarget){

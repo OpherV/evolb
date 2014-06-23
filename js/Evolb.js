@@ -32,7 +32,9 @@ Evolb.core=(function(){
         game.load.image('heat_bg', 'assets/sprites/heat_bg.png');
         game.load.image('poison_bg', 'assets/sprites/poison_bg.png');
         game.load.image('bubble', 'assets/sprites/bubble.png');
-        game.load.image('menu_bg', 'assets/sprites/gui/menu.png');
+        game.load.image('menu_bg', 'assets/sprites/gui/menu_bg.jpg');
+        game.load.image('menu_bg2', 'assets/sprites/gui/menu_bg2.png');
+        game.load.image('logo', 'assets/sprites/gui/logo.png');
 
         game.load.script('abstractFilter', 'js/filters/AbstractFilter.js');
         game.load.script('filterX', 'js/filters/BlurX.js');
@@ -90,7 +92,9 @@ Evolb.core=(function(){
             Evolb.currentLevel = Evolb.LevelLoader.loadLevelByName(levelName);
         }
         else{
-            Evolb.Menu.load(game);
+            var mainMenu=new Evolb.Menu(game);
+            Evolb.currentLevel=mainMenu;
+            mainMenu.load();
         }
 
 
