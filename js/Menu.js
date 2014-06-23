@@ -74,8 +74,8 @@ Evolb.Menu.prototype.load=function(){
 
         var bobTime=this.game.rnd.realInRange(6000,10000);
 
-        this.game.add.tween(this).to({ x: randomPoint.x, y: randomPoint.y }, bobTime, Phaser.Easing.Linear.None, true);
-        this.game.time.events.add(bobTime, bob, this);
+        this.currentTween=this.game.add.tween(this).to({ x: randomPoint.x, y: randomPoint.y }, bobTime, Phaser.Easing.Linear.None, true);
+        this.nextBob=this.game.time.events.add(bobTime, bob, this);
 
     }
 
@@ -98,16 +98,25 @@ Evolb.Menu.prototype.load=function(){
     var that=this;
 
     this.addMenuItem("Tutorial",function(){
-        that.menuGroup.destroy();
+        that.destroy();
         Evolb.currentLevel = Evolb.LevelLoader.loadLevelByName("tutorial");
     });
     this.addMenuItem("Random Level",function(){
-        that.menuGroup.destroy();
+        that.destroy();
         Evolb.currentLevel  = Evolb.LevelLoader.loadLevelByName("random");
     });
 
 };
 
+
+Evolb.Menu.prototype.destroy=function(){
+    for (var x=0;x<this.characters.length;x++){
+        var character=this.characters[x];
+        this.game.tweens.remove(character.currentTween);
+        this.game.time.events.remove(character.nextBob);
+    }
+    this.menuGroup.destroy();
+};
 
 
 Evolb.Menu.prototype.addCreature=function(x,y){
