@@ -77,7 +77,7 @@ Evolb.Creature= function (level,objectData) {
 
     //health bar
     this.healthbar = new Evolb.gui.CreatureHealthbar(this.game,this);
-    //this.healthbar.blendMode = PIXI.blendModes.ADD;
+    this.healthbar.blendMode = PIXI.blendModes.MULTIPLY;
     this.healthbar.x = -this.healthbar.width/2;
     this.healthbar.y = -this.healthbar.height/2-3;
     this.addChild(this.healthbar);
