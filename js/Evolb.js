@@ -62,6 +62,7 @@ Evolb.core=(function(){
         game.load.audio('fire-woosh', 'assets/sound/fire_woosh.mp3');
         game.load.audio('water-sizzle', 'assets/sound/water_sizzle.mp3');
         game.load.audio('poison', 'assets/sound/poison.mp3');
+        game.load.audio('bubble1', 'assets/sound/bubble1.mp3');
 
 
 
