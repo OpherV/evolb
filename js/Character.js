@@ -152,7 +152,7 @@ Evolb.Character.prototype.init=function(){
     //add gui to gui layer
     this.level.layers.gui.add(this.gui);
 
-    this.timeEvents.areaDamage=this.game.time.events.loop(1000, this.areaEvent, this);
+    this.timeEvents.areaDamage=this.game.time.events.loop(2500, this.areaEvent, this);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
     //only initialize for characters that can attack
