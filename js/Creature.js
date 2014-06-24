@@ -228,6 +228,10 @@ Evolb.Creature.prototype.contactHandler={
     "thorn": function(body){
         this.stopBreeding();
         this.physicalDamage(body.sprite.damageOutput,true);
+    },
+    "pebble": function(body){
+        this.stopBreeding();
+        this.physicalDamage(body.sprite.damageOutput,true);
     }
 };
 
@@ -312,9 +316,12 @@ Evolb.Creature.prototype.damage=function(amount,showDamage){
     Evolb.Character.prototype.damage.call(this,amount,showDamage);
 
     if (showDamage){
-        this.face.animations.play("pain",2).onComplete.addOnce(function(){
-            this.face.animations.frame=oldFaceFrame;
-        },this);
+        var anim=this.face.animations.play("pain",2);
+        if (anim){
+            anim.onComplete.addOnce(function(){
+                this.face.animations.frame=oldFaceFrame;
+            },this);
+        }
     }
 };
 

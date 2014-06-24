@@ -59,6 +59,9 @@ Evolb.Enemy1.prototype.attackHandler={
 Evolb.Enemy1.prototype.contactHandler={
     "thorn": function(body){
         this.physicalDamage(body.sprite.damageOutput,true);
+    },
+    "pebble": function(body){
+        this.physicalDamage(body.sprite.damageOutput,true);
     }
 };
 

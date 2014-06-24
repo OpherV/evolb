@@ -23,7 +23,7 @@ Evolb.core=(function(){
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
-        game.load.image('smallrock', 'assets/sprites/small_rock.png');
+        game.load.image('pebble', 'assets/sprites/pebble.png');
         game.load.image('rock1', 'assets/sprites/rock1.png');
         game.load.image('rock2', 'assets/sprites/rock2.png');
         game.load.image('rock3', 'assets/sprites/rock3.png');

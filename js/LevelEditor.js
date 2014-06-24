@@ -240,6 +240,10 @@ Evolb.LevelEditor.prototype.initializeLevelEditor=function(){
             layer: "rocks"
         },
         {
+            constructorName: "Pebble",
+            layer: "rocks"
+        },
+        {
             constructorName: "Thorn",
             layer: "rocks"
         },
