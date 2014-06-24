@@ -18,7 +18,7 @@ Evolb.Level=function(game,levelWidth,levelHeight){
     game.world.setBounds(-this.labOffset, -this.labOffset, this.levelWidth+this.labOffset*2, this.levelHeight+this.labOffset*2);
 
     //music
-    this.music=this.game.sound.play("level_music",0.1);
+    this.music=this.game.sound.play("level_music",0.1,true);
 
 
     this.layers={

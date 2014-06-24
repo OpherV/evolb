@@ -116,7 +116,7 @@ Evolb.Menu.prototype.load=function(){
 
 
     //music
-    this.music=this.game.sound. play("menu_music",0.2);
+    this.music=this.game.sound. play("menu_music",0.2,true);
 };
 
 
