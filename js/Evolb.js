@@ -27,6 +27,8 @@ Evolb.core=(function(){
         game.load.image('rock1', 'assets/sprites/rock1.png');
         game.load.image('rock2', 'assets/sprites/rock2.png');
         game.load.image('rock3', 'assets/sprites/rock3.png');
+        game.load.image('thorn1', 'assets/sprites/thorns1.png');
+        game.load.image('thorn2', 'assets/sprites/thorns2.png');
         game.load.image('pattern_ice', 'assets/patterns/pattern_ice.png');
         game.load.image('ice_bg', 'assets/sprites/ice_bg.png');
         game.load.image('heat_bg', 'assets/sprites/heat_bg.png');
@@ -65,13 +67,11 @@ Evolb.core=(function(){
         game.load.audio('bubble1', 'assets/sound/bubble1.mp3');
 
 
-
-
-
         //physics
 
         //	Load our physics data exported from PhysicsEditor
         game.load.physics('rocks', 'assets/physics/rocks.json');
+        game.load.physics('thorns', 'assets/physics/thorns.json');
 
         Evolb.LevelLoader.init(game);
     }
