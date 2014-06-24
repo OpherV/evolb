@@ -57,6 +57,8 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
     this.body.fixedRotation = true;
     this.body.collideWorldBounds=true;
 
+    this.bodySprite=this; //which sprite is generally used to for size calculations
+
     //events
     //*************************
     this.body.onBeginContact.add(beginContactHandler, this);

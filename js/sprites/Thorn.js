@@ -7,6 +7,8 @@ Evolb.Thorn=function(level,objectData){
     this.id=this.objectData.id;
     this.kind="thorn";
 
+    this.damageOutput=10;
+
     var thornNumber=this.objectData.thornType?this.objectData.thornType:this.game.rnd.integerInRange(1,2);
     this.objectData.thornType=thornNumber;
     Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y,'thorn'+thornNumber);

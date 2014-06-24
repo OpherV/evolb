@@ -224,6 +224,10 @@ Evolb.Creature.prototype.contactHandler={
         if (this.modifiedStats.damageOutput>0){
             body.sprite.damage(this.modifiedStats.damageOutput,true);
         }
+    },
+    "thorn": function(body){
+        this.stopBreeding();
+        this.physicalDamage(body.sprite.damageOutput,true);
     }
 };
 
@@ -248,7 +252,7 @@ Evolb.Creature.prototype.endContactHandler={
 };
 
 Evolb.Creature.prototype.doHungerEvent=function(){
-    if (this.hasHunger){
+    if (this.hasHunger && !this.level.levelEditor.isActive){
         this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"),false);
     }
 };
@@ -258,12 +262,14 @@ Evolb.Creature.prototype.init = function(){
     this.dna.activate();
     this.healthbar.redraw();
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);
+    this.level.updateGoal();
 };
 
 
 Evolb.Creature.prototype.postKill = function(){
     Evolb.Character.prototype.postKill.call(this);
     this.bubbleEmitter.destroy();
+    this.level.updateGoal();
 };
 
 Evolb.Creature.prototype.update = function(){
