@@ -6,8 +6,8 @@ Evolb.Traits.Offense={
     lowName: "Neutral",
     highName: "Offensive",
     damageBonus: {
-        lowLimit: 0,
-        highLimit: 30
+        lowLimit: 5,
+        highLimit: 25
     },
     sprites: [{frame: 6, x: -72, y: -82},
             {frame: 7, x: -80, y: -73},

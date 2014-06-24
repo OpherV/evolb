@@ -15,7 +15,10 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
         attackSpeed: 500,
         defense: 0,
         damageOutput: 0,// attack speed in millisecs
-        mutationChance: 0
+        mutationChance: 0,
+        heatEndurance: 0,
+        coldEndurance: 0,
+        poisonEndurance: 0
     };
 
     this.modifiedStats={}; //these are the stats after any modifiers
@@ -29,6 +32,10 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
     this.canBeControlled = true; //can be controlled by player
     this.canBreed = true;
     this.canBob = true;
+
+    this.isHot=false;
+    this.isCold=false;
+    this.isPoisoned=false;
 
     this.hungerDelay=Phaser.Timer.SECOND*10; // amount of time until hunger starts kicking in
     this.hungerTimeInterval=Phaser.Timer.SECOND*2;
@@ -49,6 +56,8 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
 
     this.gui=this.game.add.group();
 
+    this.emitters={};
+
 
     //construct sprite
     Phaser.Sprite.call(this, this.game, x, y, spriteKey);
@@ -56,6 +65,8 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
     this.game.physics.p2.enable(this,false);
     this.body.fixedRotation = true;
     this.body.collideWorldBounds=true;
+
+    this.bodySprite=this; //which sprite is generally used to for size calculations
 
     //events
     //*************************
@@ -117,6 +128,15 @@ Evolb.Character.types= Object.freeze({
     POWERUP: "powerup"
 });
 
+
+Evolb.Character.damageTypes= Object.freeze({
+    PHYSICAL: "physical",
+    HEAT: "heat",
+    COLD: "cold",
+    POISON: "poison"
+});
+
+
 // generic methods
 // ******************
 //Every class inheriting should call this on startup
@@ -129,6 +149,8 @@ Evolb.Character.prototype.init=function(){
 
     //add gui to gui layer
     this.level.layers.gui.add(this.gui);
+
+    this.timeEvents.areaDamage=this.game.time.events.loop(1000, this.areaEvent, this);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
     //only initialize for characters that can attack
@@ -164,6 +186,19 @@ Evolb.Character.prototype.attackCycle=function(){
     }
 };
 
+
+
+Evolb.Character.prototype.areaEvent=function(){
+    if (this.isHot){
+        this.typedDamage(5,Evolb.Character.damageTypes.HEAT,true);
+    }
+    if (this.isCold){
+        this.typedDamage(3,Evolb.Character.damageTypes.COLD,true);
+    }
+    if (this.isPoisoned){
+        this.typedDamage(10,Evolb.Character.damageTypes.POISON,true);
+    }
+};
 
 
 Evolb.Character.prototype.isTouching=function(body){
@@ -354,9 +389,32 @@ Evolb.Character.prototype.render=function(){
 
 
 //returns the actual damage inflicted
-Evolb.Character.prototype.physicalDamage= function(amount,showDamage) {
+Evolb.Character.prototype.typedDamage= function(amount,type,showDamage) {
+
     //reduce defense stats from damage
-    var inflictedDamage=Math.max(0,amount-this.modifiedStats.defense);
+    var inflictedDamage;
+    var textColor="#ff0000";
+
+    switch (type){
+        case Evolb.Character.damageTypes.PHYSICAL:
+            inflictedDamage=Math.max(0,amount-this.modifiedStats.defense);
+            break;
+        case Evolb.Character.damageTypes.HEAT:
+            inflictedDamage=Math.max(0,amount-this.modifiedStats.heatEndurance);
+            textColor="#ff7b11";
+            break;
+        case Evolb.Character.damageTypes.COLD:
+            inflictedDamage=Math.max(0,amount-this.modifiedStats.coldEndurance);
+            textColor="#1138ff";
+            break;
+        case Evolb.Character.damageTypes.POISON:
+            inflictedDamage=Math.max(0,amount-this.modifiedStats.poisonEndurance);
+            textColor="#d86dd7";
+            break;
+        default:
+            inflictedDamage=amount;
+    }
+
     if (inflictedDamage>0){
         this.damage(inflictedDamage,showDamage);
         if (showDamage){
@@ -364,7 +422,7 @@ Evolb.Character.prototype.physicalDamage= function(amount,showDamage) {
         }
         this.healthbar.redraw();
     }
-    this.bobupText("-"+Math.round(inflictedDamage),"#ff0000");
+    this.bobupText("-"+Math.round(inflictedDamage),textColor);
 
     return inflictedDamage;
 };
@@ -408,24 +466,7 @@ Evolb.Character.prototype.update = function() {
     var pointerInWorld=new Phaser.Point(pointer.worldX,pointer.worldY);
 
     if (this.isFollowingPointer && this.canBeControlled){
-        var maxPlayerControlRange=1000;
-        var moveRatio;
-
-        //in case of one creature, always move it
-        if (this.level.getCreatures().length==1){
-            moveRatio=1;
-        }
-        else{
-            moveRatio=Math.max(0.15,pointer.controlRatio); //minimum should be higher than 0
-        }
-        //creatures farther from the pointer are less effected
-        //var effectiveDistance=Math.min(maxPlayerControlRange,Phaser.Point.distance(this,pointer));
-        //var moveSpeedRatio= -Math.pow(effectiveDistance/Evolb.core.PLAYER_CONTROL_RANGE,7)+1;
-        if (Phaser.Point.distance(this,pointerInWorld)<=moveRatio*maxPlayerControlRange){
-            this.moveToTarget(pointerInWorld,this.modifiedStats.moveSpeed*moveRatio);
-        }
-//        console.log(Phaser.Point.distance(this,pointer));
-
+        this.moveToTarget(pointerInWorld,this.modifiedStats.moveSpeed);
     }
 
     if (this.canBob && this.state==Evolb.Character.states.DRIFTING && this.body.velocity.x<=this.modifiedStats.idleVelocityRange && this.body.velocity.y<=this.modifiedStats.idleVelocityRange){
@@ -442,17 +483,19 @@ Evolb.Character.prototype.update = function() {
 
     }
 
-    if (this.dna){
-        for (var traitName in this.dna.traits){
-            this.dna.traits[traitName].parentTrait.onUpdate(this);
-        }
+    //not required for now
 
-        for (var traitName in this.dna.baseTraits){
-            if (this.dna.baseTraits[traitName].parentTrait.onUpdate){
-                this.dna.baseTraits[traitName].parentTrait.onUpdate(this);
-            }
-        }
-    }
+//    if (this.dna){
+//        for (var traitName in this.dna.traits){
+//            this.dna.traits[traitName].parentTrait.onUpdate(this);
+//        }
+//
+//        for (var traitName in this.dna.baseTraits){
+//            if (this.dna.baseTraits[traitName].parentTrait.onUpdate){
+//                this.dna.baseTraits[traitName].parentTrait.onUpdate(this);
+//            }
+//        }
+//    }
 
     //proximity events
     for (var x=0;x<this.proximityChecks.length;x++){
@@ -462,6 +505,13 @@ Evolb.Character.prototype.update = function() {
         }
     }
 
+
+    //emitters
+    for(var emitterName in this.emitters){
+        var emitter=this.emitters[emitterName];
+        emitter.emitX=this.x;
+        emitter.emitY=this.y;
+    }
 };
 
 

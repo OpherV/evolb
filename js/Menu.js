@@ -11,6 +11,8 @@ Evolb.Menu=function (game) {
     this.i=0;
     this.max=0;
 
+    this.floatCounter=0;
+
     this.menuGroup=game.add.group();
     this.characters=[];
 };
@@ -26,12 +28,18 @@ Evolb.Menu.prototype.load=function(){
     var menu_bg2= this.game.add.sprite(this.game.width/2,this.game.height/2,"menu_bg2",0,this.menuGroup);
     menu_bg2.anchor.setTo(0.5);
 
-    var logo= this.game.add.sprite(this.game.width/2,this.game.height/6,"logo",0,this.menuGroup);
-    logo.anchor.setTo(0.5);
+    this.logo=this.game.add.sprite(this.game.width/2,this.game.height/6,"logo",0,this.menuGroup);
+    this.logo.anchor.setTo(0.5);
 
     var bgSizeRatio=menu_bg.width/menu_bg.height;
-    menu_bg.height=this.game.height;
-    menu_bg.width=menu_bg.height*bgSizeRatio;
+    if (bgSizeRatio>this.game.width/this.game.height){
+        menu_bg.height=this.game.height;
+        menu_bg.width=menu_bg.height*bgSizeRatio;
+    }
+    else{
+        menu_bg.width=this.game.width;
+        menu_bg.height=menu_bg.width*(1/bgSizeRatio);
+    }
 
     menu_bg2.height=menu_bg.height;
     menu_bg2.width=menu_bg.width;
@@ -101,9 +109,9 @@ Evolb.Menu.prototype.load=function(){
         that.destroy();
         Evolb.currentLevel = Evolb.LevelLoader.loadLevelByName("tutorial");
     });
-    this.addMenuItem("Random Level",function(){
+    this.addMenuItem("Play",function(){
         that.destroy();
-        Evolb.currentLevel  = Evolb.LevelLoader.loadLevelByName("random");
+        Evolb.currentLevel  = Evolb.LevelLoader.loadLevelByName("level5");
     });
 
 };
@@ -147,7 +155,7 @@ Evolb.Menu.prototype.addCreature=function(x,y){
 
     //random size
 
-    creature.scale.setTo(0.3+Math.random()*0.6);
+    creature.scale.setTo(0.23+Math.random()*0.45);
 
 
     blobBody.anchor.setTo(0.5);
@@ -171,17 +179,17 @@ Evolb.Menu.prototype.addEnemy=function(x,y){
 
     //create random blink
     var frameArray=[2,1,0,0,0,1,2];
-    for(var i=0;i<this.game.rnd.integerInRange(16,300);i++){
+    for(var i=0;i<this.game.rnd.integerInRange(150,500);i++){
         frameArray.unshift(2);
     }
 
 
     enemey.animations.add("attack",frameArray);
-    enemey.animations.play("attack",16,false);
+    enemey.animations.play("attack",16,true);
 
     //random size
 
-    enemey.scale.setTo(0.8+Math.random());
+    enemey.scale.setTo(0.6+Math.random()*0.75);
 
 
     enemey.anchor.setTo(0.5);
@@ -194,6 +202,7 @@ Evolb.Menu.prototype.addEnemy=function(x,y){
 
 
 Evolb.Menu.prototype.addMenuItem=function(text,callback){
+    var that=this;
     var textObject=new Phaser.Text(this.game,0,0,text);
     this.menuGroup.addChild(textObject);
     textObject.font = 'Quicksand';
@@ -206,6 +215,7 @@ Evolb.Menu.prototype.addMenuItem=function(text,callback){
 
     textObject.inputEnabled=true;
     textObject.events.onInputOver.add(function(){
+        that.game.sound.play("bubble1");
         this.fill="#662d91";
     }, textObject);
     textObject.events.onInputOut.add(function(){
@@ -250,6 +260,14 @@ Evolb.Menu.prototype.update=function(){
         this.update_interval = Math.floor(Math.random() * 20) * 60; // 0 - 20sec @ 60fps
         this.i = 0;
     }
+
+
+    //float logo
+    // Move sprite up and down smoothly for show
+    var tStep = Math.sin( this.floatCounter) ;
+    this.logo.y = this.game.height/6 + tStep * 7 ;
+    this.logo.rotation += Phaser.Math.degToRad( 0.1 * tStep ) * 0.4  ;
+    this.floatCounter +=  Math.PI * 2 / 360;
 };
 
 

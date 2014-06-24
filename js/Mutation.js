@@ -10,7 +10,7 @@ Evolb.Mutation= function (level,objectData) {
     this.kind="mutation";
 
 
-    var graphics=new Phaser.Sprite(this.game, 0,0, 'mutation');
+    var graphics=new Phaser.Sprite(this.game, 0,0, 'mutation',0);
     this.addChild(graphics);
 
     this.selectMarkerObj=graphics;
@@ -18,8 +18,8 @@ Evolb.Mutation= function (level,objectData) {
     graphics.anchor.setTo(0.5);
     graphics.scale.setTo(0.6);
     graphics.angle=-60;
-    graphics.y=10;
-    this.game.add.tween(graphics).to( { angle: 15 }, 1500, Phaser.Easing.Sinusoidal.InOut, true, 0, Number.MAX_VALUE, true);
+    graphics.y=-5;
+    this.game.add.tween(graphics).to( { angle: -40 }, 4000, Phaser.Easing.Sinusoidal.InOut, true, 0, Number.MAX_VALUE, true);
     this.game.add.tween(graphics).to( { y: 0 }, 900, Phaser.Easing.Sinusoidal.InOut, true, 0, Number.MAX_VALUE, true);
 
     this.game.physics.p2.enable(this,false,false);
@@ -36,3 +36,14 @@ Evolb.Mutation= function (level,objectData) {
 
 Evolb.Mutation.prototype = Object.create(Phaser.Sprite.prototype);
 Evolb.Mutation.prototype.constructor = Evolb.Mutation;
+
+
+Evolb.Mutation.prototype.destroy=function(){
+    var deathSprite=this.game.add.sprite(this.x, this.y,"mutation",0,this.level.layers.powerUps);
+    deathSprite.scale.setTo(0.6);
+    deathSprite.anchor.setTo(0.5);
+    deathSprite.animations.add("destroy",[0,1,2,3,4,5,6,7,8]);
+    deathSprite.animations.play("destroy",30,false,true);
+    Phaser.Sprite.prototype.destroy.call(this);
+};
+

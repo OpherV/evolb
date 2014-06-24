@@ -23,10 +23,12 @@ Evolb.core=(function(){
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
-        game.load.image('mutation', 'assets/sprites/mutation.png');
+        game.load.image('pebble', 'assets/sprites/pebble.png');
         game.load.image('rock1', 'assets/sprites/rock1.png');
         game.load.image('rock2', 'assets/sprites/rock2.png');
         game.load.image('rock3', 'assets/sprites/rock3.png');
+        game.load.image('thorn1', 'assets/sprites/thorns1.png');
+        game.load.image('thorn2', 'assets/sprites/thorns2.png');
         game.load.image('pattern_ice', 'assets/patterns/pattern_ice.png');
         game.load.image('ice_bg', 'assets/sprites/ice_bg.png');
         game.load.image('heat_bg', 'assets/sprites/heat_bg.png');
@@ -53,6 +55,8 @@ Evolb.core=(function(){
         game.load.atlasJSONHash('plankton_eyes', 'assets/sprites/plankton_eyes.png', 'assets/spriteAtlas/plankton_eyes.json' );
         game.load.atlasJSONHash('plankton_death', 'assets/sprites/plankton_death.png', 'assets/spriteAtlas/plankton_death.json' );
         game.load.atlasJSONHash('book', 'assets/sprites/book.png', 'assets/spriteAtlas/book.json' );
+        game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
+        game.load.atlasJSONHash('endurance_particles', 'assets/sprites/endurance_particles_sprites.png', 'assets/spriteAtlas/endurance_particles.json' );
 
 
         game.load.audio('ice-cracking', 'assets/sound/ice-cracking-01.mp3');
@@ -62,15 +66,14 @@ Evolb.core=(function(){
         game.load.audio('fire-woosh', 'assets/sound/fire_woosh.mp3');
         game.load.audio('water-sizzle', 'assets/sound/water_sizzle.mp3');
         game.load.audio('poison', 'assets/sound/poison.mp3');
-
-
-
+        game.load.audio('bubble1', 'assets/sound/bubble1.mp3');
 
 
         //physics
 
         //	Load our physics data exported from PhysicsEditor
         game.load.physics('rocks', 'assets/physics/rocks.json');
+        game.load.physics('thorns', 'assets/physics/thorns.json');
 
         Evolb.LevelLoader.init(game);
     }

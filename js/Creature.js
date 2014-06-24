@@ -14,12 +14,23 @@ Evolb.Creature= function (level,objectData) {
         //set dna from level object
         for(var property in this.objectData){
 
+            //base Traits
             if (property.indexOf("baseTrait_")>-1){
                 var traitValues=property.split("_");
                 var traitName=traitValues[1];
                 var traitValue=parseFloat(this.objectData[property]);
                 //set value
                 this.dna.baseTraits[traitName].value=traitValue;
+            }
+
+            //traits
+            if (property.indexOf("trait_")>-1){
+                var traitValues=property.split("_");
+                var traitName=traitValues[1];
+                var traitValue=parseFloat(this.objectData[property]);
+
+                var newTrait=new Evolb.TraitInstance(Evolb.Traits[traitName],traitValue);
+                this.dna.traits[newTrait.parentTrait.name]=newTrait;
             }
         }
     }
@@ -111,25 +122,25 @@ Evolb.Creature= function (level,objectData) {
 
     //emitters
 
-    this.iceEmitter = this.game.add.emitter(0, 0, 30);
-    this.iceEmitter.makeParticles('ice_particles',[0,1]);
-    this.iceEmitter.setScale(1, 1, 1, 1, 0, Phaser.Easing.Sinusoidal.InOut, true);
-    this.iceEmitter.setAlpha(1, 0, 3000);
-    this.iceEmitter.setXSpeed(-300,300);
-    this.iceEmitter.setYSpeed(-300,300);
-    this.iceEmitter.gravity = 0;
+    this.emitters.iceShards = this.game.add.emitter(0, 0, 30);
+    this.emitters.iceShards.makeParticles('ice_particles',[0,1]);
+    this.emitters.iceShards.setScale(1, 1, 1, 1, 0, Phaser.Easing.Sinusoidal.InOut, true);
+    this.emitters.iceShards.setAlpha(1, 0, 3000);
+    this.emitters.iceShards.setXSpeed(-300,300);
+    this.emitters.iceShards.setYSpeed(-300,300);
+    this.emitters.iceShards.gravity = 0;
 
-    this.bubbleEmitter = this.game.add.emitter(0, 0, 200);
-    this.level.layers.inAquarium.addChild(this.bubbleEmitter);
-    this.bubbleEmitter.makeParticles('bubble');
-    this.bubbleEmitter.setAlpha(1,0,5000);
-    this.bubbleEmitter.setRotation(0,0);
+    this.emitters.bubbles = this.game.add.emitter(0, 0, 200);
+    this.level.layers.inAquarium.addChild(this.emitters.bubbles);
+    this.emitters.bubbles.makeParticles('bubble');
+    this.emitters.bubbles.setAlpha(1,0,5000);
+    this.emitters.bubbles.setRotation(0,0);
     var bubbleScale= 0.1+this.dna.baseTraits.sizeSpeed.value*0.1;
-    this.bubbleEmitter.setScale(bubbleScale, bubbleScale+0.01,bubbleScale,bubbleScale+0.01,1000);
-    this.bubbleEmitter.setXSpeed(0,30);
-    this.bubbleEmitter.setYSpeed(0,30);
-    this.bubbleEmitter.gravity = 0;
-    this.bubbleEmitter.start(false, 5000, 100);
+    this.emitters.bubbles.setScale(bubbleScale, bubbleScale+0.01,bubbleScale,bubbleScale+0.01,1000);
+    this.emitters.bubbles.setXSpeed(0,30);
+    this.emitters.bubbles.setYSpeed(0,30);
+    this.emitters.bubbles.gravity = 0;
+    this.emitters.bubbles.start(false, 5000, 100);
 
     //methods
 
@@ -170,28 +181,37 @@ Evolb.Creature.prototype.spawn=function(father,mother){
 
 Evolb.Creature.prototype.contactHandler={
     "IceArea": function(body){
-        this.showBody("freezing");
-        this.game.sound.play("ice-cracking");
+        if (this.modifiedStats.coldEndurance==0){
+            this.isCold=true;
+            this.showBody("freezing");
+            this.game.sound.play("ice-cracking");
+        }
     },
     "HeatArea": function(body){
-        this.showBody("hot",400);
-        this.face.animations.play("pain");
-        this.game.sound.play("fire-woosh");
+        if (this.modifiedStats.heatEndurance==0){
+            this.isHot=true;
+            this.showBody("hot",400);
+            this.face.animations.play("pain");
+            this.game.sound.play("fire-woosh");
 
-        if (!this.blobSmoke){
-            this.blobSmoke=new Phaser.Sprite(this.game,10,-90,'blob_smoke');
-            this.addChild(this.blobSmoke);
-            this.blobSmoke.animations.add("smoke",[0,1,2,3,4,5,6,7,8,9,10]);
-            this.blobSmoke.animations.play("smoke",16,true);
-            //this.blobSmoke.alpha=0;
+            if (!this.blobSmoke){
+                this.blobSmoke=new Phaser.Sprite(this.game,10,-90,'blob_smoke');
+                this.addChild(this.blobSmoke);
+                this.blobSmoke.animations.add("smoke",[0,1,2,3,4,5,6,7,8,9,10]);
+                this.blobSmoke.animations.play("smoke",16,true);
+                //this.blobSmoke.alpha=0;
+            }
+
+            this.game.add.tween(this.blobSmoke).to({ alpha: 1}, 500, Phaser.Easing.Linear.Out).start();
         }
-
-        this.game.add.tween(this.blobSmoke).to({ alpha: 1}, 500, Phaser.Easing.Linear.Out).start();
     },
     "PoisonArea": function(body){
-        this.face.animations.play("pain");
-        this.showBody("poisoned");
-        this.game.sound.play("poison");
+        if (this.modifiedStats.poisonEndurance==0){
+            this.isPoisoned=true;
+            this.face.animations.play("pain");
+            this.showBody("poisoned");
+            this.game.sound.play("poison");
+        }
     },
     "food": function(body){
         this.heal(body.sprite.healAmount);
@@ -206,13 +226,15 @@ Evolb.Creature.prototype.contactHandler={
     },
     "mutation": function(body){
         this.modifiedStats.mutationChance=1;
+        this.dna.baseTraits.mutationChance.parentTrait.onUpdate(this);
+
         body.sprite.destroy();
     },
     "creature": function(body){
         //creature is a cannibal!
         if (this.dna.traits.cannibalism && this.health/this.modifiedStats.maxHealth<=this.dna.traits.cannibalism.getValue("feedPercent")){
                 //TODO: set this as a percentage of the trait
-                var inflictedDamage=body.sprite.physicalDamage(40,true);
+                var inflictedDamage=body.sprite.typedDamage(40,Evolb.Character.damageTypes.PHYSICAL,true);
                 this.heal(inflictedDamage-1);
         }
         else if (this.state==Evolb.Character.states.WANTS_TO_BREED && body.sprite.state!=Evolb.Character.states.BREEDING){
@@ -224,31 +246,46 @@ Evolb.Creature.prototype.contactHandler={
         if (this.modifiedStats.damageOutput>0){
             body.sprite.damage(this.modifiedStats.damageOutput,true);
         }
+    },
+    "thorn": function(body){
+        this.stopBreeding();
+        this.typedDamage(body.sprite.damageOutput,Evolb.Character.damageTypes.PHYSICAL,true);
+    },
+    "pebble": function(body){
+        this.stopBreeding();
+        this.typedDamage(body.sprite.damageOutput,Evolb.Character.damageTypes.PHYSICAL,true);
     }
 };
 
 Evolb.Creature.prototype.endContactHandler={
     "IceArea": function(body){
-        this.showBody("yellow",400);
-        this.game.sound.play("ice-breaking");
-        this.iceEmitter.x = this.x;
-        this.iceEmitter.y = this.y;
-        this.iceEmitter.start(true, 3000, null, 10);
+        if (this.isCold){
+            this.showBody("yellow",400);
+            this.game.sound.play("ice-breaking");
+            this.emitters.iceShards.start(true, 3000, null, 10);
+        }
+        this.isCold=false;
     },
     "HeatArea": function(body){
-        this.showBody("yellow");
-        this.face.animations.play("normal");
-        this.game.sound.play("water-sizzle");
-        this.game.add.tween(this.blobSmoke).to({ alpha: 0}, 500, Phaser.Easing.Linear.Out).start();
+        if (this.isHot){
+            this.showBody("yellow");
+            this.face.animations.play("normal");
+            this.game.sound.play("water-sizzle");
+            this.game.add.tween(this.blobSmoke).to({ alpha: 0}, 500, Phaser.Easing.Linear.Out).start();
+        }
+        this.isHot=false;
     },
     "PoisonArea": function(body){
-        this.showBody("yellow");
-        this.face.animations.play("normal");
+        if (this.isPoisoned){
+            this.showBody("yellow");
+            this.face.animations.play("normal");
+        }
+        this.isPoisoned=false;
     }
 };
 
 Evolb.Creature.prototype.doHungerEvent=function(){
-    if (this.hasHunger){
+    if (this.hasHunger && !this.level.levelEditor.isActive){
         this.damage(this.dna.baseTraits.sizeSpeed.getValue("hungerDamage"),false);
     }
 };
@@ -258,19 +295,19 @@ Evolb.Creature.prototype.init = function(){
     this.dna.activate();
     this.healthbar.redraw();
     this.game.time.events.add(this.hungerDelay,this.setHungry,this);
+    this.level.updateGoal();
 };
 
 
 Evolb.Creature.prototype.postKill = function(){
     Evolb.Character.prototype.postKill.call(this);
-    this.bubbleEmitter.destroy();
-};
-
-Evolb.Creature.prototype.update = function(){
-    Evolb.Character.prototype.update.call(this);
-
-    this.bubbleEmitter.emitX=this.x;
-    this.bubbleEmitter.emitY=this.y;
+    //emitters
+    for(var emitterName in this.emitters){
+        var emitter=this.emitters[emitterName];
+        emitter.destroy();
+        emitter.emitY=this.y;
+    }
+    this.level.updateGoal();
 };
 
 Evolb.Creature.prototype.blink=function(){
@@ -306,9 +343,12 @@ Evolb.Creature.prototype.damage=function(amount,showDamage){
     Evolb.Character.prototype.damage.call(this,amount,showDamage);
 
     if (showDamage){
-        this.face.animations.play("pain",2).onComplete.addOnce(function(){
-            this.face.animations.frame=oldFaceFrame;
-        },this);
+        var anim=this.face.animations.play("pain",2);
+        if (anim){
+            anim.onComplete.addOnce(function(){
+                this.face.animations.frame=oldFaceFrame;
+            },this);
+        }
     }
 };
 
