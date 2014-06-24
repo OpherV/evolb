@@ -33,8 +33,10 @@ Evolb.Pebble=function(level,objectData){
         if (!(body && body.sprite && body.sprite!=null)){ return; }
         if (body.sprite.kind=="thorn"){
             //pebbles destroy thorns
-            this.destroy();
-            body.sprite.destroy();
+
+            //TODO causes weird bug, disabled for now
+//            this.destroy();
+//            body.sprite.destroy();
         }
     }
 };
