@@ -338,6 +338,8 @@ Evolb.Character.prototype.startBreedingWith=function(target){
     this.currentBreedingWith.state=Evolb.Character.states.BREEDING;
     this.healthbar.redraw();
 
+    this.game.sound.play("giggle",0.2);
+
     //TODO breaks encapsulation
     this.face.animations.play("sex");
     this.showBody("pink");
