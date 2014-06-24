@@ -9,6 +9,8 @@ Evolb.Pebble=function(level,objectData){
 
     this.damageOutput=5;
 
+    var that=this;
+
     Phaser.Sprite.call(this, this.game, this.objectData.x, this.objectData.y,"pebble");
     this.game.physics.p2.enable(this,false);
 
@@ -29,6 +31,7 @@ Evolb.Pebble=function(level,objectData){
     this.body.onBeginContact.add(beginContactHandler, this);
 
     function beginContactHandler(body, shapeA, shapeB, equation) {
+        that.game.sound.play("thump");
 
         if (!(body && body.sprite && body.sprite!=null)){ return; }
         if (body.sprite.kind=="thorn"){

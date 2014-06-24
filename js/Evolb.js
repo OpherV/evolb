@@ -57,16 +57,31 @@ Evolb.core=(function(){
         game.load.atlasJSONHash('book', 'assets/sprites/book.png', 'assets/spriteAtlas/book.json' );
         game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
         game.load.atlasJSONHash('endurance_particles', 'assets/sprites/endurance_particles_sprites.png', 'assets/spriteAtlas/endurance_particles.json' );
+        game.load.atlasJSONHash('pop', 'assets/sprites/pop.png', 'assets/spriteAtlas/pop.json' );
 
 
-        game.load.audio('ice-cracking', 'assets/sound/ice-cracking-01.mp3');
-        game.load.audio('ice-breaking', 'assets/sound/ice_break.mp3');
-        game.load.audio('enemy-spike', 'assets/sound/enemy_spike.mp3');
-        game.load.audio('spike-stab', 'assets/sound/spike_stab.mp3');
-        game.load.audio('fire-woosh', 'assets/sound/fire_woosh.mp3');
-        game.load.audio('water-sizzle', 'assets/sound/water_sizzle.mp3');
-        game.load.audio('poison', 'assets/sound/poison.mp3');
+        game.load.audio('ice-cracking', 'assets/sound/192415_urupin_fast-freezing-ice.mp3');
+        game.load.audio('ice-breaking', 'assets/sound/66520_connum_breaking-a-bottle-no2.mp3');
+        game.load.audio('enemy-spike', 'assets/sound/135015_leonsflashlight_blade-being-pulled.mp3');
+        game.load.audio('spike-stab', 'assets/sound/179222_mixedupmoviestuff_knife-stab.mp3');
+        game.load.audio('fire-woosh', 'assets/sound/161081_smidoid_flare.mp3');
+        game.load.audio('water-sizzle', 'assets/sound/17299_luffy_luffy-fire3alternate.mp3');
+        game.load.audio('poison', 'assets/sound/219566_qubodup_poison-spell-magic.mp3');
         game.load.audio('bubble1', 'assets/sound/bubble1.mp3');
+        game.load.audio('pop1', 'assets/sound/60762_gelo-papas_blubs-mouth.mp3');
+        game.load.audio('eat', 'assets/sound/114277_plingativator_applecrunches.mp3');
+        game.load.audio('dna', 'assets/sound/220173__gameaudio__spacey-1up-power-up.mp3');
+        game.load.audio('thump', 'assets/sound/125429_jspath1_three-bass-thumps.mp3');
+        game.load.audio('ouch', 'assets/sound/210213__augdog__pin-pullout.mp3');
+        game.load.audio('giggle', 'assets/sound/19260__martian__cute-giggles.mp3');
+
+
+
+
+        game.load.audio('menu_music', 'assets/sound/music/go_cart.mp3');
+        game.load.audio('level_music', 'assets/sound/music/pamgaea.mp3');
+
+
 
 
         //physics

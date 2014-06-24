@@ -338,6 +338,8 @@ Evolb.Character.prototype.startBreedingWith=function(target){
     this.currentBreedingWith.state=Evolb.Character.states.BREEDING;
     this.healthbar.redraw();
 
+    this.game.sound.play("giggle",0.2);
+
     //TODO breaks encapsulation
     this.face.animations.play("sex");
     this.showBody("pink");
@@ -464,9 +466,17 @@ Evolb.Character.prototype.bobupText= function(text,color) {
 Evolb.Character.prototype.update = function() {
     var pointer=this.game.input.activePointer;
     var pointerInWorld=new Phaser.Point(pointer.worldX,pointer.worldY);
-
+    var shouldMove=true;
     if (this.isFollowingPointer && this.canBeControlled){
-        this.moveToTarget(pointerInWorld,this.modifiedStats.moveSpeed);
+
+        //if flinging this creature, don't move until pointer leaves creature
+        if (this.level.currentControlledCreature==this && this.game.physics.p2.hitTest(pointerInWorld,[this]).length>0){
+            shouldMove=false;
+        }
+
+        if (shouldMove){
+            this.moveToTarget(pointerInWorld,this.modifiedStats.moveSpeed);
+        }
     }
 
     if (this.canBob && this.state==Evolb.Character.states.DRIFTING && this.body.velocity.x<=this.modifiedStats.idleVelocityRange && this.body.velocity.y<=this.modifiedStats.idleVelocityRange){

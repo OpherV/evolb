@@ -114,6 +114,9 @@ Evolb.Menu.prototype.load=function(){
         Evolb.currentLevel  = Evolb.LevelLoader.loadLevelByName("level5");
     });
 
+
+    //music
+    this.music=this.game.sound. play("menu_music",0.2);
 };
 
 
@@ -124,6 +127,7 @@ Evolb.Menu.prototype.destroy=function(){
         this.game.time.events.remove(character.nextBob);
     }
     this.menuGroup.destroy();
+    this.music.stop();
 };
 
 

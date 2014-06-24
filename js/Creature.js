@@ -171,7 +171,7 @@ Evolb.Creature.prototype.spawn=function(father,mother){
     this.level.layers.creatures.add(newCreature);
     newCreature.isFollowingPointer=this.isFollowingPointer;
     newCreature.init();
-
+    this.game.sound.play("pop1");
     //TODO: recycle creature?
 };
 
@@ -184,7 +184,7 @@ Evolb.Creature.prototype.contactHandler={
         if (this.modifiedStats.coldEndurance==0){
             this.isCold=true;
             this.showBody("freezing");
-            this.game.sound.play("ice-cracking");
+            this.game.sound.play("ice-cracking",0.5);
         }
     },
     "HeatArea": function(body){
@@ -192,7 +192,7 @@ Evolb.Creature.prototype.contactHandler={
             this.isHot=true;
             this.showBody("hot",400);
             this.face.animations.play("pain");
-            this.game.sound.play("fire-woosh");
+            this.game.sound.play("fire-woosh",0.5);
 
             if (!this.blobSmoke){
                 this.blobSmoke=new Phaser.Sprite(this.game,10,-90,'blob_smoke');
@@ -210,7 +210,7 @@ Evolb.Creature.prototype.contactHandler={
             this.isPoisoned=true;
             this.face.animations.play("pain");
             this.showBody("poisoned");
-            this.game.sound.play("poison");
+            this.game.sound.play("poison",0.5);
         }
     },
     "food": function(body){
@@ -220,17 +220,19 @@ Evolb.Creature.prototype.contactHandler={
         foodDeath.animations.add("die",[0,1,2,3,4,5,6,7,8]);
         this.level.layers.powerUps.addChild(foodDeath);
         foodDeath.play("die",24,false,true);
-
+        this.game.sound.play("eat");
 
         body.sprite.destroy();
     },
     "mutation": function(body){
         this.modifiedStats.mutationChance=1;
         this.dna.baseTraits.mutationChance.parentTrait.onUpdate(this);
+        this.game.sound.play("dna");
 
         body.sprite.destroy();
     },
     "creature": function(body){
+
         //creature is a cannibal!
         if (this.dna.traits.cannibalism && this.health/this.modifiedStats.maxHealth<=this.dna.traits.cannibalism.getValue("feedPercent")){
                 //TODO: set this as a percentage of the trait
@@ -250,10 +252,12 @@ Evolb.Creature.prototype.contactHandler={
     "thorn": function(body){
         this.stopBreeding();
         this.typedDamage(body.sprite.damageOutput,Evolb.Character.damageTypes.PHYSICAL,true);
+        this.game.sound.play("ouch");
     },
     "pebble": function(body){
         this.stopBreeding();
         this.typedDamage(body.sprite.damageOutput,Evolb.Character.damageTypes.PHYSICAL,true);
+        this.game.sound.play("ouch");
     }
 };
 
@@ -261,7 +265,7 @@ Evolb.Creature.prototype.endContactHandler={
     "IceArea": function(body){
         if (this.isCold){
             this.showBody("yellow",400);
-            this.game.sound.play("ice-breaking");
+            this.game.sound.play("ice-breaking",0.5);
             this.emitters.iceShards.start(true, 3000, null, 10);
         }
         this.isCold=false;
@@ -270,7 +274,7 @@ Evolb.Creature.prototype.endContactHandler={
         if (this.isHot){
             this.showBody("yellow");
             this.face.animations.play("normal");
-            this.game.sound.play("water-sizzle");
+            this.game.sound.play("water-sizzle",0.5);
             this.game.add.tween(this.blobSmoke).to({ alpha: 0}, 500, Phaser.Easing.Linear.Out).start();
         }
         this.isHot=false;
@@ -307,6 +311,13 @@ Evolb.Creature.prototype.postKill = function(){
         emitter.destroy();
         emitter.emitY=this.y;
     }
+
+    var deathSprite=this.game.add.sprite(this.x, this.y,"pop",0,this.level.layers.powerUps);
+    deathSprite.scale.setTo(1);
+    deathSprite.anchor.setTo(0.5);
+    deathSprite.animations.add("destroy",[0,1,2,3,4,5]);
+    deathSprite.animations.play("destroy",20,false,true);
+
     this.level.updateGoal();
 };
 
