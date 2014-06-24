@@ -233,8 +233,6 @@ Evolb.Creature.prototype.contactHandler={
     },
     "creature": function(body){
 
-        this.game.sound.play("hit-rock");
-
         //creature is a cannibal!
         if (this.dna.traits.cannibalism && this.health/this.modifiedStats.maxHealth<=this.dna.traits.cannibalism.getValue("feedPercent")){
                 //TODO: set this as a percentage of the trait
@@ -313,6 +311,13 @@ Evolb.Creature.prototype.postKill = function(){
         emitter.destroy();
         emitter.emitY=this.y;
     }
+
+    var deathSprite=this.game.add.sprite(this.x, this.y,"pop",0,this.level.layers.powerUps);
+    deathSprite.scale.setTo(1);
+    deathSprite.anchor.setTo(0.5);
+    deathSprite.animations.add("destroy",[0,1,2,3,4,5]);
+    deathSprite.animations.play("destroy",20,false,true);
+
     this.level.updateGoal();
 };
 
