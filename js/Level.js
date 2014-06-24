@@ -683,7 +683,7 @@ Evolb.Level.prototype.placeWithoutCollision=function(sprite,spriteArrays,placeFu
     //console.log(placeAttemptCounter);
 };
 
-Evolb.Level.prototype.Step=function(stepFunction){
+Evolb.Level.Step=function(stepFunction){
     var returnFunc=function(){
         var stepPromise = new Promise(function(resolve,reject){
             stepFunction(resolve,reject);
