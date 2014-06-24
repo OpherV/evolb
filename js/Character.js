@@ -410,24 +410,7 @@ Evolb.Character.prototype.update = function() {
     var pointerInWorld=new Phaser.Point(pointer.worldX,pointer.worldY);
 
     if (this.isFollowingPointer && this.canBeControlled){
-        var maxPlayerControlRange=1000;
-        var moveRatio;
-
-        //in case of one creature, always move it
-        if (this.level.getCreatures().length==1){
-            moveRatio=1;
-        }
-        else{
-            moveRatio=Math.max(0.15,pointer.controlRatio); //minimum should be higher than 0
-        }
-        //creatures farther from the pointer are less effected
-        //var effectiveDistance=Math.min(maxPlayerControlRange,Phaser.Point.distance(this,pointer));
-        //var moveSpeedRatio= -Math.pow(effectiveDistance/Evolb.core.PLAYER_CONTROL_RANGE,7)+1;
-        if (Phaser.Point.distance(this,pointerInWorld)<=moveRatio*maxPlayerControlRange){
-            this.moveToTarget(pointerInWorld,this.modifiedStats.moveSpeed*moveRatio);
-        }
-//        console.log(Phaser.Point.distance(this,pointer));
-
+        this.moveToTarget(pointerInWorld,this.modifiedStats.moveSpeed);
     }
 
     if (this.canBob && this.state==Evolb.Character.states.DRIFTING && this.body.velocity.x<=this.modifiedStats.idleVelocityRange && this.body.velocity.y<=this.modifiedStats.idleVelocityRange){

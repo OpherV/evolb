@@ -192,6 +192,10 @@ Evolb.Level=function(game,levelWidth,levelHeight){
             var bodies=game.physics.p2.hitTest(clickPoint,this.layers.creatures.children);
             if (bodies.length>0){
                 var sprite=bodies[0].parent.sprite;
+
+                sprite.isFollowingPointer=true;
+                this.currentControlledCreature=sprite;
+                sprite.markSelected(0Xbfe8bf);
                 //infoPanel.selectCharacter(sprite);
             }
             else{
@@ -202,6 +206,14 @@ Evolb.Level=function(game,levelWidth,levelHeight){
 
 
             }
+
+
+
+            this.pointerController.clear();
+            this.pointerController.cameraOffset.x=pointer.x;
+            this.pointerController.cameraOffset.y=pointer.y;
+            this.pointerController.beginFill(0xFFFFFF, 0.1);
+            this.pointerController.drawCircle(0, 0,20);
 
         }
         else{
@@ -214,6 +226,11 @@ Evolb.Level=function(game,levelWidth,levelHeight){
     game.input.onUp.add(function(pointer){
         if(this.isControlEnabled && !this.levelEditor.isActive){
             this.clearControlPointer();
+            this.currentControlledCreature.isFollowingPointer=false;
+            if (this.currentControlledCreature){
+                this.currentControlledCreature.deselect();
+            }
+            this.currentControlledCreature=null;
         }
     },this);
 
@@ -411,23 +428,8 @@ Evolb.Level.prototype.clearControlPointer=function(){
 
 Evolb.Level.prototype.updatePointerController=function(){
     var pointer=this.game.input.activePointer;
-    var minRadius=20;
-    var maxRadius=90;
-    var maxMouseDownTime=1000;
-
-    var controlRatio=pointer.duration/maxMouseDownTime;
-    pointer.controlRatio=controlRatio;
-
-    var controlRadius=Math.min(1,Math.pow(controlRatio,2))*(maxRadius-minRadius)+minRadius;
-    if (controlRatio>0){
-        this.pointerController.clear();
-        this.pointerController.cameraOffset.x=pointer.x;
-        this.pointerController.cameraOffset.y=pointer.y;
-        this.pointerController.beginFill(0xFFFFFF, 0.1);
-        this.pointerController.drawCircle(0, 0,controlRadius);
-
-    }
-
+    this.pointerController.cameraOffset.x=pointer.x;
+    this.pointerController.cameraOffset.y=pointer.y;
 };
 
 Evolb.Level.prototype.addTextGroup=function(textArray,closeAfter){
