@@ -74,6 +74,7 @@ Evolb.core=(function(){
         game.load.audio('thump', 'assets/sound/125429_jspath1_three-bass-thumps.mp3');
         game.load.audio('ouch', 'assets/sound/210213__augdog__pin-pullout.mp3');
         game.load.audio('giggle', 'assets/sound/19260__martian__cute-giggles.mp3');
+        game.load.audio('death', 'assets/sound/167074__drminky__slime-death-1.mp3');
 
 
 

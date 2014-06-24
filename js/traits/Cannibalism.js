@@ -9,9 +9,9 @@ Evolb.Traits.Cannibalism={
         lowLimit: 0.2,
         highLimit: 0.7
     },
-    sprites: [{frame: 0, x: -48, y: 0},
-              {frame: 1, x: -63, y: 0},
-              {frame: 2, x: -85, y: 0}
+    sprites: [{frame: 0, x: -48, y: -78},
+              {frame: 1, x: -63, y: -88},
+              {frame: 2, x: -85, y: -92}
                ],
     onAdded:function(character){
 

@@ -9,6 +9,7 @@ Evolb.Traits.HeatEndurance={
         lowLimit: 1,
         highLimit: 10
     },
+    isDominant: true,
     onAdded:function(character,trait){
         character.modifiedStats.heatEndurance+=trait.getValue("heatEndurance");
 
@@ -43,6 +44,7 @@ Evolb.Traits.ColdEndurance={
         lowLimit: 1,
         highLimit: 10
     },
+    isDominant: true,
     onAdded:function(character,trait){
         character.modifiedStats.coldEndurance+=trait.getValue("coldEndurance");
 
@@ -78,6 +80,7 @@ Evolb.Traits.PoisonEndurance={
         lowLimit: 1,
         highLimit: 10
     },
+    isDominant: true,
     onAdded:function(character,trait){
         character.modifiedStats.poisonEndurance+=trait.getValue("poisonEndurance");
 

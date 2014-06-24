@@ -309,14 +309,7 @@ Evolb.Creature.prototype.postKill = function(){
     for(var emitterName in this.emitters){
         var emitter=this.emitters[emitterName];
         emitter.destroy();
-        emitter.emitY=this.y;
     }
-
-    var deathSprite=this.game.add.sprite(this.x, this.y,"pop",0,this.level.layers.powerUps);
-    deathSprite.scale.setTo(1);
-    deathSprite.anchor.setTo(0.5);
-    deathSprite.animations.add("destroy",[0,1,2,3,4,5]);
-    deathSprite.animations.play("destroy",20,false,true);
 
     this.level.updateGoal();
 };

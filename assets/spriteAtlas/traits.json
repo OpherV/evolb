@@ -26,55 +26,55 @@
 },
 "shield1.png":
 {
-	"frame": {"x":362,"y":2,"w":207,"h":156},
+	"frame": {"x":362,"y":2,"w":178,"h":134},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":207,"h":156},
-	"sourceSize": {"w":207,"h":156}
+	"spriteSourceSize": {"x":0,"y":0,"w":178,"h":134},
+	"sourceSize": {"w":178,"h":134}
 },
 "shield2.png":
 {
-	"frame": {"x":571,"y":2,"w":223,"h":175},
+	"frame": {"x":542,"y":2,"w":193,"h":151},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":223,"h":175},
-	"sourceSize": {"w":223,"h":175}
+	"spriteSourceSize": {"x":0,"y":0,"w":193,"h":151},
+	"sourceSize": {"w":193,"h":151}
 },
 "shield3.png":
 {
-	"frame": {"x":796,"y":2,"w":258,"h":205},
+	"frame": {"x":737,"y":2,"w":223,"h":177},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":258,"h":205},
-	"sourceSize": {"w":258,"h":205}
+	"spriteSourceSize": {"x":0,"y":0,"w":223,"h":177},
+	"sourceSize": {"w":223,"h":177}
 },
 "spike1.png":
 {
-	"frame": {"x":1056,"y":2,"w":36,"h":41},
+	"frame": {"x":962,"y":2,"w":174,"h":136},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":41},
-	"sourceSize": {"w":36,"h":41}
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":136},
+	"sourceSize": {"w":174,"h":136}
 },
 "spike2.png":
 {
-	"frame": {"x":1094,"y":2,"w":154,"h":44},
+	"frame": {"x":1138,"y":2,"w":174,"h":139},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":154,"h":44},
-	"sourceSize": {"w":154,"h":44}
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":139},
+	"sourceSize": {"w":174,"h":139}
+},
+"spike3.png":
+{
+	"frame": {"x":1314,"y":2,"w":174,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":174,"h":159},
+	"sourceSize": {"w":174,"h":159}
 },
 "spike4.png":
 {
-	"frame": {"x":1250,"y":2,"w":154,"h":159},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":154,"h":159},
-	"sourceSize": {"w":154,"h":159}
-},
-"spike6.png":
-{
-	"frame": {"x":1406,"y":2,"w":239,"h":159},
+	"frame": {"x":1490,"y":2,"w":239,"h":159},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":239,"h":159},
@@ -85,8 +85,8 @@
 	"version": "1.0",
 	"image": "traits_sprites.png",
 	"format": "RGBA8888",
-	"size": {"w":1647,"h":209},
+	"size": {"w":1731,"h":181},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:694a8238bfa711363a0bf5579a4da18d:0f77b68abb31639c2e8534c3208a9441:063a82455af2a4764b21af6a5a2f672b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:4429cd544c2ab17e0f8c15275a1b1036:5826632486d0f3c62d4319f00fcd998d:063a82455af2a4764b21af6a5a2f672b$"
 }
 }

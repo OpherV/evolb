@@ -88,6 +88,8 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
     }
 
     function endContactHandler(body, shapeA, shapeB, equation) {
+        //character just died, not relevant
+        if (this.health<=0){return;}
         if (body && body.sprite){
             //remove from inContactWith array
             if (this.inContactWith[body.sprite.id]){
@@ -150,7 +152,7 @@ Evolb.Character.prototype.init=function(){
     //add gui to gui layer
     this.level.layers.gui.add(this.gui);
 
-    this.timeEvents.areaDamage=this.game.time.events.loop(1000, this.areaEvent, this);
+    this.timeEvents.areaDamage=this.game.time.events.loop(2500, this.areaEvent, this);
 
     this.timeEvents.findTarget=this.game.time.events.loop(1000, this.findTarget, this);
     //only initialize for characters that can attack
@@ -261,6 +263,16 @@ Evolb.Character.prototype.postKill=function(){
         this.timeEvents[timerName].timer.remove(this.timeEvents[timerName]);
         delete this.timeEvents[timerName];
     }
+
+
+    this.game.sound.play("death");
+
+    var deathSprite=this.game.add.sprite(this.x, this.y,"pop",0,this.level.layers.powerUps);
+    deathSprite.scale.setTo(1);
+    deathSprite.anchor.setTo(0.5);
+    deathSprite.animations.add("destroy",[0,1,2,3,4,5]);
+    deathSprite.animations.play("destroy",20,false,true);
+
 
 };
 
