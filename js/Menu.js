@@ -109,9 +109,9 @@ Evolb.Menu.prototype.load=function(){
         that.destroy();
         Evolb.currentLevel = Evolb.LevelLoader.loadLevelByName("tutorial");
     });
-    this.addMenuItem("Random Level",function(){
+    this.addMenuItem("Play",function(){
         that.destroy();
-        Evolb.currentLevel  = Evolb.LevelLoader.loadLevelByName("random");
+        Evolb.currentLevel  = Evolb.LevelLoader.loadLevelByName("level5");
     });
 
 };

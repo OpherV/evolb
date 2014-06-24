@@ -9,6 +9,7 @@ Evolb.LevelLoader=function(){
         _levels={};
         _preloadLevel('tutorial', 'levels/tutorial.js');
         _preloadLevel('random', 'levels/random.js');
+        _preloadLevel('level5', 'levels/level5.js');
     }
 
     function _loadLevel(game,levelData){
@@ -31,6 +32,12 @@ Evolb.LevelLoader=function(){
         if (levelData.onLevelStart){
             levelData.onLevelStart.call(level);
         }
+
+        if (levelData.updateGoal){
+            level.updateGoal=levelData.updateGoal;
+        }
+
+
 
         return level;
 

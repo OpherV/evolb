@@ -59,12 +59,14 @@ Evolb.Area.prototype.update = function() {
 ////        }
 ////
 ////    }
-    if (true){
-        for (var x=0;x<this.clouds.children.length;x++){
-            var cloud=this.clouds.getChildAt(x);
-            this.cloudWander(cloud);
-        }
-    }
+
+//        for (var x=0;x<this.clouds.children.length;x++){
+//            var cloud=this.clouds.getChildAt(x);
+//            if (cloud.inCamera){
+//                this.cloudWander(cloud);
+//            }
+//        }
+//
 };
 
 Evolb.Area.prototype.addAreaPolygon=function(){

@@ -173,9 +173,9 @@ Evolb.Level=function(game,levelWidth,levelHeight){
     },this);
 
     //UI
-    var infoPanel=new Evolb.gui.InfoPanel(game);
-    this.layers.gui.add(infoPanel);
-    infoPanel.init();
+//    var infoPanel=new Evolb.gui.InfoPanel(game);
+//    this.layers.gui.add(infoPanel);
+//    infoPanel.init();
 
     this.pointerController=new Phaser.Graphics(game,0,0);
     this.pointerController.fixedToCamera=true;
@@ -192,10 +192,10 @@ Evolb.Level=function(game,levelWidth,levelHeight){
             var bodies=game.physics.p2.hitTest(clickPoint,this.layers.creatures.children);
             if (bodies.length>0){
                 var sprite=bodies[0].parent.sprite;
-                infoPanel.selectCharacter(sprite);
+                //infoPanel.selectCharacter(sprite);
             }
             else{
-                infoPanel.close();
+                //infoPanel.close();
                 this.layers.creatures.forEachAlive(function(creature){
                     creature.isFollowingPointer=true;
                 });
@@ -243,8 +243,13 @@ Evolb.Level.prototype.render=function(){
     }
 
     //TODO: add this to charactersin generael
+
     this.layers.creatures.forEachAlive(function(creature){
         creature.render();
+    });
+
+    this.layers.enemies.forEachAlive(function(enemy){
+        enemy.render();
     });
 
     if(this.isControlEnabled && !this.levelEditor.isActive){
@@ -253,7 +258,7 @@ Evolb.Level.prototype.render=function(){
 
     this.levelEditor.render();
 
-    this.bgParallex();
+    //this.bgParallex();
 };
 
 
@@ -468,10 +473,6 @@ Evolb.Level.prototype.removeTextBubble=function(shouldClose){
     this.game.add.tween(this.bubbleObj).to({ alpha: 0}, 300, Phaser.Easing.Cubic.In).start();
 };
 
-Evolb.Level.prototype.changeTextBubble=function(text){
-    var that=this;
-
-};
 
 Evolb.Level.prototype.addTextBubble=function(x,y,text){
     var that=this;
@@ -575,6 +576,26 @@ Evolb.Level.prototype.showInstructionText=function(text){
     return this.instructionText;
 };
 
+Evolb.Level.prototype.showGoalText=function(text){
+
+    if (this.goalText==null){
+
+        this.goalText=this.game.add.text(0,0,text,null,this.layers.gui);
+        this.goalText.font = 'Quicksand';
+        this.goalText.fontSize = 18;
+        this.goalText.fill = '#ffffff';
+        this.goalText.fixedToCamera=true;
+        this.goalText.cameraOffset.y=this.game.height-50;
+        this.goalText.alpha=0;
+        this.game.add.tween(this.goalText).to({ alpha: 1}, 600, Phaser.Easing.Cubic.In).start();
+    }
+    this.goalText.setText(text);
+    this.goalText.cameraOffset.x=this.game.width/2-this.goalText.width/2;
+
+    return this.instructionText;
+};
+
+
 Evolb.Level.prototype.addObject=function(objectData){
     var alpha=objectData.hasOwnProperty("alpha")?objectData.alpha:1;
 
@@ -660,7 +681,7 @@ Evolb.Level.prototype.placeWithoutCollision=function(sprite,spriteArrays,placeFu
     //console.log(placeAttemptCounter);
 };
 
-Evolb.Level.Step=function(stepFunction){
+Evolb.Level.prototype.Step=function(stepFunction){
     var returnFunc=function(){
         var stepPromise = new Promise(function(resolve,reject){
             stepFunction(resolve,reject);
@@ -670,3 +691,9 @@ Evolb.Level.Step=function(stepFunction){
 
     return returnFunc;
 };
+
+
+
+
+//override functions
+Evolb.Level.prototype.updateGoal=function(){};
