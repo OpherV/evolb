@@ -101,7 +101,7 @@ Evolb.Enemy1.prototype.init = function(){
     Evolb.Character.prototype.init.call(this);
     this.setHunting();
 
-//    this.healthbar = new Evolb.gui.Healthbar(this.game,this);
+    this.healthbar = new Evolb.gui.Healthbar(this.game,this);
 //    this.healthbar.x=-this.width/2;
 //    this.healthbar.y=-this.height/2-9;
 //    this.gui.addChild(this.healthbar);
