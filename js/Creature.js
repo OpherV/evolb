@@ -309,7 +309,6 @@ Evolb.Creature.prototype.postKill = function(){
     for(var emitterName in this.emitters){
         var emitter=this.emitters[emitterName];
         emitter.destroy();
-        emitter.emitY=this.y;
     }
 
     this.level.updateGoal();

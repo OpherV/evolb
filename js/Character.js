@@ -88,6 +88,8 @@ Evolb.Character= function (level,id,x,y,spriteKey) {
     }
 
     function endContactHandler(body, shapeA, shapeB, equation) {
+        //character just died, not relevant
+        if (this.health<=0){return;}
         if (body && body.sprite){
             //remove from inContactWith array
             if (this.inContactWith[body.sprite.id]){
