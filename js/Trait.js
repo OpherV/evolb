@@ -50,7 +50,7 @@ Evolb.TraitInstance.baseTraits={
         highName: "Big & Slow",
         speed: {
             lowLimit: 70,
-            highLimit: 150,
+            highLimit: 140,
             reverse: true
         },
         size:{
@@ -58,8 +58,8 @@ Evolb.TraitInstance.baseTraits={
             highLimit: 0.85
         },
         hungerDamage:{
-            lowLimit: 0.75,
-            highLimit: 1.5,
+            lowLimit: 1,
+            highLimit: 1.75,
             reverse: true,
             easingFunction: Evolb.TraitInstance.EXPONENTIAL
         }
