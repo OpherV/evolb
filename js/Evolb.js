@@ -23,7 +23,7 @@ Evolb.core=(function(){
         game.load.image('background', 'assets/background.png');
         game.load.image('lab_bg', 'assets/sprites/lab_bg.jpg');
         game.load.image('cannibal_stars', 'assets/cannibal_stars.png');
-        game.load.image('mutation', 'assets/sprites/mutation.png');
+        game.load.image('smallrock', 'assets/sprites/small_rock.png');
         game.load.image('rock1', 'assets/sprites/rock1.png');
         game.load.image('rock2', 'assets/sprites/rock2.png');
         game.load.image('rock3', 'assets/sprites/rock3.png');
@@ -55,6 +55,7 @@ Evolb.core=(function(){
         game.load.atlasJSONHash('plankton_eyes', 'assets/sprites/plankton_eyes.png', 'assets/spriteAtlas/plankton_eyes.json' );
         game.load.atlasJSONHash('plankton_death', 'assets/sprites/plankton_death.png', 'assets/spriteAtlas/plankton_death.json' );
         game.load.atlasJSONHash('book', 'assets/sprites/book.png', 'assets/spriteAtlas/book.json' );
+        game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
 
 
         game.load.audio('ice-cracking', 'assets/sound/ice-cracking-01.mp3');
