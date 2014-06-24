@@ -98,15 +98,36 @@ Evolb.Dna.combine=function(dna1,dna2,chanceOfMutation){
     }
 
     for (var x=0; x<Evolb.TraitInstance.traitList.length;x++){
-        takeFromFirst=Math.random()<.5; //random boolean;
         traitName=Evolb.TraitInstance.traitList[x].name;
-        //father has trait
-        if (takeFromFirst && dna1.traits[traitName]){
-            newDna.traits[traitName]=dna1.traits[traitName].clone();
+        takeFromFirst=Math.random()<.5; //random boolean;
+
+        //dominant trait
+        if (Evolb.TraitInstance.traitList[x].isDominant){
+            //only father has trait
+            if (dna1.traits[traitName] && !(traitName in dna2.traits)){
+                newDna.traits[traitName]=dna1.traits[traitName].clone();
+            }
+            //only mother has trait
+            else if (dna2.traits[traitName] && !(traitName in dna1.traits)){
+                newDna.traits[traitName]=dna2.traits[traitName].clone();
+            }
+            //both have trait
+            else if ((traitName in dna1.traits)&& (traitName in dna2.traits)){
+                //chose from either
+                newDna.traits[traitName]=takeFromFirst?dna1.traits[traitName].clone():dna2.traits[traitName].clone();
+            }
+
         }
-        //mother has trait
-        else if (!takeFromFirst && dna2.traits[traitName]){
-            newDna.traits[traitName]=dna2.traits[traitName].clone();
+        //recessive trait
+        else{
+            //father has trait
+            if (takeFromFirst && dna1.traits[traitName]){
+                newDna.traits[traitName]=dna1.traits[traitName].clone();
+            }
+            //mother has trait
+            else if (!takeFromFirst && dna2.traits[traitName]){
+                newDna.traits[traitName]=dna2.traits[traitName].clone();
+            }
         }
     }
 
