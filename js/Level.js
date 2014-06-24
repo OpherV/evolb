@@ -226,8 +226,8 @@ Evolb.Level=function(game,levelWidth,levelHeight){
     game.input.onUp.add(function(pointer){
         if(this.isControlEnabled && !this.levelEditor.isActive){
             this.clearControlPointer();
-            this.currentControlledCreature.isFollowingPointer=false;
             if (this.currentControlledCreature){
+                this.currentControlledCreature.isFollowingPointer=false;
                 this.currentControlledCreature.deselect();
             }
             this.currentControlledCreature=null;

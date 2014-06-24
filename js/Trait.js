@@ -1,7 +1,7 @@
 Evolb=(window.Evolb?window.Evolb:{});
-Evolb.TraitInstance=function(parentTrait){
+Evolb.TraitInstance=function(parentTrait,startValue){
     this.parentTrait=parentTrait;
-    this.value=0.5;
+    this.value=(typeof startValue != 'undefined')?startValue:0.5;
     this.traitSprite=null; //sprite to represent the trait
 };
 
@@ -71,5 +71,8 @@ Evolb.TraitInstance.baseTraits={
 Evolb.TraitInstance.traitList=[
     Evolb.Traits.Cannibalism,
     Evolb.Traits.Armor,
-    Evolb.Traits.Offense
+    Evolb.Traits.Offense,
+    Evolb.Traits.HeatEndurance,
+    Evolb.Traits.ColdEndurance,
+    Evolb.Traits.PoisonEndurance
 ];

@@ -56,6 +56,7 @@ Evolb.core=(function(){
         game.load.atlasJSONHash('plankton_death', 'assets/sprites/plankton_death.png', 'assets/spriteAtlas/plankton_death.json' );
         game.load.atlasJSONHash('book', 'assets/sprites/book.png', 'assets/spriteAtlas/book.json' );
         game.load.atlasJSONHash('mutation', 'assets/sprites/mutation_sprites.png', 'assets/spriteAtlas/mutation.json' );
+        game.load.atlasJSONHash('endurance_particles', 'assets/sprites/endurance_particles_sprites.png', 'assets/spriteAtlas/endurance_particles.json' );
 
 
         game.load.audio('ice-cracking', 'assets/sound/ice-cracking-01.mp3');

@@ -1,0 +1,44 @@
+{"frames": {
+
+"poop1.png":
+{
+	"frame": {"x":2,"y":2,"w":99,"h":99},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":99,"h":99},
+	"sourceSize": {"w":99,"h":99}
+},
+"poop2.png":
+{
+	"frame": {"x":103,"y":2,"w":99,"h":99},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":99,"h":99},
+	"sourceSize": {"w":99,"h":99}
+},
+"poop3.png":
+{
+	"frame": {"x":204,"y":2,"w":99,"h":99},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":99,"h":99},
+	"sourceSize": {"w":99,"h":99}
+},
+"poop4.png":
+{
+	"frame": {"x":305,"y":2,"w":99,"h":99},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":99,"h":99},
+	"sourceSize": {"w":99,"h":99}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "endurance_particles_sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":406,"h":103},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:94e662347bffde7b0465a205e72611ea:185f46ad5ab4bc69dd118857827fdfb6:f13b2659e2b6f7b2f70e125748337d5b$"
+}
+}

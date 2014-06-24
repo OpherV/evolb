@@ -19,12 +19,16 @@ Evolb.Enemy1= function (level,objectData) {
 
     this.body.setCircle(this.width/2);
     this.body.setCollisionGroup(this.level.collisionGroups.characters);
-    this.body.collides([this.level.collisionGroups.characters,this.level.collisionGroups.obstacles]);
+    this.body.collides([this.level.collisionGroups.characters,
+                        this.level.collisionGroups.obstacles,
+                        this.level.collisionGroups.areas]);
 
     this.stats.moveSpeed=this.objectData.moveSpeed?this.objectData.moveSpeed:10;
     this.stats.maxSpeed=this.objectData.maxSpeed?this.objectData.maxSpeed:105;
     this.stats.attackSpeed=1000; //attack speed in millisecs
     this.stats.damageOutput=10;
+
+    this.health=50;
 
     this.init();
 
@@ -51,17 +55,43 @@ Evolb.Enemy1.prototype.attackCycle=function(){
 Evolb.Enemy1.prototype.attackHandler={
     "creature": function(body){
         body.sprite.stopBreeding();
-        body.sprite.physicalDamage(this.modifiedStats.damageOutput,true);
+        body.sprite.typedDamage(this.modifiedStats.damageOutput,Evolb.Character.damageTypes.PHYSICAL,true);
         this.game.sound.play("spike-stab",0.5);
     }
 };
 
 Evolb.Enemy1.prototype.contactHandler={
     "thorn": function(body){
-        this.physicalDamage(body.sprite.damageOutput,true);
+        this.typedDamage(body.sprite.damageOutput,Evolb.Character.damageTypes.PHYSICAL,true);
     },
     "pebble": function(body){
-        this.physicalDamage(body.sprite.damageOutput,true);
+        this.typedDamage(body.sprite.damageOutput,Evolb.Character.damageTypes.PHYSICAL,true);
+    },
+    "IceArea": function(body){
+        this.isCold=true;
+        this.game.sound.play("ice-cracking");
+    },
+    "HeatArea": function(body){
+        this.isHot=true;
+        this.game.sound.play("fire-woosh");
+    },
+    "PoisonArea": function(body){
+        this.isPoisoned=true;
+        this.game.sound.play("poison");
+   }
+};
+
+Evolb.Enemy1.prototype.endContactHandler={
+    "IceArea": function(body){
+        this.game.sound.play("ice-breaking");
+        this.isCold=false;
+    },
+    "HeatArea": function(body){
+        this.game.sound.play("water-sizzle");
+        this.isHot=false;
+    },
+    "PoisonArea": function(body){
+        this.isPoisoned=false;
     }
 };
 
@@ -71,9 +101,9 @@ Evolb.Enemy1.prototype.init = function(){
     Evolb.Character.prototype.init.call(this);
     this.setHunting();
 
-    this.healthbar = new Evolb.gui.Healthbar(this.game,this);
-    //this.healthbar.x=-this.width/2;
-    //this.healthbar.y=-this.height/2-9;
-    //this.gui.addChild(this.healthbar);
-    //this.healthbar.redraw();
+//    this.healthbar = new Evolb.gui.Healthbar(this.game,this);
+//    this.healthbar.x=-this.width/2;
+//    this.healthbar.y=-this.height/2-9;
+//    this.gui.addChild(this.healthbar);
+//    this.healthbar.redraw();
 };
