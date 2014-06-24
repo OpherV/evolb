@@ -13,9 +13,9 @@ Evolb.Traits.Armor={
         lowLimit: 5,
         highLimit: 30
     },
-    sprites: [{frame: 3, x: -105, y: -76},
-        {frame: 4, x: -115, y: -87},
-        {frame: 5, x: -138, y: -104}
+    sprites: [{frame: 3, x: -92, y: -66},
+        {frame: 4, x: -100, y: -75},
+        {frame: 5, x: -118, y: -92}
     ],
     onAdded:function(character){
         character.modifiedStats.moveSpeed-=character.dna.traits.armor.getValue("drag");
