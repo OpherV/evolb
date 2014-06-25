@@ -39,5 +39,26 @@ Genetic traits are inherited from parents and are passed on to offspring.
 Our goal is for the player to exprience evolution firsthand by experiencing these topics. Understanding and internalizing them is a key requirment for success in the game. 
 
 ## Why open source?
-Because we're big believers in sharing knowledge, especially so when it comes to sceince, the entire game and its assests are open source under GPLv2. You're more then welcome to send us your ideas, suggestions, complaints, to submit your own code or to do whatever you want with it!
+Because we're big believers in sharing knowledge, especially so when it comes to sceince, the entire game and its assests are open source under GPLv2. 
 
+## Roadmap
+
+### What we have so far:
+- A lot of the game mechanics up
+- Traits: armor, offense spikes, cannibalism, heat endurance, cold endurance, poison endurance
+- A playable concept level
+- Beginning of a tutorial
+- A level editor
+
+## What is planned for the future:
+- Many many many more fun traits!
+- More levels!
+- Better tutorial
+- Performance imporvements
+- Mobile version?
+- Multiplayer support?
+
+
+## How can you help?
+
+You're more then welcome to send us your ideas, suggestions, complaints, to submit your own code or to do whatever you want with it!
