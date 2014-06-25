@@ -19,9 +19,9 @@ Evolb was designed and developed by [Opher Vishnia](http:///www.opherv.com) and 
 
 Evolution is a scary concept for those who don't know it very well. This is due to a plethora of reasons. Some of them being:
 
-- Concepts in evolution contradict cultural conceptions
-- It's a complicated process, with many intricate parts
-- It's hard to grasp because of the long time scale (the famous "no witnesses" argument)
+- Concepts in evolution may contradict cultural predispositions
+- A complicated process, with many intricate parts
+- Hard to grasp because of the long time scale (the famous "no witnesses" argument)
 - Unlike dogma, science is based on doubt, discovery and readjustment. For some it's difficult to "believe" in something that's not absolute and prone to change.
 
 
@@ -36,7 +36,7 @@ Genetic traits are inherited from parents and are passed on to offspring.
 
 **Time:** Evolutionary change can happen in a few generations, but major change, such as speciation, often takes many thousands of generations.
 
-The goal is for the play to exprience evolution firsthand by experiencing these topics. Understanding and internalizing these concepts is a key requirment for success in the game. 
+Our goal is for the player to exprience evolution firsthand by experiencing these topics. Understanding and internalizing them is a key requirment for success in the game. 
 
 ## Why open source?
 Because we're big believers in sharing knowledge, especially so when it comes to sceince, the entire game and its assests are open source under GPLv2. You're more then welcome to send us your ideas, suggestions, complaints, to submit your own code or to do whatever you want with it!
