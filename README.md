@@ -3,7 +3,7 @@ Evolb
 **An open source HTML5 game that aims to teach basic concepts in evolution**
 
 
-![screenshot](http://i.imgur.com/f5boCMd.png?1)
+![screenshot](http://i.imgur.com/UBYpqcf.png?1)
 
 ## See
 
