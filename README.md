@@ -15,7 +15,7 @@ The game is really at its earliest stage, with just the basic mechanics working 
 
 Evolb was designed and developed by [Opher Vishnia](http:///www.opherv.com) and [Adi Klagesbrun](http://www.dvarimshe.com/).
 
-Evolution is a complicated concept that's very hard to grasp for some, especially because it's a complicated process that occurs over such a long time span. Evolb attempts to incorporate these four pillars of evolution theory into its gameplay
+Evolution is a complicated concept that's very hard to grasp for some, especially because it's a complex process that occurs over such a long time span. Evolb attempts to incorporate these four pillars of evolution theory into its gameplay
 
 **Variation:** All life forms vary genetically within a population.
 
