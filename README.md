@@ -50,7 +50,7 @@ Because we're big believers in sharing knowledge, especially so when it comes to
 - Beginning of a tutorial
 - A level editor
 
-## What is planned for the future:
+### What is planned for the future:
 - Many many many more fun traits!
 - More levels!
 - Better tutorial
