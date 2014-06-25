@@ -2,8 +2,7 @@ Evolb
 =====
 **An open source HTML5 game that aims to tackle basic concepts in evolution**
 
-![screenshot](http://i.imgur.com/f5boCMd.png?1)
-
+<iframe width="560" height="315" src="//www.youtube.com/embed/npkGzhTnWNw?rel=0" frameborder="0" allowfullscreen></iframe>
 
 ## Play
 The game is really at its earliest stage, with just the basic mechanics working but you can get a sneak preview here:
