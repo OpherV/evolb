@@ -5,7 +5,7 @@ Evolb
 
 ![screenshot](http://i.imgur.com/f5boCMd.png?1)
 
-Gameplay video: https://www.youtube.com/watch?v=npkGzhTnWNw
+**Gameplay video: https://www.youtube.com/watch?v=npkGzhTnWNw**
 
 ## Play
 The game is really at its earliest stage, with just the basic mechanics working but you can get a sneak preview here:
