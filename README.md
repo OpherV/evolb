@@ -15,7 +15,7 @@ The game is really at its earliest stage, with just the basic mechanics working 
 
 ## Who and why
 
-Evolb was designed and developed by [Opher Vishnia](http:///www.opherv.com) and [Adi Klagesbrun](http://www.dvarimshe.com/).
+Evolb was designed and developed by [Opher Vishnia](http:///www.opherv.com) and [Adi Klagesbrun](http://www.dvar.im/).
 
 Evolution is a scary concept for those who don't know it very well. This is due to a plethora of reasons. Some of them being:
 
